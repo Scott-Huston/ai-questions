@@ -1157,7 +1157,7 @@ All were checked the same night. Fourteen are in the quiz: `weight-theft`, `chos
 - **An AI millionaire.** Truth Terminal, a chatbot, held over $1 million in cryptocurrency in 2024. Who legally owns it is unclear.
 - **Satellite tracking.** Epoch AI says its tracker covers an estimated 44% of the world's AI computing power at 86 sites (September 2026), from satellite photos, permits and company statements. Could support a question on whether a limit on AI could be checked. https://epoch.ai/data/data-centers
 
-## Removed on 2026-11-24 after the page went up for testing
+## Removed on 2026-11-24 and 25 after the page went up for testing
 
 **R127. Is AI slipping out of human control the danger AI researchers worry about most?** No. Category: Risk and rules. As of September 2026. (id `researcher-worries`)
 - Answer text: In a December 2024 survey they put fake information, such as deepfakes, first: 83% said it deserves substantial or extreme concern. Of its eleven dangers, the two about powerful AI with the wrong goals came ninth and tenth, at 46% and 43%.
@@ -1170,3 +1170,9 @@ All were checked the same night. Fourteen are in the quiz: `weight-theft`, `chos
 - Answer: Andrew Ng, AI researcher, in 2015. The other names were Neil deGrasse Tyson, Mark Zuckerberg and Steven Pinker.
 - Why retired: Seen in a round and not wanted. It was one of the calm voices among the quotes.
 - Source: The Register: Fearing a rise of killer robots is like worrying about overpopulation on Mars: https://www.theregister.com/2015/03/19/andrew_ng_baidu_ai/
+
+**R128. If AI advances fast, do AI experts expect Americans to live past 90 on average by 2100?** Yes. Category: Forecasting. As of July 28, 2026. (id `life-expectancy`)
+- Answer text: The experts' middle forecast was 95, compared with 85 if AI progress is slow. US life expectancy was about 79 in 2023.
+- Detail: The forecasts come from 180 experts the Forecasting Research Institute surveyed in June and July 2026: computer scientists, people in the AI industry, economists and think-tank researchers. Without assuming any particular pace, their middle forecast was 88. They disagreed a lot: with rapid progress, a quarter of them expected less than 88 and a quarter more than 105. They also expected rapid progress to cut yearly deaths from tuberculosis, HIV/AIDS and malaria to 500,000 by 2050, compared with 1.65 million if it is slow. Many doubted the gains would be shared evenly, and the panel did not expect AI to make people much more satisfied with their lives.
+- Why retired: Seen in a round and not wanted.
+- Sources: Forecasting Research Institute: LEAP Wave 10 report: https://leap.forecastingresearch.org/reports/wave10 ; Forecasting Research Institute: Experts forecast rapid AI progress could bring health and wealth without happiness: https://forecastingresearch.substack.com/p/forecasting-ai-benefits
