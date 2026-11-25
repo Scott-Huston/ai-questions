@@ -423,7 +423,8 @@ input[type="range"].g-range { -webkit-appearance: none; appearance: none; height
 .photo-name { position: absolute; left: 8px; bottom: 8px; background: var(--surface); color: var(--ink); border-radius: 999px; padding: 2px 10px; font-size: 0.82rem; font-weight: 600; }
 /* Result rows that open to list the questions they count */
 details.lean { border: 0; background: none; border-radius: 0; }
-.lean > summary, .lean-head { display: grid; grid-template-columns: 8.7em 1fr auto 1rem; gap: 4px 12px; align-items: center; padding: 8px 0; min-height: 44px; font-weight: 400; font-size: 0.95rem; list-style: none; }
+.lean > summary, .lean-head { display: grid; grid-template-columns: minmax(0, 8.7em) minmax(24px, 1fr) auto 1rem; gap: 4px 12px; align-items: center; padding: 8px 0; min-height: 44px; font-weight: 400; font-size: 0.95rem; list-style: none; }
+.lean .bar { min-width: 0; }
 .lean > summary::-webkit-details-marker { display: none; }
 .lean > summary::after { content: "\25BE"; color: var(--muted); text-align: right; transition: transform .15s ease; }
 .lean[open] > summary::after { transform: rotate(180deg); }
@@ -1431,14 +1432,14 @@ const QUESTIONS = [
   detail:"Researchers have begun to map the insides of these models, and in 2024 Anthropic picked out millions of individual concepts in one of its own. Most of what happens in there is still unexplained. The company told investors in November 2026 that unwanted behavior in ordinary software can be traced to specific bugs, while the inner workings of models like its Claude are 'more inscrutable'. Its researchers call them 'grown, not built'. Its head, Dario Amodei, wrote in 2025 that people outside the field are often surprised and alarmed to learn 'that we do not understand how our own AI creations work'.",
   safety:"Researchers have mostly treated AI models as black boxes, and have only begun to look inside.",
   src:[["Dario Amodei: The urgency of interpretability","https://www.darioamodei.com/post/the-urgency-of-interpretability"],["Anthropic: Mapping the mind of a large language model","https://www.anthropic.com/research/mapping-mind-language-model"],["Anthropic: prospectus filed with the SEC, November 18, 2026","https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm"]] },
-{ id:"chatbot-learns", cat:"AI research", a:false, worse:"yes", asOf:"June 2026",
+{ id:"chatbot-learns", cat:"AI research", a:false, worse:"yes", group:"chat-data", asOf:"June 2026",
   rank:7,
   q:"Does AI like ChatGPT get smarter from each conversation people have with it?",
   short:"It stays the same while you talk. The more you tell it, the more useful its answers can be, but the AI itself does not change until the company trains a new version.",
   detail:"Some apps keep notes about you or search your old chats, which is not the same as the AI itself learning. Companies can use conversations as training material later. One of the hard parts is that teaching a model something new tends to overwrite what it knew. Demis Hassabis, then head of Google DeepMind, named learning continuously as one of the gaps between today's AI and human-level AI in January 2026.",
   safety:"The line between using an AI and training it is starting to blur: one coding tool updates its AI from its users' work as often as every five hours.",
   src:[["Oxford Martin AI Governance Initiative: When AI systems learn during deployment","https://aigi.ox.ac.uk/blog-post/when-ai-systems-learn-during-deployment-our-safety-evaluations-break/"],["Transformer: Teaching AI to learn","https://www.transformernews.ai/p/teaching-ai-to-continual-learning"],["Fortune: Hassabis, Amodei and LeCun at Davos on how close AI is to human level","https://fortune.com/2026/01/23/deepmind-demis-hassabis-anthropic-dario-amodei-yann-lecun-ai-davos/"],["LessWrong: What's continual learning and why might we expect to see it?","https://www.lesswrong.com/posts/5mCJzimtNZc9o4e26/what-s-continual-learning-and-why-might-we-expect-to-see-it"]] },
-{ id:"chats-train", cat:"Society", a:true, worse:"yes", asOf:"October 2026",
+{ id:"chats-train", cat:"Society", a:true, worse:"yes", group:"chat-data", asOf:"October 2026",
   rank:7,
   q:"Unless you change a setting, can OpenAI train its AI on what you type into ChatGPT?",
   short:"It can. OpenAI says ChatGPT 'improves by further training on the conversations people have with it, unless you opt out'. Google's Gemini does the same by default and Claude asks you at sign-up, an October 2026 check of company policies found.",
@@ -1948,7 +1949,7 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", 
    Terms a general reader may not know. The first match in a block of text becomes a tappable term. */
 const GLOSSARY = [
   ["Turing test", /Turing test/i, "A test proposed by Alan Turing in 1950. A person chats by text with a human and a machine without knowing which is which, then guesses. The machine passes if people can't reliably pick out the human."],
-  ["Riemann Hypothesis", /Riemann (Hypothesis|proof)/i, "A claim about a hidden pattern in the prime numbers, made in 1859 and never proven until now. Often called the most famous unsolved problem in mathematics."],
+  ["Riemann Hypothesis", /Riemann (Hypothesis|proof)/i, "A claim about a hidden pattern in the prime numbers, made in 1859. It has long been one of the most famous problems in mathematics."],
   ["Navier–Stokes", /Navier[–-]Stokes/, "One of the Millennium Prize problems. It asks whether the equations describing how water and air flow always behave sensibly."],
   ["Lean", /\bLean\b/, "A programming language for writing math proofs so a computer can check every single step."],
   ["conjecture", /\bconjecture\b/i, "A mathematical statement that experts believe is true but that nobody has proven."],
@@ -2104,7 +2105,7 @@ const GUESS_FORMS = {
   "half-the-web": { type: "pct", q: "What share of English-language web pages made since ChatGPT arrived show signs of AI?", truth: 35, truthText: "35%", full: [29, 41], half: [20, 49], wild: "high", check: ["35% of English-language pages", "49.9% of new ones"], short: "That is the Pew Research Center's count of pages dated after ChatGPT appeared. A marketing firm counted 49.9% of new articles as mainly AI-written." },
   "author-style": { type: "pct", q: "AI and trained writers both imitated a famous author. How often did judges say AI came closer?", truth: 81, truthText: "81% of the time", full: [74, 88], half: [62, 100], wild: "high", check: ["81% of matchups"], short: "Panels of writers from top US writing programs were not told which were which. They judged the AI's versions closer to the author's style in 81% of matchups, and better written in 62%." },
   "authors-settlement": { type: "log", unit: "usd", min: 1e6, max: 1e11, refs: [], q: "How much did Anthropic agree to pay over pirated books?", hint: "It came to about $3,000 a book.", truth: 1.5e9, truthText: "$1.5 billion", full: [1.1e9, 2.1e9], half: [0.6e9, 4e9], check: ["pay $1.5 billion"], skip: 0 },
-  "synthid": { type: "log", unit: "count", min: 1e6, max: 1e13, q: "How many AI-made images and videos has Google marked with its invisible watermark?", refs: [["Everyone on Earth", 8e9]], hint: "By Google's count.", truth: 180e9, truthText: "180 billion and counting", full: [110e9, 300e9], half: [45e9, 720e9], wild: "low", check: ["more than 180 billion"] },
+  "synthid": { type: "log", unit: "count", min: 1e6, max: 1e13, q: "How many AI-made images and videos has Google marked with its invisible watermark?", refs: [["Everyone on Earth", 8e9]], hint: "By Google's count.", truth: 180e9, fuzzy: true, truthText: "180 billion and counting", full: [110e9, 300e9], half: [45e9, 720e9], wild: "low", check: ["more than 180 billion"] },
   "brain-to-text": { type: "pct", q: "From brain scans alone, what share of the words a person types can AI get right?", truth: 61, truthText: "61%", full: [55, 67], half: [45, 77], wild: "high", check: ["About 6 words in 10", "about ten hours"], short: "A 2026 system from Meta got that many right on average, using a machine that fills a room. No surgery is needed, but it took about ten hours of recordings from each person." },
   "training-text": { type: "log", unit: "years", min: 1, max: 1e6, refs: [["A long life", 80], ["Since the pyramids", 4500]], q: "How long would it take to read everything one Google AI was trained on?", hint: "One person, reading day and night.", truth: 85000, truthText: "Roughly 85,000 years", full: [42000, 170000], half: [17000, 430000], wild: "high", check: ["roughly 85,000 years", "day and night"], short: "That is about a thousand lifetimes. The AI is Gemma 3, one of Google's smaller models, trained on a mix of text and images and counted here as text." },
   "home-computer": { type: "lin", min: 0, max: 60, unit: " months", q: "How far behind the world's best is AI that runs on one gaming computer?", hint: "On standard tests, 2025. The graphics card cost under $2,500.", truth: 9, fuzzy: true, range: [6, 12], truthText: "6 to 12 months", full: [5, 13], half: [2, 22], wild: "low", check: ["6 to 12 months earlier"], skip: 1 },
@@ -2129,7 +2130,7 @@ const GUESS_FORMS = {
   "brain-power": { type: "log", unit: "count", min: 1000, max: 1e10, q: "How many human brains could run on the power the biggest AI data center can draw?", refs: [["Everyone in the US", 340e6], ["Everyone on Earth", 8e9]], hint: "A human brain runs on about 20 watts.", truth: 50e6, truthText: "About 50 million", full: [30e6, 85e6], half: [14e6, 180e6], wild: "high", check: ["about 50 million"] },
   "voice-clone": { type: "pct", q: "How often could people tell AI copies of real voices from real recordings, in a 2026 study?", truth: 54, truthText: "54% of the time", full: [49, 59], half: [43, 69], wild: "low", check: ["only 54% of the time"] },
   "captcha": { type: "pct", q: "How often did free AI get past Google's 'prove you're not a robot' puzzles (CAPTCHAs) in a 2026 study?", truth: 93, truthText: "In 93% of tries", full: [86, 100], half: [74, 100], wild: "high", check: ["in 93% of 500 live tries"], skip: 1 },
-  "harder-to-trick": { type: "log", unit: "hours", min: 1 / 60, max: 1000, refs: [["A coffee break", 0.25], ["A work week", 40]], q: "Testers beat one AI's biology safeguards in 10 minutes. How long did an AI six months newer hold out?", truth: 7, truthText: "More than 7 hours", full: [6, 14], half: [4.5, 30], wild: "low", check: ["needed 10 minutes", "more than 7 hours for another released six months later"], skip: 1 },
+  "harder-to-trick": { type: "log", unit: "hours", min: 1 / 60, max: 1000, refs: [["A coffee break", 0.25], ["A work week", 40]], q: "Testers beat one AI's biology safeguards in 10 minutes. How long did an AI six months newer hold out?", truth: 7, fuzzy: true, truthText: "More than 7 hours", full: [6, 14], half: [4.5, 30], wild: "low", check: ["needed 10 minutes", "more than 7 hours for another released six months later"], skip: 1 },
   "developer-jobs": { type: "lin", min: -50, max: 50, unit: "%", signed: true, q: "How much did the number of software developers in the US change from 2022 to 2025?", hint: "ChatGPT came out in late 2022.", truth: 8, truthText: "Up 8%", full: [3, 14], half: [1, 22], wild: "low", check: ["up 8% from 2022"], short: "That is from a government survey of households, which counted about 2.25 million on average in 2025. A separate survey of employers found a 10% rise from May 2022 to May 2025." },
   "researcher-odds": { type: "pct", q: "On average, what chance did AI researchers give of AI wiping us out or leaving us powerless for good?", hint: "1,489 researchers answered in December 2024.", truth: 18, truthText: "18%", full: [13, 23], half: [8, 33], wild: "high", check: ["The average was 18%", "1,489 researchers", "Just over half said at least 10%"] },
   "congress-talks": { type: "lin", min: 0, max: 535, unit: " of 535", q: "How many of the 535 members of Congress have spoken publicly about AI as smart as people or out of control?", hint: "By an advocacy group's count, November 2026.", truth: 75, truthText: "75 of 535", full: [55, 100], half: [35, 150], wild: "high", check: ["lists 75 now in Congress", "25 Republicans, 48 Democrats"], short: "The AI Policy Network's list has 25 Republicans, 48 Democrats and 2 independents. They include House Speaker Mike Johnson, a Republican, and Democratic Senator Chuck Schumer." },
@@ -2362,7 +2363,7 @@ const Guess = (() => {
   const clamp01 = t => Math.max(0, Math.min(1, t));
   const pos = (f, n) => f.type === "log" ? Math.log(n / f.min) / Math.log(f.max / f.min) : (n - lo(f)) / (hi(f) - lo(f));
   const at = (f, t) => {
-    if (f.type === "log") return two(f.min * Math.pow(f.max / f.min, t));
+    if (f.type === "log") { const v = two(f.min * Math.pow(f.max / f.min, t)); return f.unit === "usd" || f.unit === "count" ? Math.round(v) : v; }   // money and counts are shown whole, so they are graded whole
     const step = f.step || 1, v = lo(f) + t * (hi(f) - lo(f));
     return Number((Math.round(v / step) * step).toFixed(decimals(f)));
   };
@@ -2442,7 +2443,7 @@ const Guess = (() => {
   function compare(f, g) {
     if (f.type === "pick") return "";
     const said = `You said ${say(f, g)}`, dir = g > f.truth ? "high" : "low";
-    if (f.range) return said + (within(g, f.range) ? ", inside that range." : within(g, f.full) ? ", just outside that range." : `, too ${dir}.`);
+    if (f.range && /\d/.test(f.truthText)) return said + (within(g, f.range) ? ", inside that range." : within(g, f.full) ? ", just outside that range." : `, too ${dir}.`);
     if (f.fuzzy || f.unit === "times") return said + (within(g, f.full) ? "." : `, too ${dir}.`);
     if (f.type === "log") {
       const r = g > f.truth ? g / f.truth : f.truth / g;
@@ -2468,8 +2469,8 @@ const Guess = (() => {
   const CLOSERS = new Set(["als-voice", "radiologists", "training-text", "brain-power", "billion-users", "chip-speed", "water-burger", "exam-markers", "sprint", "planets", "waymo-safety", "er-diagnosis", "unmask-author", "imo"]);
   const GOOD_NEWS = new Set(["als-voice", "er-diagnosis", "brain-to-text", "waymo-safety", "planets", "protein-design", "signal-proof", "antibiotics", "therapy-bot", "breast-screening", "ai-tutor", "doctor-empathy", "hurricanes", "vesuvius-scroll", "old-codes"]);
   const MONEY = new Set(["revenue-growth", "labs-vs-exxon", "compute-spend", "token-spend", "authors-settlement", "power-bills"]);
-  // Not in one group, but one answers the other, or both are the same trick (can people tell AI from the real thing?).
-  const APART = [["chats-train", "chatbot-learns"], ["turing", "fake-video"], ["turing", "voice-clone"], ["turing", "face-test"], ...GUESS_FACES.map(f => ["turing", f.id])];
+  // Not in one group, but the same trick (can people tell AI from the real thing?).
+  const APART = [["turing", "fake-video"], ["turing", "voice-clone"], ["turing", "face-test"], ...GUESS_FACES.map(f => ["turing", f.id])];
   // Odds of a catastrophe read as grim even where they are the tamer answer. Good is for a true statement that is not alarming, and
   // loud for a statement, true or not, that says the wilder thing.
   const grim = q => isHeavy(q) && (leanOf(q) === "wild" || q.id === "catastrophe-odds"), good = q => GOOD_NEWS.has(q.id) || leanOf(q) === "tame", loud = q => q.worse === "yes";
@@ -2495,7 +2496,7 @@ const Guess = (() => {
         }
         return m;
       };
-      if (quads.some(x => !x.oddFalse) || Math.random() < 0.8) { if (add("f", 1, is(alarming))) add("f", 1); if (add("t", 1, good)) add("t", 1); add("t", 2); }   // one true statement in three is not alarming
+      if (quads.some(x => !x.oddFalse) || Math.random() < 0.8) { if (add("f", 1, is(alarming))) add("f", 1); if (add("t", 1, q => good(q) && !seen.has(q.id))) add("t", 1); add("t", 2); }   // one true statement in three is not alarming
       else { if (add("t", 1, is(alarming))) add("t", 1); add("f", 1, is(true)); add("f", 1, is(false)); add("f", 4 - got.length); }      // the false ones sound both ways
       const quad = makeQuad(shuffle(got));
       if (quad) quads.push(quad);
@@ -2512,11 +2513,13 @@ const Guess = (() => {
     // The first and the last are chosen before the rest, a new one if there is any, and with more chance in it: rounds should not all begin alike.
     const one = tests => { for (const ok of tests) { const had = rest.length; fill(1, ok, per(2), false, ends); if (rest.length > had) return rest[rest.length - 1]; } return null; };
     const fresh = x => !seen.has(x.id), easy = x => HOOKS.has(x.q.id) && !isHeavy(x.q) && !MONEY.has(x.q.id);
-    const first = photo && Math.random() < 0.4 ? photo : one([x => OPENERS.has(x.q.id) && fresh(x), x => easy(x) && fresh(x), x => OPENERS.has(x.q.id), x => !isHeavy(x.q)]);
-    const last = one([x => CLOSERS.has(x.q.id) && fresh(x), x => HOOKS.has(x.q.id) && fresh(x), x => CLOSERS.has(x.q.id), x => !isHeavy(x.q)]);
+    const first = photo && Math.random() < 0.4 ? photo : one([x => OPENERS.has(x.q.id) && fresh(x), x => easy(x) && fresh(x), x => fresh(x) && !isHeavy(x.q), x => OPENERS.has(x.q.id), x => !isHeavy(x.q)]);
+    const last = one([x => CLOSERS.has(x.q.id) && fresh(x), x => HOOKS.has(x.q.id) && fresh(x), x => fresh(x) && !isHeavy(x.q), x => CLOSERS.has(x.q.id), x => !isHeavy(x.q)]);
     const calm = x => leanOf(x.q) === "tame";
     fill(per(2) - plain().filter(calm).length, x => calm(x) && (fresh(x) || !NUM.some(fresh)), per(2));   // none seen before is brought back for this while there are new ones
-    for (const [cap, loose] of [[per(2), false], [per(3), false], [99, false], [99, true]]) fill(99, () => true, cap, loose);
+    const caps = [[per(2), false], [per(3), false], [99, false]];
+    for (const [cap, loose] of caps) fill(99, fresh, cap, loose);                                  // new ones, a little past the limits if need be
+    for (const [cap, loose] of caps.concat([[99, true]])) fill(99, () => true, cap, loose);        // then seen ones
     const middle = quads.concat(rest).filter(x => x !== first && x !== last);
     let best = null;
     for (let k = 0; k < 300; k++) {                  // no two of the same kind, on the same subject or both grim in a row where that can be helped
@@ -3637,7 +3640,7 @@ function findingOf(s, an) {
 function findingLine(key, s, an) {
   if (key === "clear") {
     return s.right === s.n ? "A perfect round. You got every one of these."
-      : "You got nearly all of these, which is harder than it sounds.";
+      : `You got ${s.close ? "or came close to " : ""}nearly all of these, which is harder than it sounds.`;
   }
   if (key === "wilder") return "When you missed, it was mostly because the truth was wilder than your guess.";
   if (key === "tamer") return "When you missed, it was mostly because the truth was tamer than your guess.";
@@ -3666,8 +3669,9 @@ function gotMe(answers) {
   return bad.map(r => BY_ID[r.id]).filter(q => q && !q.kind && q.q.length <= 110)
     .sort((x, y) => (y.rank || 0) - (x.rank || 0) || x.q.length - y.q.length);
 }
-// How that question is introduced. It never says what the answer was.
+// How that question is introduced, on the picture and in a post. It never says what the answer was.
 function gotLead(x) { return x.said ? `I said ${x.said}:` : "This one got me:"; }
+function gotLine(x) { return x.said ? `${x.q} I said ${x.said.replace(/^[A-Z](?=[a-z ])/, c => c.toLowerCase())}.` : `${gotLead(x)} ${x.q}`; }
 function closeToCoinFlip(brier) { return Math.abs(brier - 0.25) < 0.0005; }
 // The text a player shares. It never gives an answer away: the squares show right and wrong in order,
 // and the teaser names one question that caught the player out without saying how.
@@ -3690,7 +3694,7 @@ function shareText(s, key, url) {
   const tail = !url ? ["How well do you know AI?"] : url.includes("?c=") ? [`Same ${s.n} questions for you:`, url] : ["Try it:", url];
   // Rough length as the strictest sites count it: a square counts double and a link counts as 23.
   const fits = tease => [first, second, tease, tail[0]].join("\n").length + 2 * s.n + (url ? 24 : 0) + 3 <= 275;
-  const tease = gotMe(state.answers).map(x => gotLead(x) + " " + x.q).find(fits);
+  const tease = gotMe(state.answers).map(gotLine).find(fits);
   if (tease) lines.push(tease);
   return lines.concat(tail).join("\n");
 }
@@ -3806,8 +3810,7 @@ function renderResults() {
   const returning = state.finished, guess = state.mode === "guess";   // back from looking at a question again, or from Learn more
   setScreen("results");
   state.finished = true; state.view = state.list.length - 1;
-  if (!state.recorded) keepRound(LAST_KEY);
-  clearRound();
+  if (!state.recorded) { keepRound(LAST_KEY); clearRound(); }   // a result opened again says nothing about a round begun since
   try { if (/[?&]c=/.test(location.search)) history.replaceState(history.state, "", location.pathname); } catch (e) {}
   const conf = state.mode === "confidence";
   const s = guess ? Guess.summarize(state.answers) : summarize(state.answers), an = guess ? Guess.analyze(state.answers) : analyze(state.answers);
@@ -3843,13 +3846,16 @@ function renderResults() {
       <div>${missRow("Wilder answers", "under", an.under, an.wildN, an.under + " of " + an.wildN)}${missRow("Tamer answers", "over", an.over, an.tameN, an.over + " of " + an.tameN)}</div>
       <p class="small muted">A wilder answer is one where AI does more, spreads faster or has fewer limits. A tamer one is the opposite. Tap a row to see which you missed.</p>${other}`;
   const unseen = QUESTIONS.length - seenCount();
-  const url = shareUrl(s), text = shareText(s, key, url);
+  const url = shareUrl(s);
+  // The words as edited and the round to come stay with this result while a question or Learn more is looked at.
+  const kept = state.kept && state.kept.list === state.list ? state.kept : (state.kept = { list: state.list, text: null, next: null });
+  const text = kept.text === null ? shareText(s, key, url) : kept.text;
   const canNative = typeof navigator.share === "function";
   // Playing again goes on in the way just played. After a friend's challenge that may not be the saved one.
   // (Saying how sure you are is a setting of yes or no, so there the saved choice counts.)
   const nextMode = (store.mode === "guess") === guess ? store.mode : state.mode, nextGuess = nextMode === "guess";
   // The round to come is dealt now, so that the button can promise new questions only when every one of them is.
-  const next = nextGuess ? Guess.draw(Guess.LENGTHS.includes(state.length) ? state.length : 20, true) : drawRound(state.length), seen = new Set(store.seen);
+  const next = kept.next = kept.next || (nextGuess ? Guess.draw(Guess.LENGTHS.includes(state.length) ? state.length : 20, true) : drawRound(state.length)), seen = new Set(store.seen);
   const againLabel = next.every(it => (nextGuess ? Guess.idsOf(it) : [it.id]).every(id => !seen.has(id))) ? `Play ${next.length} new questions` : "Play again";
 
   const head = `
@@ -3971,6 +3977,7 @@ function renderResults() {
   fitBox(box);
   try { document.fonts.ready.then(() => fitBox(box)); } catch (e) {}
   box.addEventListener("input", () => {
+    kept.text = current();
     fitBox(box);
     const fresh = shareLinks(current(), url);
     document.querySelectorAll("#share-links a").forEach(a => { const hit = fresh.find(l => l[0] === a.dataset.net); if (hit) a.href = hit[1]; });
@@ -4065,7 +4072,8 @@ async function resultImage(s, key) {
   const DISPLAY = '"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif';
   const MONO = '"IBM Plex Mono", ui-monospace, Menlo, monospace';
   const BODY = '"IBM Plex Sans", "Segoe UI", system-ui, sans-serif';
-  try { await Promise.all([document.fonts.load(`700 100px ${DISPLAY}`), document.fonts.load(`500 30px ${MONO}`), document.fonts.load(`500 30px ${BODY}`)]); } catch (e) {}
+  // Slow fonts get a few seconds, then the picture is drawn with the ones at hand.
+  try { await Promise.race([Promise.all([document.fonts.load(`700 100px ${DISPLAY}`), document.fonts.load(`500 30px ${MONO}`), document.fonts.load(`500 30px ${BODY}`)]), new Promise(r => setTimeout(r, 2500))]); } catch (e) {}
   const COL = { bg: "#0e141a", ink: "#e8edf1", muted: "#9aa8b4", accent: "#98a9ff", good: "#57d3a9", bad: "#ff8fa6", meh: "#f2c867" };
   const box = (px, py, w, h, r, fill) => {
     x.beginPath(); x.moveTo(px + r, py);
