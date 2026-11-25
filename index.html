@@ -230,7 +230,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 44px; ma
 .next-row {
   position: sticky; bottom: 0; margin-top: -4px;
   padding: 14px 0 calc(14px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(to bottom, transparent, var(--bg) 38%);
+  background: linear-gradient(to bottom, transparent, var(--bg) 14px);
 }
 .pill {
   display: inline-block; font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500;
@@ -829,8 +829,8 @@ const QUESTIONS = [
   rank:8,
   q:"Do the most accurate AI models usually admit when they don't know something?",
   short:"The top four don't. When stumped on a test of hard facts, these models from Anthropic and OpenAI gave a wrong answer at least half the time instead of admitting it. Google's newest, somewhat less accurate, gave one 4% to 14% of the time.",
-  detail:"The test is by Artificial Analysis, which compares AI models. As of November 2026 Anthropic's Claude Fable 5.2 was the most accurate, right 79% of the time. When it was not right, it gave a wrong answer instead of declining 59% of the time. OpenAI's GPT-6.2 Astra was right 69% of the time, with the same 59%, and Google's Gemini 4 models 48% to 60%. Summarizing a document is a different test. On one, models added unsupported claims to between 1.8% and 24.2% of summaries. Outside the lab, a public database lists more than 2,200 court decisions involving material invented by AI, such as fake case citations.",
-  src:[["Artificial Analysis: AA-Omniscience, knowledge and hallucination benchmark","https://artificialanalysis.ai/evaluations/omniscience"],["Vectara: hallucination leaderboard","https://github.com/vectara/hallucination-leaderboard"],["Suprmind: AI hallucination rates, benchmarks and leaderboards 2026","https://suprmind.ai/hub/ai-hallucination-rates-and-benchmarks/"],["Read Beyond the Bar: court decisions on AI-invented citations","https://readbeyondthebar.com/record/ai-hallucination-cases-lawyers"]] },
+  detail:"The test is by Artificial Analysis, which compares AI models. As of November 2026 Anthropic's Claude Fable 5.2 was the most accurate, right 79% of the time. When it was not right, it gave a wrong answer instead of declining 59% of the time. OpenAI's GPT-6.2 Astra was right 69% of the time, with the same 59%, and Google's Gemini 4 models 48% to 60%. Summarizing a document is a different test. On one, models added unsupported claims to between 1.8% and 24.2% of summaries. Outside the lab, a public database lists 2,336 rulings involving material invented by AI, such as court cases that do not exist.",
+  src:[["Artificial Analysis: AA-Omniscience, knowledge and hallucination benchmark","https://artificialanalysis.ai/evaluations/omniscience"],["Vectara: hallucination leaderboard","https://github.com/vectara/hallucination-leaderboard"],["Suprmind: AI hallucination rates, benchmarks and leaderboards 2026","https://suprmind.ai/hub/ai-hallucination-rates-and-benchmarks/"],["Damien Charlotin: AI Hallucination Cases database (November 23, 2026)","https://www.damiencharlotin.com/hallucinations/"]] },
 { id:"false-premise", cat:"Reliability", a:false, worse:"yes", asOf:"August 30, 2026",
   rank:7,
   q:"If you ask AI about the news and get a detail wrong, will it reliably set you straight?",
@@ -1132,8 +1132,8 @@ const QUESTIONS = [
   rank:5,
   q:"Have more than a million humanoid robots been put to use around the world?",
   short:"Nowhere near. Counts for the whole of 2025 range from about 7,000 sold to about 18,000 shipped.",
-  detail:"The two figures come from different trackers: an industry body counted about 7,000 sold for industrial and professional use, and a market researcher counted nearly 18,000 shipped. Sales are growing quickly, and Bank of America expects about 90,000 in 2026. Chinese companies dominate the market. For comparison, factories installed about 542,000 ordinary industrial robots in 2024.",
-  src:[["IT Brief: Chinese vendors dominate humanoid robot market in 2025","https://itbrief.com.au/story/chinese-vendors-dominate-humanoid-robot-market-in-2025"],["Reuters: Humanoid robot sales tally hit 7,000 globally last year","https://tribune.com.pk/story/2630593/humanoid-robot-sales-tally-hit-7000-globally-last-year/"]] },
+  detail:"The two figures come from different trackers: an industry body counted about 7,000 sold for industrial and professional use, and a market researcher counted nearly 18,000 shipped. Sales are growing quickly, and Bank of America expects about 90,000 in 2026. Chinese companies dominate the market. For comparison, factories installed more than 600,000 ordinary industrial robots in 2025.",
+  src:[["IT Brief: Chinese vendors dominate humanoid robot market in 2025","https://itbrief.com.au/story/chinese-vendors-dominate-humanoid-robot-market-in-2025"],["Reuters: Humanoid robot sales tally hit 7,000 globally last year","https://tribune.com.pk/story/2630593/humanoid-robot-sales-tally-hit-7000-globally-last-year/"],["International Federation of Robotics: Five million robots now operate in factories (September 2026)","https://ifr.org/ifr-press-releases/news/five-million-robots-now-operate-in-factories-globally"]] },
 
 { id:"vesuvius-scroll", cat:"Science", a:true, worse:"yes", group:"history", asOf:"June 2026",
   rank:4,
@@ -1241,8 +1241,8 @@ const QUESTIONS = [
   rank:9,
   q:"Has AI caused widespread job losses across the economy?",
   short:"Not so far. A Stanford team that tracks payrolls sees no widespread job losses from AI across the economy, and Federal Reserve economists concluded in November 2026 that its effects on jobs look small and mixed.",
-  detail:"The effects so far are concentrated: fewer young people are being hired into the jobs AI could affect most, mainly through reduced hiring instead of layoffs. Experienced workers show no comparable gap, the Stanford team says. The Federal Reserve economists say the effects on jobs may be larger going forward.",
-  src:[["Stanford Digital Economy Lab: No widespread displacement, but the AI employment gap for young workers has widened","https://digitaleconomy.stanford.edu/news/canariesaug26/"],["Federal Reserve: Artificial intelligence and the US economy, current evidence (November 2026)","https://www.federalreserve.gov/econres/feds/artificial-intelligence-and-the-us-economy-current-evidence.htm"]] },
+  detail:"The effects so far are concentrated: fewer young people are being hired into the jobs AI could affect most, mainly through reduced hiring instead of layoffs. Experienced workers show no comparable gap, the Stanford team says. In a Census Bureau survey in early November 2026, 2.4% of businesses using AI said it had lowered their headcount over six months, and 7.3% that it had raised it. The Federal Reserve economists say the effects on jobs may be larger going forward.",
+  src:[["Stanford Digital Economy Lab: No widespread displacement, but the AI employment gap for young workers has widened","https://digitaleconomy.stanford.edu/news/canariesaug26/"],["Federal Reserve: Artificial intelligence and the US economy, current evidence (November 2026)","https://www.federalreserve.gov/econres/feds/artificial-intelligence-and-the-us-economy-current-evidence.htm"],["Census Bureau: Business Trends and Outlook Survey, data downloads (November 2026)","https://www.census.gov/hfp/btos/data_downloads"]] },
 { id:"layoffs-ai", cat:"Work", a:false, worse:"yes", group:"jobs", asOf:"November 6, 2026",
   rank:5,
   q:"Have US employers blamed AI for most of their 2026 job cuts?",
