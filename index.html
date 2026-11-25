@@ -20,18 +20,18 @@
 <meta property="og:title" content="What's Up With AI?">
 <meta property="og:description" content="Ten quick questions about where AI really stands. Some of it sounds like science fiction and has already happened. Some of it you'd expect by now, and it hasn't.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f4f8">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0e141a">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#2742d6">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#2339c4">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232b47d6'/%3E%3Ctext x='32' y='48' font-family='Arial,Helvetica,sans-serif' font-size='46' font-weight='700' text-anchor='middle' fill='white'%3E?%3C/text%3E%3C/svg%3E">
 <!-- iPhones use this picture, not the icon above, when the quiz is added to the home screen or saved as a favorite. -->
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-title" content="What's Up With AI?">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* Layout idea: one centered reading column, one question on screen at a time, big tap targets,
-   and a result card built to be shared. Green, red and amber always mean right, wrong and unsure. */
+/* Layout idea: a question sits on a blue field, and the lower edge of the field is the ruler a guess is placed on. Answers and results are
+   a quiet reading column below, with big tap targets and a result card built to be shared. Green, red and amber always mean right, wrong and unsure. */
 :root {
   --bg: #f3f4f8;
   --surface: #ffffff;
@@ -47,6 +47,9 @@
   --bad-bg: #fbe7ec;
   --meh: #7a5200;
   --meh-bg: #fff2cf;
+  --field: #2742d6; --field-deep: #1c31b0; --on-field: #ffffff; --on-field-2: #dfe5ff; --field-line: #93a4ff;
+  --f-good: #57d3a9; --f-bad: #ff8fa6; --f-meh: #f2c867; --f-ink: #0c1330; --choice: #ffffff; --choice-2: #d9e0ff;
+  --btn: #131c26; --on-btn: #ffffff;
   --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -68,6 +71,7 @@
     --bad-bg: #3a1a23;
     --meh: #f2c867;
     --meh-bg: #392e12;
+    --field: #2339c4; --field-deep: #182a97; --choice: #e8ecff; --choice-2: #c9d3ff; --btn: #f1f4f7; --on-btn: #0e141a;
     color-scheme: dark;
   }
 }
@@ -86,6 +90,7 @@
   --bad-bg: #3a1a23;
   --meh: #f2c867;
   --meh-bg: #392e12;
+  --field: #2339c4; --field-deep: #182a97; --choice: #e8ecff; --choice-2: #c9d3ff; --btn: #f1f4f7; --on-btn: #0e141a;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -109,6 +114,8 @@ main {
 h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.12; }
 h1 { font-size: clamp(2.3rem, 9vw, 3.4rem); font-weight: 700; letter-spacing: -0.02em; }
 h2, h1.q-h { font-size: clamp(1.5rem, 5.4vw, 2rem); font-weight: 700; letter-spacing: -0.01em; }
+.field h1.q-h { font-size: clamp(1.7rem, min(4.9vw, 6.2vh), 3.3rem); font-weight: 800; letter-spacing: -0.022em; line-height: 1.04; max-width: 22ch; overflow-wrap: break-word; }
+.field h1.q-h.brief { font-size: clamp(2.1rem, min(6.2vw, 8.4vh), 4.2rem); line-height: 1.0; max-width: 17ch; }
 h3, .src-h { font-size: 1.12rem; font-weight: 700; }
 .src-h { font-family: var(--font-display); line-height: 1.12; margin: 0; }
 h1[tabindex="-1"]:focus, h2[tabindex="-1"]:focus, .verdict:focus { outline: none; }
@@ -160,30 +167,50 @@ button, a, label, summary, input, textarea { touch-action: manipulation; }
 .link:focus-visible, .term:focus-visible, p > a:focus-visible, li > a:focus-visible, .res-title:focus-visible { outline-offset: -5px; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
-/* Start screen */
-.hero { display: flex; flex-direction: column; gap: 14px; padding-top: 10px; }
-.brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+/* The field: where a question is asked */
+main.fielded { max-width: none; padding: 0; gap: 0; min-height: 100vh; min-height: 100svh; }
+#reveal { padding-bottom: 72px; }
+main.fielded > * { flex: none; }
+main.fielded > .fill { flex: 1 0 auto; display: flex; flex-direction: column; }
+.fill > .yn { flex: 1; max-height: 46rem; }
+.wrap { width: min(100% - 40px, 62rem); margin-inline: auto; }
+.field, .on-field { background: var(--field); color: var(--on-field); }
+.field { padding: 16px 0 28px; }
+.field .muted, .field .eyebrow, .on-field .muted { color: var(--on-field-2); }
+.field .link, .field a, .on-field .link { color: inherit; }
+.field :focus-visible, .on-field :focus-visible { outline-color: var(--on-field); }
+.field .term { text-decoration-color: var(--field-line); }
+.field .term:hover, .field .term[aria-expanded="true"] { color: inherit; text-decoration-color: currentColor; }
+.field .defbox { border-left: 0; border-radius: 8px; max-width: 36rem; }
+.field .btn-primary, .on-field .btn-primary { background: var(--on-field); border-color: var(--on-field); color: var(--field); }
+.brand { display: flex; align-items: center; gap: 10px; font: 700 1.18rem/1.1 var(--font-display); letter-spacing: -0.01em; color: var(--ink); }
 .brand-mark { display: inline-flex; gap: 3px; }
 .brand-mark i { width: 10px; height: 10px; border-radius: 2.5px; background: var(--good); }
 .brand-mark i:nth-child(2) { background: var(--bad); }
-.hero-title { font-size: clamp(2.1rem, 9vw, 3.5rem); }
-.rot { display: block; color: var(--accent); min-height: 2.3em; text-wrap: wrap; transition: opacity .28s ease, transform .28s ease; }
-@media (max-width: 350px) { .rot { min-height: 3.45em; } }
-.rot.out { opacity: 0; transform: translateY(8px); }
+.field .brand { color: inherit; }
+.field .brand-mark { display: none; }
+.field .tab { color: inherit; border: 0; border-radius: 4px; padding: 8px 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.field .topbar { margin-bottom: clamp(6px, 1.8vh, 24px); }
+.field .wrap > .eyebrow:first-child { padding-top: 18px; }
+main.fielded:empty { background: var(--field); }
+.field .intro { color: var(--on-field-2); font-size: clamp(0.92rem, 1.6vw, 1.05rem); line-height: 1.4; max-width: 62ch; text-wrap: pretty; margin-bottom: 16px; }
+.field.tight { padding-bottom: 4px; }
 .lede { font-size: 1.08rem; max-width: 34rem; }
-.start { display: flex; flex-direction: column; gap: 12px; }
-.opts { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; padding-top: 16px; border-top: 1px solid var(--line); }
-.opt { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; }
-.opt-label { font-size: 0.92rem; color: var(--muted); }
-.seg { position: relative; display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 2px; }
-.seg input { position: absolute; opacity: 0; pointer-events: none; }
-.seg label { padding: 6px 14px; border-radius: 7px; font-size: 0.92rem; font-weight: 500; cursor: pointer; min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; }
-.seg input:checked + label { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
-.seg input:focus-visible + label { outline: 3px solid var(--accent); outline-offset: 1px; }
-.challenge { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); display: flex; flex-direction: column; gap: 12px; }
-.challenge-line { font-size: 1.08rem; }
-.dare-q { font-size: clamp(1.4rem, 5vw, 1.8rem); }
+.extras { display: flex; flex-direction: column; gap: 18px; padding: 22px 0 64px; }
+.note { color: var(--muted); max-width: 46ch; text-wrap: balance; }
+.foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 28px; border-top: 1px solid var(--line); padding-top: 10px; }
+.foot .link { margin: 0; }
+.foot #returning { margin-left: auto; }
+.lens { display: inline-flex; align-items: center; gap: 2px; color: var(--muted); }
+.lens > span { margin-right: 6px; }
+.lens button { min-width: 44px; min-height: 44px; border: 0; background: none; color: var(--accent); font-weight: 500; border-radius: 8px; padding: 0 8px; text-decoration: underline; text-underline-offset: 3px; }
+.lens button[aria-pressed="true"] { color: var(--ink); font-weight: 600; text-decoration: none; background: var(--accent-soft); }
+.hello { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; padding: 12px 0 10px; }
+.hello .btn-big { min-width: min(100%, 22rem); }
+.hello .dots { width: min(100%, 22rem); margin: 2px 0 10px; }
+.challenge-line { font-size: 1.08rem; max-width: 40ch; }
 .pass-on { margin-top: 2px; }
+@media (max-width: 620px) { .foot #returning { margin-left: 0; width: 100%; } }
 
 /* Question screen */
 .q-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 20px; }
@@ -193,27 +220,52 @@ button, a, label, summary, input, textarea { touch-action: manipulation; }
 .dot.good { background: var(--good); }
 .dot.bad { background: var(--bad); }
 .dot.meh { background: var(--meh); }
+.field .dots { flex: 0 1 auto; grid-auto-columns: minmax(0, 17px); gap: 6px; }
+@media (max-width: 619px) { .field .dots.many { gap: 2.5px; } }
+.field .q-top { justify-content: flex-start; }
+.field .q-top .count { margin-right: auto; }
+.field .dot.here { outline-color: var(--on-field); }
+.field .dot { background: transparent; box-shadow: inset 0 0 0 2px var(--field-line); }
+.field .dot.now { background: var(--on-field); box-shadow: none; }
+.field .dot.good { background: var(--f-good); box-shadow: none; }
+.field .dot.bad { background: var(--f-bad); box-shadow: none; }
+.field .dot.meh { background: var(--f-meh); box-shadow: none; }
+.field .count { color: var(--on-field-2); }
+.field .progress { background: var(--field-deep); }
+.field .progress > div { background: var(--on-field); }
+.field .arrow { background: transparent; border-color: var(--field-line); color: inherit; }
+.field .arrow:hover:not(:disabled) { background: var(--on-field); border-color: var(--on-field); color: var(--field); }
 .dot.pop { animation: pop .3s ease; }
 @keyframes pop { 0% { transform: scale(0.6); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
 .count { font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
 .progress { flex: 1; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
 .progress > div { height: 100%; background: var(--accent); transition: width .25s ease; }
-.q-body { display: flex; flex-direction: column; gap: 10px; padding-top: 4px; }
-.yn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.ans { position: relative; min-height: 78px; font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; border-width: 2px; border-radius: 14px; }
-.ans kbd { display: none; position: absolute; top: 8px; right: 10px; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; line-height: 1.5; }
+.q-body { display: flex; flex-direction: column; gap: 10px; padding-top: 16px; }
+.q-body > p { max-width: 48ch; }
+.control:empty { display: none; }
+.yn { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+.ans { position: relative; min-width: 0; padding-inline: 8px; min-height: clamp(140px, 23vh, 240px); font: 800 clamp(2rem, 12vw, 6rem)/1 var(--font-display); letter-spacing: -0.015em; border: 0; border-radius: 0; background: var(--field-deep); color: var(--on-field); }
+.ans kbd { display: none; position: absolute; top: 14px; right: 16px; font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0; font-weight: 500; color: inherit; border: 1px solid var(--field-line); border-radius: 4px; padding: 0 6px; line-height: 1.6; }
 @media (hover: hover) and (pointer: fine) {
   .ans kbd { display: block; }
-  .ans:hover { background: var(--accent-soft); }
+  .ans:hover:not(:disabled) { background: var(--on-field); color: var(--field); }
 }
-.conf { display: flex; flex-direction: column; gap: 10px; }
-.conf-read { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.conf-num { font-family: var(--font-mono); font-size: 2rem; font-weight: 500; font-variant-numeric: tabular-nums; min-width: 4.2ch; }
 input[type="range"] { width: 100%; accent-color: var(--accent); height: 44px; margin: 0; }
-.conf-ends { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--muted); }
 
 /* Answer reveal */
-.verdict { border-radius: 14px; padding: 16px 18px 18px; border: 1px solid transparent; display: flex; flex-direction: column; gap: 6px; animation: rise .22s ease; }
+.reveal { display: grid; gap: 16px; padding-top: 24px; }
+.reveal:empty { display: none; }
+.reveal .side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.fielded .btn-ink, .fielded .next-row .btn-primary { background: var(--btn); border-color: var(--btn); color: var(--on-btn); font-family: var(--font-display); font-weight: 700; font-size: 1.22rem; border-radius: 8px; }
+.fielded .btn-ink[aria-disabled] { background: none; border-color: transparent; color: var(--ink); font-weight: 600; font-size: 1.1rem; }
+@media (min-width: 900px) {
+  .reveal { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); column-gap: 36px; align-items: start; grid-auto-rows: max-content; }
+  .reveal > * { grid-column: 1; }
+  .reveal > .side { grid-column: 2; grid-row: 1 / span 4; }
+  .reveal > .next-row { grid-column: 1 / -1; grid-row: 5; }
+  .reveal > .next-row .btn { max-width: 33rem; }
+}
+.verdict { border-radius: 10px; scroll-margin: 16px 0 100px; padding: 18px 20px 20px; border: 1px solid transparent; display: flex; flex-direction: column; gap: 6px; animation: rise .22s ease; }
 .verdict.good { background: var(--good-bg); border-color: var(--good); }
 .verdict.bad { background: var(--bad-bg); border-color: var(--bad); }
 .verdict.meh { background: var(--meh-bg); border-color: var(--meh); }
@@ -225,10 +277,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 44px; ma
 .verdict-word { font-family: var(--font-display); font-size: 2.3rem; font-weight: 700; line-height: 1.05; }
 .their { color: var(--muted); padding-top: 4px; }
 @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-.why {
-  background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent);
-  border-radius: 0 12px 12px 0; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px;
-}
+.why { display: flex; flex-direction: column; gap: 5px; padding: 2px 0 4px; }
+.why p:last-child { font-size: 1.04rem; }
 .next-row {
   position: sticky; bottom: 0; margin-top: -4px;
   padding: 14px 0 calc(14px + env(safe-area-inset-bottom, 0px));
@@ -267,6 +317,26 @@ details > .body { padding: 0 14px 14px; display: flex; flex-direction: column; g
 .result { display: flex; flex-direction: column; gap: 14px; padding: 24px 22px; }
 .score { font-family: var(--font-display); font-weight: 700; font-size: clamp(4.4rem, 23vw, 6.6rem); line-height: 0.92; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
 .score-of { color: var(--muted); font-size: 0.48em; letter-spacing: 0; margin-left: 4px; }
+.after { width: min(100% - 40px, 62rem); margin-inline: auto; padding: 4px 0 72px; display: grid; gap: 22px; }
+.after > div { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+@media (min-width: 900px) {
+  .after { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); column-gap: 40px; }
+  .after > div:last-child { padding-top: 18px; }
+}
+.toll { display: flex; flex-direction: column; gap: 12px; padding-top: 14px; }
+.field .finding { font-size: clamp(2rem, min(7vw, 8vh), 3.9rem); font-weight: 800; letter-spacing: -0.022em; line-height: 1.02; padding: 0; }
+.field .finding + p { font-size: 1.05rem; max-width: 44ch; color: var(--on-field-2); }
+.field .told { display: flex; flex-direction: column; gap: 10px; padding-top: 10px; }
+.field .compare { background: var(--field-deep); color: inherit; max-width: 46ch; }
+.field .grid { grid-template-columns: repeat(10, minmax(0, 26px)); margin-top: 4px; }
+.field .grid i { background: var(--field-deep); }
+.field .grid i.good { background: var(--f-good); }
+.field .grid i.bad { background: var(--f-bad); }
+.field .grid i.meh { background: var(--f-meh); }
+.score-edge .knob { width: 40px; height: 40px; margin: -20px 0 0 -20px; }
+.score-edge .reading b { font-size: clamp(5rem, min(20vw, 17vh), 10rem); }
+.score-edge .stage .inner { height: clamp(9.6rem, 25vh, 17rem); }
+.mark-lab.friend { font-size: 0.92rem; }
 .grid { display: grid; grid-template-columns: repeat(10, minmax(0, 28px)); gap: 6px; }
 .grid i { display: block; aspect-ratio: 1; border-radius: 22%; background: var(--line); animation: pop .3s ease both; animation-delay: calc(var(--i, 0) * 45ms); }
 .grid.many { grid-template-columns: repeat(auto-fill, 14px); gap: 4px; }
@@ -333,7 +403,6 @@ td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-
 .res { display: flex; flex-direction: column; gap: 4px; padding: 10px 0; }
 .res-title { font-weight: 600; font-size: 1.02rem; padding: 10px 0; margin: -10px 0; }
 #share-status:empty, #share-status-2:empty { display: none; }
-.resume { display: flex; flex-direction: column; gap: 10px; }
 textarea.share-preview { display: block; width: 100%; resize: vertical; font-size: 1rem; }
 #pic-slot { display: flex; flex-direction: column; gap: 8px; }
 #pic-slot:empty { display: none; }
@@ -345,13 +414,6 @@ details.res-more > .body { padding: 0; }
 .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
 .tab { font: inherit; font-weight: 600; font-size: 0.95rem; color: var(--accent); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; min-height: 44px; display: inline-flex; align-items: center; text-decoration: none; white-space: nowrap; }
 .tab:hover { border-color: var(--accent); }
-.modes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; position: relative; }
-.modes input { position: absolute; opacity: 0; pointer-events: none; }
-.modes label { border: 2px solid var(--line); border-radius: 14px; background: var(--surface); padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; cursor: pointer; }
-.modes label b { font-family: var(--font-display); font-size: 1.1rem; }
-.modes label span { font-size: 0.88rem; color: var(--muted); line-height: 1.4; }
-.modes input:checked + label { border-color: var(--accent); background: var(--accent-soft); }
-.modes input:focus-visible + label { outline: 3px solid var(--accent); outline-offset: 2px; }
 .arrow { flex: none; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-size: 1.5rem; line-height: 1; padding: 0 0 4px; display: grid; place-items: center; }
 .arrow:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
 .arrow:disabled { opacity: 0.35; cursor: default; }
@@ -365,62 +427,123 @@ button.dot::after { content: ""; position: absolute; inset: -14px -2px; }
 .linky:hover { text-decoration-color: currentColor; }
 .verdict-word.long { font-size: clamp(1.5rem, 6vw, 2.1rem); line-height: 1.1; text-wrap: balance; }
 
-/* Guess mode: the ruler. You place a guess on it, then the truth and the scoring bands appear on the same ruler. */
-:root { --band-full: #7fcbb2; --band-half: #f0d38a; --thumb: 34px; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --band-full: #1f6b54; --band-half: #6b5420; } }
-:root[data-theme="dark"] { --band-full: #1f6b54; --band-half: #6b5420; }
-.ruler { display: flex; flex-direction: column; gap: 6px; }
-.readout { font-family: var(--font-mono); font-weight: 500; font-size: clamp(1.9rem, 9vw, 2.6rem); line-height: 1.1; font-variant-numeric: tabular-nums; min-height: 1.15em; display: block; }
-.readout.unset { color: var(--muted); font-size: 1.2rem; line-height: 2.35; font-family: var(--font-body); font-weight: 400; }
-input[type="range"].g-range { -webkit-appearance: none; appearance: none; height: 48px; background: transparent; cursor: pointer; display: block; }
-.g-range::-webkit-slider-runnable-track { height: 12px; border-radius: 6px; background: var(--line); }
-.g-range::-moz-range-track { height: 12px; border-radius: 6px; background: var(--line); }
-.g-range::-webkit-slider-thumb { -webkit-appearance: none; width: var(--thumb); height: var(--thumb); border-radius: 50%; background: var(--accent); border: 4px solid var(--surface); box-shadow: 0 0 0 2px var(--accent); margin-top: calc((12px - var(--thumb)) / 2); }
-.g-range::-moz-range-thumb { width: var(--thumb); height: var(--thumb); border-radius: 50%; background: var(--accent); border: 4px solid var(--surface); box-shadow: 0 0 0 2px var(--accent); box-sizing: border-box; }
-.g-range.unset::-webkit-slider-thumb { background: var(--surface); box-shadow: 0 0 0 2px var(--muted); }
-.g-range.unset::-moz-range-thumb { background: var(--surface); box-shadow: 0 0 0 2px var(--muted); }
-.g-range:focus-visible { outline-offset: 0; border-radius: 10px; }
-.ends { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); font-family: var(--font-mono); }
-.marks { position: relative; z-index: 0; }
-.mark-lab { position: absolute; top: 0; font-size: 0.78rem; line-height: 1.25; color: var(--muted); text-align: center; max-width: 8.5rem; padding-top: 8px; }
-.mark-lab::before { content: ""; position: absolute; top: calc(-12px - var(--rise, 0px)); left: var(--stem, 50%); height: calc(18px + var(--rise, 0px)); border-left: 2px solid var(--line); z-index: -1; }
+/* Guess mode: the ruler. A guess is placed on the lower edge of the field, then the truth and the scoring bands appear on the same edge. */
+:root { --band-full: #57d3a9; --band-half: #f2c867; }
+.slide { user-select: none; -webkit-user-select: none; }
+.stage { background: var(--field); color: var(--on-field); }
+.slide { overflow-x: clip; }
+.inner { position: relative; width: min(100% - 76px, 62rem - 36px); margin-inline: auto; }
+.stage .inner { height: clamp(8.8rem, 22vh, 16.4rem); }
+.slide[data-live] .stage { touch-action: pan-y pinch-zoom; cursor: grab; }
+.slide[data-live] .edge { touch-action: pinch-zoom; cursor: grab; }
+.slide.drag, .slide.drag .stage, .slide.drag .edge { cursor: grabbing; }
+.reading { position: absolute; bottom: 2.6rem; left: 50%; transform: translateX(-50%); text-align: center; white-space: nowrap; }
+.reading b { display: block; font: 800 clamp(4.2rem, min(16vw, 13.2vh), 8.8rem)/0.86 var(--font-display); letter-spacing: -0.02em; }
+.reading.wide b { font-size: clamp(3.2rem, min(11vw, 11.5vh), 6.4rem); }
+.reading.wider b { font-size: clamp(2.5rem, min(8.6vw, 11vh), 5.4rem); }
+.reading span { display: block; min-height: 1.2em; margin-top: 10px; font: 500 clamp(1rem, 2.1vw, 1.25rem)/1.2 var(--font-body); color: var(--on-field-2); }
+.reading.unset b { color: var(--field-line); }
+.stem { position: absolute; bottom: 0; width: 4px; height: 32px; margin-left: -2px; background: var(--on-field); }
+.stem.truth, .span { background: var(--f-good); }
+.span { position: absolute; bottom: 0; height: 9px; min-width: 9px; }
+.edge { position: relative; background: var(--bg); padding-bottom: 4px; min-height: 56px; }
+.t { position: absolute; top: 0; width: 1px; height: 11px; background: var(--muted); }
+.t.maj { width: 2px; margin-left: -0.5px; height: 23px; background: var(--ink); }
+.tl { position: absolute; top: 28px; transform: translateX(-50%); font: 400 0.8rem/1 var(--font-mono); color: var(--muted); white-space: nowrap; background: var(--bg); padding: 3px; z-index: 1; }
+.tl.s { left: -3px; transform: none; }
+.tl.e { right: -3px; transform: none; }
+.w { display: none; }
+@media (max-width: 355px) { .n { display: none; } }
+@media (min-width: 720px) { .w { display: block; } .n { display: none; } }
+.g-range { position: absolute; top: -32px; left: -24px; width: calc(100% + 48px) !important; height: 64px !important; margin: 0; opacity: 0; pointer-events: none; z-index: 1; }
+.knob { position: absolute; top: 0; left: 50%; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%; border: 4px solid var(--on-field); background: var(--f-ink); color: var(--on-field); display: grid; place-items: center; z-index: 2; pointer-events: none; }
+.knob svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.g-range:focus-visible ~ .knob { box-shadow: 0 0 0 4px var(--f-ink), 0 0 0 7px var(--on-field); }
+.g-range.unset ~ .knob { animation: nudge 1.5s 0.8s ease-in-out 2; }
+.g-range.unset ~ .knob.nudge { animation: nudge 0.7s ease-in-out; }
+.knob.mini { width: 24px; height: 24px; margin: -12px 0 0 -12px; }
+@keyframes nudge { 0%, 100% { margin-left: -24px; } 30% { margin-left: -38px; } 70% { margin-left: -10px; } }
+@media (prefers-reduced-motion: reduce) { .g-range.unset ~ .knob, .g-range.unset ~ .knob.nudge { animation: none; } }
+@media (forced-colors: active) {
+  .ans, .pick, .photo { border: 2px solid ButtonText; }
+  .edge { border-top: 2px solid CanvasText; }
+  .t, .stem, .span { forced-color-adjust: none; background: CanvasText; }
+  .bands > i, .dot, .legend i { forced-color-adjust: none; }
+}
+.marks { position: relative; margin-top: 50px; }
+.edge .inner { padding-top: 0.05px; }
+.mark-lab { position: absolute; top: 0; width: max-content; font-size: 0.8rem; line-height: 1.25; color: var(--accent); font-weight: 500; text-align: center; max-width: 9.5rem; padding-top: 6px; }
+.mark-lab::before { content: ""; position: absolute; top: calc(-50px - var(--rise, 0px)); left: var(--stem, 50%); height: calc(55px + var(--rise, 0px)); border-left: 2px solid var(--accent); }
 .mark-lab b { display: block; font-family: var(--font-mono); font-weight: 500; color: var(--ink); }
-.result-ruler { position: relative; padding-block: 46px 46px; }
-.rail { position: relative; height: 16px; border-radius: 8px; background: var(--line); margin-inline: calc(var(--thumb) / 2); }
-.rail > .band { position: absolute; top: 0; bottom: 0; }
-.rail > .band.half { background: var(--band-half); }
-.rail > .band.full { background: var(--band-full); }
-.pin { position: absolute; width: 0; }
-.pin::before { content: ""; position: absolute; left: -2px; width: 4px; background: var(--ink); }
-.pin.truth::before { top: -10px; height: 26px; }
-.pin.you::before { top: 0; height: 26px; background: var(--accent); }
-.pin span { position: absolute; white-space: nowrap; font-size: 0.88rem; font-weight: 600; transform: translateX(var(--shift, -50%)); }
-.pin.truth.label::before { display: none; }
-.pin-range { position: absolute; top: -10px; height: 26px; margin-inline: -2px; border: 4px solid var(--ink); border-bottom: 0; border-radius: 4px 4px 0 0; min-width: 8px; }
-.pin.truth span { bottom: 14px; }
-.pin.you span { top: 30px; color: var(--accent); }
-.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 0.8rem; color: var(--muted); }
+.mark-lab.you { font-size: 0.92rem; }
+.mark-lab.you b { font-family: var(--font-body); font-weight: 600; }
+.mark-lab.you::before { border-left: 3px solid var(--accent); margin-left: -0.5px; }
+.bands > i { position: absolute; top: 0; height: 13px; z-index: 1; }
+.bands .half { background: var(--band-half); }
+.bands .full { background: var(--band-full); }
+.act { display: grid; gap: 12px 30px; align-items: center; padding-top: 14px; }
+.act .btn { min-height: 58px; }
+.knob.nudge { animation: nudge 0.7s ease-in-out; }
+@media (min-width: 760px) { .act { grid-template-columns: minmax(300px, 400px) 1fr; padding-top: 16px; } }
+@media (max-width: 620px) {
+  .field .topbar { margin-bottom: 4px; }
+  .field .intro { margin-bottom: 11px; }
+  .q-body { padding-top: 12px; }
+}
+/* Small phones, where the browser's own bars leave little height */
+@media (max-height: 650px) and (max-width: 620px) {
+  .field { padding: 8px 0 12px; }
+  .field.tight { padding-bottom: 0; }
+  .field .topbar { margin-bottom: 2px; }
+  .field .intro { margin-bottom: 8px; }
+  .field .intro .more { display: none; }
+  .field h1.q-h { font-size: 1.5rem; }
+  .field h1.q-h.brief { font-size: 1.8rem; }
+  .q-body { padding-top: 8px; gap: 6px; }
+  .stage .inner { height: 7.2rem; }
+  .reading { bottom: 2.1rem; }
+  .reading b { font-size: 3.6rem; }
+  .reading.wide b { font-size: 2.9rem; }
+  .reading.wider b { font-size: 2.3rem; }
+  .reading span { margin-top: 4px; font-size: 0.95rem; }
+  .edge { min-height: 52px; }
+  .act { padding-top: 6px; gap: 6px; }
+  .act .btn { min-height: 52px; }
+}
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 0.8rem; color: var(--muted); padding-top: 8px; }
 .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; transform: translateY(1px); }
 .legend .f { background: var(--band-full); }
 .legend .h { background: var(--band-half); }
-.picks { display: flex; flex-direction: column; gap: 10px; }
-.pick { text-align: left; justify-content: flex-start; width: 100%; border-width: 2px; min-height: 58px; font-weight: 500; line-height: 1.3; }
+.on-field.list { padding-bottom: 30px; }
+.slide[data-live] .act { padding-bottom: 28px; }
+.picks { display: grid; gap: 8px; }
+.pick { text-align: left; justify-content: flex-start; width: 100%; border: 2px solid transparent; min-height: 60px; font-weight: 500; line-height: 1.3; border-radius: 8px; }
+.on-field .pick { background: var(--choice); color: var(--f-ink); padding: 13px 18px; font-size: 1.06rem; }
+.on-field .pick:hover:not(:disabled) { background: var(--choice-2); border-color: var(--choice-2); }
+.on-field .pick:disabled { background: var(--field-deep); color: var(--on-field); }
+@media (min-width: 760px) {
+  .picks { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .fill .pick { font-size: 1.28rem; min-height: 104px; padding: 18px 26px; }
+}
 .pick:disabled, .ans:disabled { opacity: 1; cursor: default; }
-.pick.right { border-color: var(--good); background: var(--good-bg); }
-.pick.wrong { border-color: var(--bad); background: var(--bad-bg); }
-.pick.near { border-color: var(--meh); background: var(--meh-bg); }
+.on-field .right, .on-field .pick.right { background: var(--f-good); color: var(--f-ink); }
+.on-field .wrong, .on-field .pick.wrong { background: var(--f-bad); color: var(--f-ink); }
+.on-field .pick.near { background: var(--f-meh); color: var(--f-ink); }
 .pick .tag { margin-left: auto; font-size: 0.8rem; font-weight: 600; white-space: nowrap; padding-left: 10px; text-align: right; line-height: 1.35; }
+.claim { font-weight: 600; font-size: 1.06rem; line-height: 1.35; text-wrap: balance; }
 .others { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
 .others li { display: flex; flex-direction: column; gap: 3px; }
-.photos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.photo { position: relative; border: 3px solid var(--line); border-radius: 14px; padding: 0; overflow: hidden; background: var(--line); display: block; }
+#swap-row { padding-top: 16px; }
+.photos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 62rem; }
+@media (min-width: 700px) { .photos { grid-template-columns: repeat(4, 1fr); } }
+.photo { position: relative; border: 4px solid var(--field-deep); border-radius: 8px; padding: 0; overflow: hidden; background: var(--field-deep); display: block; }
 .photo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
-.photo:hover:not(:disabled) { border-color: var(--accent); }
+.photo:hover:not(:disabled) { border-color: var(--on-field); }
 .photo:disabled { cursor: default; }
-.photo.right { border-color: var(--good); }
-.photo.wrong { border-color: var(--bad); }
-.photo.plain img { opacity: 0.75; }
-.photo-name { position: absolute; left: 8px; bottom: 8px; background: var(--surface); color: var(--ink); border-radius: 999px; padding: 2px 10px; font-size: 0.82rem; font-weight: 600; }
+.photo.right { border-color: var(--f-good); background: var(--f-good); }
+.photo.wrong { border-color: var(--f-bad); background: var(--f-bad); }
+.photo.plain img { opacity: 0.6; }
+.photo-name { position: absolute; left: 8px; bottom: 8px; background: var(--f-ink); color: var(--on-field); border-radius: 6px; padding: 2px 10px; font-size: 0.82rem; font-weight: 600; }
 /* Result rows that open to list the questions they count */
 details.lean { border: 0; background: none; border-radius: 0; }
 .lean > summary, .lean-head { display: grid; grid-template-columns: minmax(0, 8.7em) minmax(24px, 1fr) auto 1rem; gap: 4px 12px; align-items: center; padding: 8px 0; min-height: 44px; font-weight: 400; font-size: 0.95rem; list-style: none; }
@@ -440,13 +563,13 @@ span.bar { display: block; }
 .missed .small { grid-column: 2; }
 footer { color: var(--muted); font-size: 0.85rem; }
 @media (prefers-reduced-motion: reduce) {
-  .progress > div, .rot, .btn, .disc { transition: none; }
+  .progress > div, .btn, .disc { transition: none; }
   .verdict, .dot.pop, .grid i { animation: none; }
 }
 </style>
 </head>
 <body>
-<main id="app"></main>
+<main id="app" class="fielded"></main>
 <script>
 // If the quiz fails to start, for example in a very old browser, say so instead of leaving a blank page.
 setTimeout(function () {
@@ -454,7 +577,7 @@ setTimeout(function () {
   if (app && !app.firstChild) app.innerHTML = '<p style="max-width:40rem;margin:2rem auto;padding:0 20px">The quiz did not load. It needs an up-to-date browser. Try opening this link in Safari or Chrome.</p>';
 }, 3000);
 </script>
-<noscript><p style="max-width:40rem;margin:2rem auto;padding:0 20px;font-family:system-ui,sans-serif">This quiz needs JavaScript to run. Please turn it on and reload the page.</p></noscript>
+<noscript><style>#app { display: none; }</style><p style="max-width:40rem;margin:2rem auto;padding:0 20px;font-family:system-ui,sans-serif">This quiz needs JavaScript to run. Please turn it on and reload the page.</p></noscript>
 
 <script>
 /* ---------- Configuration ----------
@@ -2324,8 +2447,8 @@ const GUESS_FACES = [
     src:[["Wikimedia Commons: official portrait of Delia L. Smith, US Department of Justice, public domain","https://commons.wikimedia.org/wiki/File:Delia_L._Smith,_U.S._Attorney.jpg"],["Wikimedia Commons: official portrait of Vanessa Roberts Avery, US Department of Justice, public domain","https://commons.wikimedia.org/wiki/File:Vanessa_Roberts_Avery,_U.S._Attorney.jpg"],["Wikimedia Commons: official portrait of Dena J. King, US Attorney's Office, Western District of North Carolina, public domain","https://commons.wikimedia.org/wiki/File:Usa-dena-j-king.jpg"],["PNAS, 2026: training people to spot AI faces","https://pmc.ncbi.nlm.nih.gov/articles/PMC13342996/"]] }
 ];
 // The photos are separate files. Where they are not beside the page (a copy of this file alone), no photo question is dealt.
-const PHOTOS = { here: false };
-if (GUESS_FACES.length && CONFIG.modes.includes("guess")) { const im = new Image(); im.onload = () => { PHOTOS.here = true; }; im.src = GUESS_FACES[0].ai; }
+const PHOTOS = { here: false, checked: Promise.resolve() };
+if (GUESS_FACES.length && CONFIG.modes.includes("guess")) { const im = new Image(); PHOTOS.checked = new Promise(done => { im.onload = () => { PHOTOS.here = true; done(); }; im.onerror = done; }); im.src = GUESS_FACES[0].ai; }
 /* ---------- Guess mode ----------
    The same questions, asked so that being close counts. GUESS_FORMS turns a question into a slider or a short list,
    GUESS_CLAIMS into a plain statement (shown four at a time), GUESS_QUOTES adds a few "who said it" picks, and GUESS_FACES
@@ -2460,7 +2583,7 @@ const Guess = (() => {
     if (off < (f.type === "pct" ? 1 : 0.05)) return `${said}, almost exactly right.`;
     if (f.year) return `${said}, ${d}${word(" years", d)} too ${g > f.truth ? "late" : "early"}.`;
     if (f.prefix) return `${said}, ${d}${word(" places", d)} off.`;   // on a chart, a lower number is a higher place
-    return `${said}, ${d}${word(f.type === "pct" || f.unit === "%" ? " points" : /^ [a-z]+s$/.test(f.unit || "") ? f.unit : "", d)} too ${dir}.`;
+    return `${said}, ${d}${f.type === "pct" || f.unit === "%" ? (d === 1 ? " percentage point" : " percentage points") : word(/^ [a-z]+s$/.test(f.unit || "") ? f.unit : "", d)} too ${dir}.`;
   }
 
   /* Dealing a round. New ones come first, then the more important ones, with some chance in it (more of it for statements, or the
@@ -2488,7 +2611,7 @@ const Guess = (() => {
   }
   // A round dealt ahead of time, which may never be played, does not fetch its photos yet.
   const preload = list => list.forEach(it => (it.photos || []).forEach(p => { new Image().src = p; }));
-  function draw(n, ahead) {
+  function draw(n, ahead, begin) {   // begin: ids to take the first question from, when one of them is new
     const seen = new Set(store.seen), tens = n / 10, per = x => Math.round(x * tens);
     const order = (list, luck) => list.map(x => ({ x, s: (seen.has(x.id) ? 0 : 100) + (x.q.rank || 5) + Math.random() * luck })).sort((a, b) => b.s - a.s).map(o => o.x);
     const groups = new Set(), cats = {}, kinds = {}, ids = new Set();
@@ -2524,7 +2647,7 @@ const Guess = (() => {
     // The first and the last are chosen before the rest, a new one if there is any, and with more chance in it: rounds should not all begin alike.
     const one = tests => { for (const ok of tests) { const had = rest.length; fill(1, ok, per(2), false, ends); if (rest.length > had) return rest[rest.length - 1]; } return null; };
     const fresh = x => !seen.has(x.id), easy = x => HOOKS.has(x.q.id) && !isHeavy(x.q) && !MONEY.has(x.q.id);
-    const first = photo && Math.random() < 0.4 ? photo : one([x => OPENERS.has(x.q.id) && fresh(x), x => easy(x) && fresh(x), x => fresh(x) && !isHeavy(x.q), x => OPENERS.has(x.q.id), x => !isHeavy(x.q)]);
+    const first = photo && !begin && Math.random() < 0.4 ? photo : one([...(begin ? [x => begin.has(x.id) && fresh(x)] : []), x => OPENERS.has(x.q.id) && fresh(x), x => easy(x) && fresh(x), x => fresh(x) && !isHeavy(x.q), x => OPENERS.has(x.q.id), x => !isHeavy(x.q)]);
     const last = one([x => CLOSERS.has(x.q.id) && fresh(x), x => HOOKS.has(x.q.id) && fresh(x), x => fresh(x) && !isHeavy(x.q), x => CLOSERS.has(x.q.id), x => !isHeavy(x.q)]);
     const calm = x => leanOf(x.q) === "tame";
     fill(per(2) - plain().filter(calm).length, x => calm(x) && (fresh(x) || !NUM.some(fresh)), per(2));   // none seen before is brought back for this while there are new ones
@@ -2593,27 +2716,105 @@ const Guess = (() => {
   /* ---- What a question and its answer look like ---- */
   function controlHtml(it, open, slider) {
     const f = it.f;
-    if (it.photos) return `<div class="photos">${it.photos.map((src, i) => `<button class="photo" type="button" data-i="${i}" aria-label="${optionsOf(it)[i]}"><img src="${esc(src)}" alt="" width="400" height="500"><span class="photo-name">${"ABCD"[i]}</span></button>`).join("")}</div>`;
+    if (it.photos) return `<div class="photos wrap">${it.photos.map((src, i) => `<button class="photo" type="button" data-i="${i}" aria-label="${optionsOf(it)[i]}"><img src="${esc(src)}" alt="" width="400" height="500"><span class="photo-name">${"ABCD"[i]}</span></button>`).join("")}</div>`;
     if (it.kind === "quad" || it.kind === "pick") {
       const opts = optionsOf(it);
-      return `<div class="picks">${opts.map((o, i) => `<button class="btn pick" type="button" data-i="${i}">${esc(o)}</button>`).join("")}</div>`;
+      return `<div class="picks wrap">${opts.map((o, i) => `<button class="btn pick" type="button" data-i="${i}">${esc(o)}</button>`).join("")}</div>`;
     }
     if (it.kind === "yn") return `<div class="yn"><button class="btn ans" data-yn="1" type="button">Yes</button><button class="btn ans" data-yn="0" type="button">No</button></div>`;
     if (!open) return "";
     const n = stops(f);
+    return slideHtml(f, { id: "slider", out: "readout", unset: true, max: n, step: 1, value: slider === null ? Math.round(n / 2) : slider, label: "Your guess", refs: f.refs, button: "Slide to make your guess" });
+  }
+  // Before a guess is made the number is a question mark in the answer's own form: ?%, $?, ? of 300.
+  const unknown = f => { const a = parts(say(f, lo(f))), b = parts(say(f, hi(f))); return [b[0].replace(/[\d.,]+/, "?").replace(/^\+/, ""), a[1].replace(/s$/, "") === b[1].replace(/s$/, "") ? b[1] : ""]; };
+  // A pin on the lower edge of the field, with the number it stands for above it.
+  function slideHtml(f, o) {
+    const refs = o.refs || [];
     return `
-      <div class="ruler card">
-        <output class="readout unset" id="readout" for="slider">Slide to your guess</output>
-        <div class="ends"><span>${esc(say(f, lo(f)))}</span><span>${esc(say(f, hi(f)))}</span></div>
-        <input type="range" id="slider" class="g-range unset" min="0" max="${n}" step="1" value="${slider === null ? Math.round(n / 2) : slider}" aria-label="Your guess" aria-valuetext="Not set">
-        ${f.refs && f.refs.length ? `<div class="marks" id="marks">${f.refs.map(r => `<span class="mark-lab" data-p="${clamp01(pos(f, r[1]))}">${esc(r[0])}<b>${esc(say(f, r[1]))}</b></span>`).join("")}</div>` : ""}
-      </div>
-      <button class="btn btn-primary btn-big btn-block" id="lock" type="button" disabled>Lock it in</button>`;
+      <div class="slide" data-live>
+        <div class="stage"><div class="inner"><output class="reading${o.unset ? " unset" : ""}" id="${o.out}" for="${o.id}"><b></b> <span></span></output><i class="stem"></i></div></div>
+        <div class="edge"><div class="inner">${ticks(f, refs.map(r => clamp01(pos(f, r[1]))), o.ends)}
+          <input type="range" id="${o.id}" class="g-range${o.unset ? " unset" : ""}" min="0" max="${o.max}" step="${o.step}" value="${o.value}" aria-label="${o.label}"${o.unset ? ` aria-valuetext="Not set"` : ""}>
+          <span class="knob" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h18M7.5 7.5 3 12l4.5 4.5M16.5 7.5 21 12l-4.5 4.5"/></svg></span>
+          ${refs.length ? `<div class="marks" id="marks">${refs.map(r => `<span class="mark-lab" data-p="${clamp01(pos(f, r[1]))}">${esc(r[0])}<b>${esc(say(f, r[1]))}</b></span>`).join("")}</div>` : ""}
+        </div></div>
+        <div class="wrap act"><button class="btn btn-ink btn-big" id="lock" type="button"${o.unset ? ` aria-disabled="true"` : ""}>${o.button}</button></div>
+      </div>`;
+  }
+  const isSlide = it => !!it.f && !it.photos && ["pct", "lin", "log"].includes(it.f.type);
+  // A number as it is shown large: the figure, and its unit underneath.
+  const parts = t => { const m = /^([+−]?\$?[\d.,]+%?)\s*(.*)$/.exec(t); return m ? [m[1], m[2]] : [t, ""]; };
+  // The truth as it is shown large: the headline's own figure where that is the same number to more places (1.5%, not 2%).
+  const shown = f => {
+    const a = parts(say(f, f.truth)), m = f.signed || f.prefix || f.year ? null : /\$?\d[\d,]*(?:\.\d+)?%?/.exec(f.truthText), v = t => Number(t.replace(/[$,%]/g, "")), kind = t => t.replace(/[^$%]/g, "");
+    return m && kind(m[0]) === kind(a[0]) && Math.abs(v(m[0]) - v(a[0])) <= Math.max(0.5, v(a[0]) * 0.05) ? [m[0], a[1]] : a;
+  };
+  // The ruler's lines and labels. Positions are percentages, so they hold at any width. Class w shows on wide screens only, n on narrow ones.
+  function ticks(f, avoid, endNames) {
+    const L = lo(f), H = hi(f), P = v => pos(f, v) * 100, out = [], near = (a, b) => Math.abs(a - b) < 1e-9 * Math.max(1, Math.abs(b));
+    const tick = (v, cls) => out.push(`<i class="t ${cls}" style="left:${P(v).toFixed(2)}%"></i>`);
+    const label = (v, text, cls) => out.push(`<span class="tl ${cls}" style="left:${P(v).toFixed(2)}%" aria-hidden="true">${esc(text)}</span>`);
+    const majors = [];
+    let mid = null;
+    if (f.type === "log") {
+      for (let k = Math.floor(Math.log10(L)); Math.pow(10, k) <= H; k++) {
+        const v = Math.pow(10, k);
+        if (v > L && v < H && !near(v, L) && !near(v, H)) majors.push(v);
+        for (let d = 2; d < 10; d++) if (d * v > L && d * v < H) tick(d * v, "");
+      }
+    } else {
+      const R = H - L, step = [0.5, 1, 2, 5, 10, 20, 25, 50, 100, 200, 500].find(x => R / x <= 10 && x >= (f.step || 1)) || R / 10, sub = step >= 5 ? step / 5 : step >= 2 ? step / 2 : 0;
+      for (let v = Math.ceil(L / step) * step; v < H - 1e-9; v += step) if (v > L + 1e-9) majors.push(v);
+      if (sub) for (let v = Math.ceil(L / sub) * sub; v < H; v += sub) if (v > L) tick(v, sub < 2.1 && R > 60 ? "w" : "");
+      mid = majors.find(v => near(v, (L + H) / 2));
+    }
+    [L, ...majors, H].forEach(v => tick(v, "maj"));
+    const ends = endNames || (/^ of /.test(f.unit || "") ? [String(L), String(H)] : [say(f, L), say(f, H)]);
+    out.push(`<span class="tl s" aria-hidden="true">${esc(ends[0])}</span><span class="tl e" aria-hidden="true">${esc(ends[1])}</span>`);
+    // Between the two ends, as many labels as fit on a ruler this wide without touching each other, the ends or a marker's line.
+    const name = v => f.type === "log" ? (/^(years|months|times)$/.test(f.unit) ? say(f, v).replace(/ [a-z]+$/, "") : say(f, v)) : f.signed || f.year ? say(f, v) : f.type === "pct" ? `${v}%` : (f.prefix || "") + Number(v.toFixed(1)).toLocaleString("en-US");
+    const em = parseFloat(getComputedStyle(document.documentElement).fontSize) / 16 || 1;
+    const fits = (px, list) => {
+      const w = t => t.length * 770 * em / px, pad = 1400 / px, clear = (v, c) => { const l = P(v) - w(name(v)) / 2, r = P(v) + w(name(v)) / 2; return l > w(ends[0]) + pad && r < 100 - w(ends[1]) - pad && !(avoid || []).some(x => x * 100 > l - pad / 2 && x * 100 < r + pad / 2); };
+      for (let k = 1; k <= list.length; k++) {
+        const c = list.filter((v, i) => i % k === 0).filter(clear);
+        if (c.length && c.every((v, i) => !i || P(v) - P(c[i - 1]) >= (w(name(v)) + w(name(c[i - 1]))) / 2 + pad)) return c;
+      }
+      return [];
+    };
+    fits(640, endNames ? [mid] : majors).forEach(v => label(v, name(v), "w"));
+    (f.type === "log" ? fits(284, majors) : mid === undefined || mid === null ? [] : fits(284, [mid])).forEach(v => label(v, name(v), "n"));
+    return out.join("");
+  }
+  // Puts the large number over its place on the ruler, kept inside the screen.
+  function place(el) {
+    const w = el.parentElement.clientWidth, h = el.offsetWidth / 2, over = 26;
+    el.style.left = Math.max(h - over, Math.min(w - h + over, Number(el.dataset.p) * w)) + "px";
+  }
+  function showReading(el, p, num, unit) {
+    el.querySelector("b").textContent = num; el.querySelector("span").textContent = unit || "your guess";
+    el.classList.toggle("wide", num.length > 5); el.classList.toggle("wider", num.length > 9);
+    el.dataset.p = p; place(el);
+  }
+  // Just after a guess is locked in, the large number travels from the guess to the truth.
+  function travel(box, f, g) {
+    const el = box.querySelector(".reading"), stem = box.querySelector(".stem"); if (!el) return;
+    const to = Number(el.dataset.p), num = el.querySelector("b").textContent, unit = el.querySelector("span").textContent, from = clamp01(pos(f, Math.max(lo(f), Math.min(hi(f), g)))), t0 = performance.now();
+    const at2 = p => { if (stem) stem.style.left = p * 100 + "%"; };
+    const end = () => { if (el.isConnected) { showReading(el, to, num, unit); at2(to); } };
+    const step = now => {
+      const k = Math.min(1, (now - t0) / 750), p = from + (to - from) * (1 - Math.pow(1 - k, 3));
+      if (!el.isConnected || k >= 1) return end();
+      const now2 = parts(say(f, at(f, p))); showReading(el, p, now2[0], now2[1] || " "); at2(p); requestAnimationFrame(step);
+    };
+    step(t0); setTimeout(end, 1300);
   }
   // Labels under the ruler sit in as many rows as they need, so none overlap on a phone.
   function layoutMarks() {
+    document.querySelectorAll(".reading[data-p]").forEach(place);
     const box = document.getElementById("marks"); if (!box) return;
-    const w = box.clientWidth, thumb = 34, rows = [];
+    const w = box.clientWidth, thumb = 0, rows = [];
     let height = 0;
     for (const el of [...box.children].sort((a, b) => a.dataset.p - b.dataset.p)) {
       const x = thumb / 2 + Number(el.dataset.p) * (w - thumb), lw = el.offsetWidth, lh = el.offsetHeight;
@@ -2632,17 +2833,16 @@ const Guess = (() => {
   function resultRuler(f, g) {
     const pct = t => (clamp01(t) * 100).toFixed(2) + "%";
     const p = n => clamp01(pos(f, Math.max(lo(f), Math.min(hi(f), n))));
-    const band = (cls, [a, b]) => { const pad = f.type === "log" ? 0 : 0.5 * (f.step || 1), l = p(a - pad), r = p(b + pad); return `<div class="band ${cls}" style="left:${pct(l)};width:${((r - l) * 100).toFixed(2)}%"></div>`; };
-    const shift = t => t < 0.2 ? "-8px" : t > 0.8 ? "calc(-100% + 8px)" : "-50%";
-    const y = p(g), [a, b] = f.range ? f.range.map(p) : [p(f.truth), p(f.truth)], t = (a + b) / 2;
-    // An answer that is a range is drawn as one, from end to end, not as a single line.
-    const truth = f.range ? `<div class="pin-range" style="left:${pct(a)};width:${((b - a) * 100).toFixed(2)}%"></div><div class="pin truth label" style="left:${pct(t)}">` : `<div class="pin truth" style="left:${pct(t)}">`;
-    return `<div class="card"><div class="result-ruler" role="img" aria-label="The truth is ${esc(f.truthText)}. You said ${esc(say(f, g))}.">
-        <div class="rail">${band("half", f.half)}${band("full", f.full)}
-          ${truth}<span style="--shift:${shift(t)}">${esc(f.truthText)}</span></div>
-          <div class="pin you" style="left:${pct(y)}"><span style="--shift:${shift(y)}">You: ${esc(say(f, g))}</span></div>
-        </div></div>
-        <div class="legend"><span><i class="f"></i>one point</span><span><i class="h"></i>half a point</span></div></div>`;
+    const band = (cls, [a, b]) => { const pad = f.type === "log" ? 0 : 0.5 * (f.step || 1), l = p(a - pad), r = p(b + pad); return `<i class="${cls}" style="left:${pct(l)};width:${((r - l) * 100).toFixed(2)}%"></i>`; };
+    const [a, b] = f.range ? f.range.map(p) : [p(f.truth), p(f.truth)], t = (a + b) / 2;
+    // An answer that is a range is drawn as one, from end to end, and its figures stand side by side.
+    const A = f.range ? parts(say(f, f.range[0])) : shown(f), B = f.range ? parts(say(f, f.range[1])) : A;
+    const num = !f.range ? A[0] : A[1] === B[1] ? A[0].replace(/%$/, "") + "–" + B[0].replace(/^[$+]/, "") : A[0], unit = A[1] === B[1] ? A[1] : `${A[1]} to ${B[0]} ${B[1]}`;
+    return `<div class="slide done" role="img" aria-label="The truth is ${esc(f.truthText)}. You said ${esc(say(f, g))}.">
+        <div class="stage"><div class="inner"><div class="reading${num.length > 5 ? " wide" : ""}${num.length > 9 ? " wider" : ""}" data-p="${t}"><b>${esc(num)}</b> <span>${unit ? esc(unit) + ", " : ""}the answer</span></div>${f.range ? `<i class="span" style="left:${pct(a)};width:${((b - a) * 100).toFixed(2)}%"></i>` : ""}<i class="stem truth" style="left:${pct(t)}"></i></div></div>
+        <div class="edge"><div class="inner"><div class="bands">${band("half", f.half)}${band("full", f.full)}</div>${ticks(f, [p(g)])}<span class="knob mini" style="left:${pct(p(g))}" aria-hidden="true"></span>
+          <div class="marks" id="marks"><span class="mark-lab you" data-p="${p(g)}">You said <b>${esc(say(f, g))}</b></span></div></div></div>
+        <div class="wrap legend"><span><i class="f"></i>one point</span><span><i class="h"></i>half a point</span></div></div>`;
   }
   // Turns the controls on screen into the marked answer.
   function mark(r, control) {
@@ -2662,7 +2862,7 @@ const Guess = (() => {
       const v = b.dataset.yn === "1"; b.disabled = true; b.style.opacity = 1;
       if (v === !!it.q.a) b.classList.add("pick", "right"); else if (v === g) b.classList.add("pick", "wrong");
     });
-    else control.innerHTML = resultRuler(f, g);
+    else { control.innerHTML = resultRuler(f, g); layoutMarks(); }
   }
   // The other three statements in a set of four, each with its own short answer.
   const othersHtml = it => it.kind !== "quad" ? "" : `<details open><summary>About the other three</summary><div class="body"><ul class="others">${it.claims.filter((c, i) => i !== it.answer).map(c => `<li><b>${c.q.a ? "True" : "Not true"}: ${esc(c.text)}</b><span>${gloss(c.q.short)}</span></li>`).join("")}</ul></div></details>`;
@@ -2670,10 +2870,10 @@ const Guess = (() => {
   const sourceOf = it => it.kind !== "quad" ? bankOf(it) : Object.assign({}, bankOf(it), { src: it.claims.flatMap(c => c.q.src) });
 
   return { LENGTHS, NUM, CLAIM, YN, QUOTE, FACE, extra, say, at, pos, stops, idsOf, titleOf, truthOf, saidOf, optionsOf, bankOf, sourceOf, answerText, grade, lean, valid, result, compare, draw, swapFor, preload, pack, unpack, encode, decode, gradeKey,
-    summarize, analyze, findingOf, controlHtml, layoutMarks, resultRuler, mark, othersHtml };
+    summarize, analyze, findingOf, controlHtml, layoutMarks, resultRuler, mark, othersHtml, isSlide, parts, showReading, travel, slideHtml, unknown };
 })();
 window.addEventListener("resize", Guess.layoutMarks);
-try { document.fonts.ready.then(Guess.layoutMarks); } catch (e) {}
+try { document.fonts.ready.then(Guess.layoutMarks); document.fonts.addEventListener("loadingdone", Guess.layoutMarks); } catch (e) {}
 
 
 /* ---------- Device memory ----------
@@ -2712,30 +2912,32 @@ function remember(id) { if (!store.seen.includes(id)) { store.seen.push(id); sav
 // reloading the tab does not throw it away.
 // The round in progress is saved after every answer. The last finished round is kept too, so a result
 // can be opened again later, for example to share it the next day.
+const unstored = {};   // a round that the browser refuses to store stays here for as long as the page is open
 function keepRound(key) {
   try {
     const ch = state.challenge, guess = state.mode === "guess";
-    localStorage.setItem(key, JSON.stringify({
+    const text = JSON.stringify({
       t: Date.now(), mode: state.mode, ids: state.list.map(q => guess ? Guess.pack(q) : q.id), ps: state.answers.map(r => guess ? r.g : r.p),
       fp: state.list.map(q => guess ? Guess.gradeKey(q) : codeOf(answerKey(q))),
       ch: ch ? { mode: ch.mode, theirs: ch.theirs, brier: ch.brier } : null
-    }));
+    });
+    unstored[key] = text; localStorage.setItem(key, text); delete unstored[key];
   } catch (e) {}
 }
 function saveRound() { keepRound(ROUND_KEY); }
-function clearRound() { try { localStorage.removeItem(ROUND_KEY); } catch (e) {} }
+function clearRound() { delete unstored[ROUND_KEY]; try { localStorage.removeItem(ROUND_KEY); } catch (e) {} }
 // Clears the saved round only if it is the one just finished, not one begun since in another tab.
 function clearOwnRound() {
   let saved = null;
-  try { saved = JSON.parse(localStorage.getItem(ROUND_KEY) || "null"); } catch (e) {}
+  try { saved = JSON.parse(unstored[ROUND_KEY] || localStorage.getItem(ROUND_KEY) || "null"); } catch (e) {}
   if (!saved || !Array.isArray(saved.ids) || state.list.every(q => saved.ids.includes(state.mode === "guess" ? Guess.pack(q) : q.id))) clearRound();
 }
-function clearLast() { try { localStorage.removeItem(LAST_KEY); } catch (e) {} }
+function clearLast() { delete unstored[LAST_KEY]; try { localStorage.removeItem(LAST_KEY); } catch (e) {} }
 function loadRound() { return readRound(ROUND_KEY, 7, false); }
 function loadLast() { return readRound(LAST_KEY, 30, true); }
 function readRound(key, days, finished) {
   try {
-    const r = JSON.parse(localStorage.getItem(key) || "null");
+    const r = JSON.parse(unstored[key] || localStorage.getItem(key) || "null");
     if (!r || typeof r !== "object" || !Array.isArray(r.ids) || !Array.isArray(r.ps)) return null;
     if (!(Date.now() - Number(r.t) < days * 864e5)) return null;
     const guess = r.mode === "guess";
@@ -3181,21 +3383,33 @@ function renderLearn() {
 function closeLearn() {
   try { if (location.hash === "#learn") history.replaceState(history.state, "", location.pathname + location.search); } catch (e) {}
   if (state.learnFrom === "results") renderResults();
-  else { state.screen = "start"; renderStart(); }
+  else if (state.learnFrom === "question" && state.answers.length) showQuestion(state.view);   // opened while reading the first answer
+  else {
+    // Learn more was reloaded, so what it was opened from is known only from the history: a round, or its result.
+    const quiz = state.learnFrom === "boot" && history.state && history.state.quiz, left = quiz ? loadRound() : null, last = quiz && !left ? loadLast() : null;
+    state.screen = "start";
+    if (left || last) resumeRound(left || last, !left); else renderStart("", state.opening);
+  }
 }
 
 /* ---------- State ---------- */
 const RAW_C = (() => { try { return new URLSearchParams(location.search).get("c") || ""; } catch (e) { return ""; } })();
 // A link can also carry a single question that a friend passed on (?q=code).
 const RAW_Q = (() => { try { return new URLSearchParams(location.search).get("q") || ""; } catch (e) { return ""; } })();
-const state = { dare: RAW_C ? null : readDare(RAW_Q), screen: "start", mode: store.mode, length: store.length, list: [], index: 0, view: 0, answers: [], slider: null, finished: false, learnFrom: "start", resultScroll: 0, bestNote: "", challenge: readChallenge(RAW_C), parked: null, rot: 0, seenBefore: new Set(), recorded: false };
+const state = { dare: RAW_C ? null : readDare(RAW_Q), screen: "start", mode: store.mode, length: store.length, list: [], index: 0, view: 0, answers: [], slider: null, finished: false, learnFrom: "start", resultScroll: 0, bestNote: "", challenge: readChallenge(RAW_C), parked: null, opening: false, dealt: "", shownAt: 0, seenBefore: new Set(), recorded: false };
 let bootNotice = "";
 if (RAW_Q && !state.dare) clearDare();   // a question that has since been retired, or a mangled link
 if (RAW_C && !state.challenge) {
-  bootNotice = "That challenge link didn't work, so here is a fresh round instead.";
+  bootNotice = "That challenge link didn't work.";
   try { history.replaceState(history.state, "", location.pathname); } catch (e) {}
 }
-function setScreen(name) { state.screen = name; if (state.rot) { clearInterval(state.rot); state.rot = 0; } }
+function setScreen(name) {
+  state.screen = name; state.shownAt = performance.now();
+  // Questions are asked on the blue field, which runs to the edges of the screen and tints the browser's bar.
+  const field = name === "start" || name === "question" || name === "bonus" || name === "results";
+  $app.classList.toggle("fielded", field);
+  document.querySelectorAll('meta[name="theme-color"]').forEach((m, i) => { m.content = field ? ["#2742d6", "#2339c4"][i] : ["#f3f4f8", "#0e141a"][i]; });
+}
 function toTop(focusId) {
   window.scrollTo(0, 0);
   const el = focusId && document.getElementById(focusId);
@@ -3203,118 +3417,73 @@ function toTop(focusId) {
 }
 
 /* ---------- Start screen ---------- */
-// Teasers for the headline. Each one is a real question in the bank, and they are split between yes and no.
-const TEASERS = ["Does AI know it's being tested?", "Has AI caused mass job losses?", "Can AI pass for human in a chat?", "Is AI progress slowing down?",
-  "Would AI cheat on a test?", "Is China far behind on AI?", "Has AI hacked a real company?", "Does AI learn from your chats?",
-  "Can AI out-argue a champion?", "Can we tell when AI is lying?", "Can AI copy your voice?", "Do experts know how AI works?",
-  "Is AI speeding up AI itself?", "Are Americans excited about AI?", "Has an AI run a real store?", "Can AI do your laundry?"];
-function startRotator() {
-  const el = document.getElementById("rot");
-  if (!el) return;
-  const order = shuffle(TEASERS);
-  let i = 0;
-  el.textContent = order[0];
-  if (reducedMotion()) return;
-  const stop = () => { clearInterval(state.rot); state.rot = 0; };
-  const go = () => {
-    state.rot = setInterval(() => {
-      if (!document.body.contains(el)) { stop(); return; }
-      el.classList.add("out");
-      setTimeout(() => { i = (i + 1) % order.length; el.textContent = order[i]; el.classList.remove("out"); }, 300);
-    }, 2600);
-  };
-  go();
-  // A tap on the headline stops it or starts it again, and any key stops it.
-  el.title = "Tap to stop or start";
-  el.addEventListener("click", () => { if (state.rot) stop(); else go(); });
-  document.addEventListener("keydown", stop, { once: true });
-}
-function renderStart(notice) {
+// The first question of a fresh round is the start screen: no menu comes before it. A friend's challenge, a question a friend sent and an
+// unfinished round take its place when there is one.
+function renderStart(notice, fresh) {
   const from = state.screen;
   setScreen("start");
+  state.opening = false;
   if (from !== "start") state.mode = store.mode;   // a challenge or a reopened result may have switched it for one round
-  const total = QUESTIONS.length, ch = state.challenge, saved = loadRound();
+  const total = QUESTIONS.length, ch = state.challenge, dare = state.dare, saved = loadRound();
   const last = !saved && !ch ? loadLast() : null;
   if (!LENGTHS.includes(state.length)) state.length = 10;
-  if (!notice && bootNotice) { notice = bootNotice; bootNotice = ""; }
-  const done = saved && saved.ps.length === saved.list.length;
-  const resume = saved ? `
-    <section class="card resume" aria-labelledby="resume-h">
-      <p class="eyebrow" id="resume-h">Unfinished round</p>
-      <p>${done ? `You answered all ${saved.list.length} questions but did not see your result.` : `You stopped at question ${saved.ps.length + 1} of ${saved.list.length}.`}</p>
-      <div class="row">
-        <button class="btn btn-primary" id="resume" type="button">${done ? "See my result" : "Pick up where you left off"}</button>
-        <button class="link" id="discard" type="button">Discard it</button>
-      </div>
-    </section>` : "";
-  let play;
+  const open = !ch && !dare && (!saved || fresh);
+  const guess = state.mode === "guess", offered = guess ? Guess.LENGTHS : LENGTHS, len = offered.includes(state.length) ? state.length : offered[offered.length - 1];
+  const best = store.best[state.mode + ":" + len], word = { 10: "Ten", 20: "Twenty", 50: "Fifty" }[len];
+  if (!notice && bootNotice) { notice = bootNotice + (open ? " Here is a fresh round instead." : ""); bootNotice = ""; }
+  const note = notice ? `<p class="small" role="status">${esc(notice)}</p>` : "", seenN = seenCount();
+  let body;
   if (ch) {
     const n = ch.list.length, guess = ch.mode === "guess";
-    play = `
-    <section class="card challenge" aria-labelledby="ch-h">
-      <p class="eyebrow" id="ch-h">You've been challenged</p>
-      <p class="challenge-line">${!ch.theirs ? `A friend sent you this exact set of ${n} questions.` : `A friend got <b>${pts(theirPoints(ch))} out of ${n}</b> on this exact set of questions.`} Same questions, your turn.</p>
-      <button class="btn btn-primary btn-big btn-block" id="take" type="button">Take the challenge</button>
-      <p class="small muted">About ${minutes(n, guess ? "guess" : "quick")}, ${guess ? "sliding to a number or picking an answer" : "answering yes or no"}. Every answer comes with its sources.${ch.mode === "confidence" ? ` Your friend gave a percentage for each answer. <button type="button" class="link" id="take-conf">Answer that way too</button>` : ""}</p>
-      ${ch.missing ? `<p class="small muted">${ch.missing === 1 ? "One question from their round has" : ch.missing + " questions from their round have"} since changed or been retired, so this round is a little shorter.</p>` : ""}
-      <p class="small"><button type="button" class="link" id="fresh">Play a fresh round instead</button></p>
-    </section>`;
+    body = `<section class="field"><div class="wrap">${topBar(true)}${note}
+      <div class="hello challenge">
+        <p class="eyebrow" id="ch-h">You've been challenged</p>
+        <h1 class="q-h">${!ch.theirs ? `A friend sent you this exact set of ${n} questions.` : `A friend got ${pts(theirPoints(ch))} out of ${n} on this exact set of questions.`}</h1>
+        ${ch.theirs && n <= 20 ? `<ol class="dots" aria-hidden="true">${ch.theirs.map(m => `<li><span class="dot ${["bad", "meh", "good"][m] || ""}"></span></li>`).join("")}</ol>` : ""}
+        <p class="challenge-line">Same questions, your turn.</p>
+        <button class="btn btn-primary btn-big" id="take" type="button">Take the challenge</button>
+        <p class="small muted">About ${minutes(n, guess ? "guess" : "quick")}, ${guess ? "sliding to a number or picking an answer" : "answering yes or no"}. Every answer comes with its sources.${ch.mode === "confidence" ? ` Your friend gave a percentage for each answer. <button type="button" class="link" id="take-conf">Answer that way too</button>` : ""}</p>
+        ${ch.missing ? `<p class="small muted">${ch.missing === 1 ? "One question from their round has" : ch.missing + " questions from their round have"} since changed or been retired, so this round is a little shorter.</p>` : ""}
+        <p class="small"><button type="button" class="link" id="fresh">Play a fresh round instead</button></p>
+        ${saved ? `<p class="small muted">You have an unfinished round. <button type="button" class="link" id="resume">Pick up where you left off</button></p>` : ""}
+      </div></div></section>`;
+  } else if (dare) {
+    body = `<section class="field${dare.it && Guess.isSlide(dare.it) ? " tight" : ""}"><div class="wrap">${topBar(true)}${note}<p class="eyebrow" id="dare-h">A friend sent you this one</p>
+      <div class="q-body"><h1 class="q-h${brief(dare.it ? Guess.titleOf(dare.it) : dare.q.q)}">${gloss(dare.it ? Guess.titleOf(dare.it) : dare.q.q)}</h1>
+      ${dare.it && dare.it.f && dare.it.f.hint ? `<p class="muted">${gloss(dare.it.f.hint)}</p>` : ""}</div></div></section>
+      <div id="dare-control" class="control${dare.it && Guess.isSlide(dare.it) ? "" : " on-field"}${listed(dare.it)}">${dare.it ? Guess.controlHtml(dare.it, true, null) : `<div class="yn"><button class="btn ans" id="dare-yes" type="button">Yes</button><button class="btn ans" id="dare-no" type="button">No</button></div>`}</div>
+      <div id="dare-reveal" class="reveal wrap"></div>`;
+  } else if (!open) {
+    const n = saved.list.length, done = saved.ps.length === n, guess = saved.mode === "guess";
+    const marks = saved.ps.map((p, i) => markOf(guess ? Guess.result(saved.list[i], p) : { id: saved.list[i].id, p, a: saved.list[i].a }));
+    body = `<section class="field"><div class="wrap">${topBar(true)}${note}
+      <div class="hello resume">
+        <p class="eyebrow" id="resume-h">Unfinished round</p>
+        <h1 class="q-h">${done ? `You answered all ${n} questions but did not see your result.` : `You stopped at question ${saved.ps.length + 1} of ${n}.`}</h1>
+        ${n <= 20 ? `<ol class="dots" aria-hidden="true">${saved.list.map((q, i) => `<li><span class="dot ${marks[i] || ""}"></span></li>`).join("")}</ol>` : ""}
+        <button class="btn btn-primary btn-big" id="resume" type="button">${done ? "See my result" : "Pick up where you left off"}</button>
+        <p class="small"><button class="link" id="fresh-round" type="button">Start a new round instead</button></p>
+      </div></div></section>`;
   } else {
-    const guess = state.mode === "guess";
-    // With both ways of playing on offer, the choice comes first. With one, the page shows no trace of the other.
-    play = `
-    <form id="start" class="start">
-      ${HAS_YESNO && HAS_GUESS ? `
-      <div class="modes" role="radiogroup" aria-label="How to play">
-        <input type="radio" name="play" id="play-guess" value="guess"${guess ? " checked" : ""}><label for="play-guess"><b>Best guess</b><span>Slide to a number or pick an answer. Close counts.</span></label>
-        <input type="radio" name="play" id="play-yesno" value="yesno"${guess ? "" : " checked"}><label for="play-yesno"><b>Yes or no</b><span>Quick calls. About half the answers are yes.</span></label>
-      </div>` : ""}
-      <button class="btn btn-primary btn-big btn-block" type="submit">Play</button>
-      <p class="small muted center" id="start-note"></p>
-      <div class="opts">
-        ${HAS_YESNO ? `
-        <div class="opt" id="opt-mode">
-          <span class="opt-label" id="lbl-mode">Say how sure you are</span>
-          <div class="seg" role="radiogroup" aria-labelledby="lbl-mode">
-            <input type="radio" name="mode" id="mode-quick" value="quick"${state.mode !== "confidence" ? " checked" : ""}><label for="mode-quick">Off</label>
-            <input type="radio" name="mode" id="mode-confidence" value="confidence"${state.mode === "confidence" ? " checked" : ""}><label for="mode-confidence">On</label>
-          </div>
-        </div>` : ""}
-        <div class="opt">
-          <span class="opt-label" id="lbl-len">Questions</span>
-          <div class="seg" role="radiogroup" aria-labelledby="lbl-len">
-            ${LENGTHS.map(v => `<input type="radio" name="length" id="len-${v}" value="${v}"${state.length === v ? " checked" : ""}><label for="len-${v}">${v}</label>`).join("")}
-          </div>
-        </div>
-        <p class="small muted" id="opt-hint"></p>
-      </div>
-    </form>`;
+    // The same question again on the way back from another page, with the pin where it was left.
+    const want = state.mode + ":" + state.length;
+    if (state.dealt !== want || state.answers.length) { deal(); state.dealt = want; }
+    state.opening = true;
+    body = questionHtml(0, topBar(true) + note + `<p class="intro" id="start-note">${word} quick ${guess ? "guesses" : "yes-or-no questions"} about where AI really stands.<span class="more"> About ${minutes(len, state.mode)}, and every answer has its sources.</span></p>`);
   }
-  const seenN = seenCount(), dare = state.dare;
-  const passed = dare ? `
-    <section class="card challenge" aria-labelledby="dare-h">
-      <p class="eyebrow" id="dare-h">A friend sent you this one</p>
-      <h2 class="dare-q">${gloss(dare.it ? Guess.titleOf(dare.it) : dare.q.q)}</h2>
-      ${dare.it && dare.it.f && dare.it.f.hint ? `<p class="muted">${gloss(dare.it.f.hint)}</p>` : ""}
-      <div id="dare-control" class="stack">${dare.it ? Guess.controlHtml(dare.it, true, null) : `<div class="yn"><button class="btn ans" id="dare-yes" type="button">Yes</button><button class="btn ans" id="dare-no" type="button">No</button></div>`}</div>
-      <div id="dare-reveal" class="stack" aria-live="polite"></div>
-    </section>
-    <p class="center" id="dare-more">There are ${total - 1} more where that came from.</p>` : "";
-  const about = "where AI really stands: what it can do, how it behaves and how people are dealing with it.";
-  const hook = "Some of it sounds like science fiction and has already happened. Some of it you'd expect by now, and it hasn't.";
-  const lede = HAS_YESNO && HAS_GUESS ? `Quick questions about ${about} ${hook}`
-    : HAS_GUESS ? `Quick guesses about ${about} Slide to a number or pick an answer, and close counts. ${hook}`
-    : `Quick yes-or-no questions about ${about} About half the answers are yes. ${hook}`;
-  $app.innerHTML = `
-    ${topBar(true)}
-    <header class="hero">
-      <h1 class="hero-title"><span class="sr-only">What's Up With AI?</span><span class="rot" id="rot" aria-hidden="true">${dare ? "Would you get this?" : "What's up?"}</span></h1>
-      <p class="lede"${dare ? " hidden" : ""}>${lede}</p>
-    </header>
-    ${notice ? `<p class="small" role="status">${esc(notice)}</p>` : ""}
-    ${passed}
-    ${ch ? play + resume : resume + play}
-    ${seenN && !ch ? `<p class="small muted" id="returning"></p>` : ""}
+  const options = open ? `
+    <p class="note" id="start-rule">${guess ? "Close counts. A near miss scores half a point." : "About half the answers are yes." + (state.mode === "confidence" ? " You give each one a percentage, and get an extra score for how well your confidence matched reality." : "")}</p>
+    <div class="foot">
+      ${HAS_YESNO && HAS_GUESS ? `<button type="button" class="link" id="mode-switch">Try a ${guess ? "yes-or-no" : "best-guess"} round</button>` : ""}
+      <span class="lens" role="group" aria-label="Number of questions"><span aria-hidden="true">Questions</span>${offered.map(v => `<button type="button" id="len-${v}" aria-pressed="${v === len}">${v}</button>`).join("")}</span>
+      ${!guess && HAS_YESNO ? `<button type="button" class="link" id="sure-switch">${state.mode === "confidence" ? "Just say yes or no" : "Say how sure you are"}</button>` : ""}
+      ${seenN ? `<p class="small muted" id="returning">You have seen ${seenN} of the ${total} questions.${typeof best === "number" ? ` Your best over ${len} is ${pts(best)}.` : ""}</p>` : ""}
+    </div>
+    ${saved ? `<p class="small muted">You still have an unfinished round. <button type="button" class="link" id="resume">Pick up where you left off</button></p>` : ""}` : dare ? `<p id="dare-more">There are ${total - 1} more where that came from.</p>
+    <p><button class="btn btn-big" id="fresh-round" type="button">Play a round</button></p>
+    ${saved ? `<p class="small muted">You also have an unfinished round. <button type="button" class="link" id="resume">Pick up where you left off</button></p>` : ""}` : "";
+  $app.innerHTML = `${body}
+    <div class="wrap extras" id="extras">${options}
     ${last ? `<p class="small muted">Your last round: ${pts(roundPoints(last))} out of ${last.list.length}. <button type="button" class="link" id="last">See that result again</button></p>` : ""}
     <details>
       <summary>How this quiz works</summary>
@@ -3328,46 +3497,29 @@ function renderStart(notice) {
         <p>This is an independent project. No one is paying for it, apart from its maker covering the hosting. It tries to pick questions which surprise in both directions. The ones that seem to matter most tend to come up first.${CONFIG.feedbackUrl ? ` If an answer looks wrong or out of date, <a href="${esc(CONFIG.feedbackUrl)}" target="_blank" rel="noopener">send a note</a>.` : ""}</p>
       </div>
     </details>
-    <footer>Facts last checked ${esc(CONFIG.checked)}.</footer>`;
+    <footer>An independent quiz. Facts last checked ${esc(CONFIG.checked)}.</footer></div>`;
   wireTopBar();
-  const form = document.getElementById("start");
-  if (form) {
-    const read = () => {
-      const f = new FormData(form), guess = HAS_GUESS && (!HAS_YESNO || f.get("play") === "guess");
-      return { mode: guess ? "guess" : f.get("mode") === "confidence" ? "confidence" : "quick", len: Number(f.get("length")) || 10 };
-    };
-    const sync = () => {
-      // Guess rounds stop at 20 questions, so the longer choices step aside.
-      const offered = read().mode === "guess" ? Guess.LENGTHS : LENGTHS;
-      LENGTHS.forEach(v => { document.getElementById("len-" + v).disabled = !offered.includes(v); document.querySelector(`label[for="len-${v}"]`).hidden = !offered.includes(v); });
-      if (!offered.includes(read().len)) document.getElementById("len-" + offered[offered.length - 1]).checked = true;
-      const { mode, len } = read(), opt = document.getElementById("opt-mode");
-      if (opt) opt.hidden = mode === "guess";
-      document.getElementById("start-note").textContent = `${len} questions, about ${minutes(len, mode)}. Every answer comes with its sources.`;
-      document.getElementById("opt-hint").textContent = mode === "confidence" ? "You give each answer a percentage instead of a plain yes or no, and get an extra score for how well your confidence matched reality." : "";
-      const back = document.getElementById("returning");
-      if (back) {
-        const best = store.best[mode + ":" + len];
-        back.textContent = `You have seen ${seenN} of the ${total} questions. New rounds start with the ones you haven't.` + (typeof best === "number" ? ` Your best over ${len} questions is ${pts(best)}.` : "");
-      }
-    };
-    form.addEventListener("change", sync);
-    sync();
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      const { mode, len } = read();
-      state.mode = okMode(mode);
-      state.length = LENGTHS.includes(len) ? len : 10;
-      store.mode = state.mode; store.length = state.length; saveStore();
-      startRound();
-    });
+  if (open) {
+    wireQuestion(0);
+    // Beside the button where there is one to stand beside.
+    const act = document.querySelector("#control .act"); if (act) act.append(document.getElementById("start-rule"));
   }
   const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener("click", fn); };
+  const again = id => { store.mode = state.mode; store.length = state.length; saveStore(); renderStart("", true); const el = document.getElementById(id); if (el) el.focus({ preventScroll: true }); };
+  on("mode-switch", () => { state.mode = okMode(guess ? "quick" : "guess"); again("mode-switch"); });
+  on("sure-switch", () => { state.mode = okMode(state.mode === "confidence" ? "quick" : "confidence"); again("sure-switch"); });
+  offered.forEach(v => on("len-" + v, () => { state.length = v; again("len-" + v); }));
   const answerDare = r => {
     const control = document.getElementById("dare-control"), it = dare.it || dare.q;
     (dare.it ? Guess.idsOf(dare.it) : [dare.q.id]).forEach(remember);
     if (dare.it) Guess.mark(r, control); else control.innerHTML = "";
     document.getElementById("dare-reveal").innerHTML = revealHtml(r, it, {});
+    if (dare.it && Guess.isSlide(dare.it) && !reducedMotion()) Guess.travel(control, dare.it.f, r.g);
+    document.getElementById("fresh-round").classList.add("btn-ink");
+    state.shownAt = performance.now();
+    const v = document.getElementById("verdict");
+    try { v.focus({ preventScroll: true }); } catch (e) {}
+    showVerdict(v, !!dare.it && Guess.isSlide(dare.it));
     // The answer is known now, so a refresh or a Back should not ask again.
     clearDare();
   };
@@ -3376,29 +3528,38 @@ function renderStart(notice) {
   on("dare-no", () => answerDare({ id: dare.q.id, p: 0, a: dare.q.a }));
   on("take", () => { state.mode = ch.mode === "guess" ? "guess" : "quick"; startRound(ch.list.slice()); });
   on("take-conf", () => { state.mode = "confidence"; startRound(ch.list.slice()); });
-  on("fresh", () => { clearChallenge(); renderStart(); });
-  on("resume", () => resumeRound(saved));
+  const begin = () => { renderStart("", true); document.getElementById("question").focus({ preventScroll: true }); };
+  on("fresh", () => { clearChallenge(); begin(); });
+  on("fresh-round", () => { if (dare) startRound(); else begin(); });
+  on("resume", () => { clearDare(); resumeRound(saved); });
   on("last", () => resumeRound(last, true));
-  on("discard", () => { clearRound(); renderStart(); });
   on("forget", () => {
     try { localStorage.removeItem(STORE_KEY); } catch (e) {}
-    clearRound(); clearLast();
+    clearRound(); clearLast(); state.dealt = "";
     store = loadStore(); state.mode = store.mode; state.length = store.length;
     renderStart("Done. This browser no longer remembers which questions you have seen or how you did.");
   });
-  if (!dare) startRotator();
+  Guess.layoutMarks();
   window.scrollTo(0, 0);
 }
+const brief = t => t.length <= 46 ? " brief" : "", listed = it => it && (it.photos || it.kind === "quad" || it.kind === "pick") ? " list" : "";
 
 /* ---------- Question screen ---------- */
 // One history entry per visit, so the Back button returns to the start screen instead of leaving the site.
 function enterQuiz() { try { if (!(history.state && history.state.quiz)) history.pushState({ quiz: 1 }, ""); } catch (e) {} }
-function startRound(list) {
+// A newcomer's first question is one of these sliders, which read in one go, because it is the first thing anyone sees of the quiz.
+const FIRST = new Set(["exam-markers", "face-test", "code-share", "brain-to-text", "daily-work-use", "electricity", "companionship", "captcha", "sprint", "teens", "driverless", "table-tennis"]);
+// Sets up a round without showing it.
+function deal(list) {
   clearDare();
-  const guess = state.mode === "guess";
-  state.list = list || (guess ? Guess.draw(Guess.LENGTHS.includes(state.length) ? state.length : 20) : drawRound(state.length));
-  state.index = 0; state.answers = []; state.slider = null; state.finished = false; state.recorded = false;
+  const guess = state.mode === "guess", draw = () => guess ? Guess.draw(Guess.LENGTHS.includes(state.length) ? state.length : 20, true, store.plays || store.seen.length ? null : FIRST) : drawRound(state.length);
+  state.list = list || draw();
+  state.index = 0; state.view = 0; state.answers = []; state.slider = null; state.finished = false; state.recorded = false; state.dealt = "";
   state.seenBefore = new Set(store.seen);
+}
+function startRound(list) {
+  deal(list);
+  if (!list && state.mode === "guess") Guess.preload(state.list);
   // The unfinished round, if there is one, stays saved until this round has its first answer. A mistaken tap
   // on Play followed by Back then loses nothing.
   enterQuiz();
@@ -3406,7 +3567,7 @@ function startRound(list) {
 }
 function resumeRound(saved, alreadyCounted) {
   // A friend's challenge that was waiting on the start screen is set aside, not dropped, while an older round is finished.
-  state.parked = saved.ch || alreadyCounted ? null : state.challenge;
+  state.parked = alreadyCounted || sameRound(saved.ch, state.challenge) ? null : state.challenge;
   state.mode = saved.mode; state.challenge = saved.ch; state.list = saved.list;
   const guess = saved.mode === "guess";
   state.answers = saved.ps.map((p, i) => guess ? Guess.result(saved.list[i], p) : ({ id: saved.list[i].id, p, a: saved.list[i].a }));
@@ -3416,6 +3577,11 @@ function resumeRound(saved, alreadyCounted) {
   enterQuiz();
   if (saved.ps.length === saved.list.length) renderResults(); else renderQuestion();
 }
+// Two challenges are the same when they ask the same questions in the same way. How sure the player says they are does not count.
+function sameRound(a, b) {
+  const key = c => (c.mode === "guess" ? "g" : "q") + c.list.map(it => c.mode === "guess" ? Guess.encode(it) : it.id).join();
+  return !!a && !!b && key(a) === key(b);
+}
 // The row at the top of a question. Answered questions can be opened again, with the arrows or by tapping their square.
 function navHtml(justAnswered) {
   const n = state.list.length, end = state.finished ? n - 1 : state.index, any = state.answers.length > 0;
@@ -3424,13 +3590,13 @@ function navHtml(justAnswered) {
   if (n > 20) middle = `<div class="progress" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${state.index}"><div style="width:${(state.index / n) * 100}%"></div></div>`;
   else {
     const how = { good: "right", bad: "wrong", meh: state.mode === "guess" ? "close" : "on the fence" };
-    middle = `<ol class="dots">${state.list.map((q, j) => {
+    middle = `<ol class="dots${n > 10 ? " many" : ""}">${state.list.map((q, j) => {
       const r = state.answers[j], cls = (r ? markOf(r) : j === state.index ? "now" : "") + (j === justAnswered ? " pop" : ""), label = `Question ${j + 1}${r ? ", " + how[markOf(r)] : ""}`;
       if (j === state.view) return `<li><span class="dot ${cls} here" role="img" aria-label="${label}, showing"></span></li>`;
       return r || j === state.index ? `<li><button type="button" class="dot ${cls}" data-go="${j}" aria-label="Go to ${label.charAt(0).toLowerCase() + label.slice(1)}"></button></li>` : `<li><span class="dot" aria-hidden="true"></span></li>`;
     }).join("")}</ol>`;
   }
-  return `<nav class="q-top" aria-label="Questions in this round">${arrow("‹", state.view - 1, state.view > 0, "Previous question")}${middle}<span class="count mono">${state.view + 1} / ${n}</span>${arrow("›", state.view + 1, state.view < end, "Next question")}</nav>`;
+  return `<nav class="q-top" aria-label="Questions in this round">${middle}<span class="count mono">${state.view + 1} / ${n}</span>${arrow("‹", state.view - 1, state.view > 0, "Previous question")}${arrow("›", state.view + 1, state.view < end, "Next question")}</nav>`;
 }
 function wireNav() { $app.querySelectorAll(".q-top [data-go]").forEach(b => b.addEventListener("click", () => showQuestion(Number(b.dataset.go)))); }
 function renderQuestion() { showQuestion(state.index); }
@@ -3438,56 +3604,67 @@ function renderQuestion() { showQuestion(state.index); }
 function showQuestion(k) {
   if (state.screen === "results") state.resultScroll = window.scrollY;
   setScreen("question");
+  state.opening = false;
   state.view = k;
-  const it = state.list[k], guess = state.mode === "guess", open = k >= state.answers.length;
-  const qHtml = gloss(guess ? Guess.titleOf(it) : it.q), hint = guess && it.f && it.f.hint;
-  const tip = open && store.plays === 0 && k < 4 && qHtml.includes('class="term"') ? `<p class="small muted">Tap an underlined word for a plain-English definition.</p>` : "";
-  const again = open && (guess ? Guess.idsOf(it) : [it.id]).every(id => state.seenBefore.has(id));
-  const swap = open && guess && it.photos && !state.challenge;   // a friend's round is the same for both, so nothing is swapped there
-  let control = "";
-  if (guess) control = Guess.controlHtml(it, open, state.slider);
-  else if (open && state.mode === "confidence") {
-    control = `
-      <div class="card conf">
-        <label for="conf" class="small muted">How likely is it that the answer is yes?</label>
-        <div class="conf-read"><span class="conf-num" id="conf-num">50%</span><span id="conf-words">${confWords(50)}</span></div>
-        <input type="range" id="conf" min="0" max="100" step="10" value="${state.slider === null ? 50 : state.slider}" aria-describedby="conf-words">
-        <div class="conf-ends"><span>0% · definitely no</span><span>100% · definitely yes</span></div>
-        <button class="btn btn-primary btn-block" id="lock" type="button">Lock it in</button>
-      </div>`;
-  } else if (open) {
-    control = `<div class="yn"><button class="btn ans" id="say-yes" type="button">Yes<kbd aria-hidden="true">Y</kbd></button><button class="btn ans" id="say-no" type="button">No<kbd aria-hidden="true">N</kbd></button></div>`;
-  }
-  $app.innerHTML = `
-    ${navHtml()}
-    <div class="q-body">
-      ${again ? `<p class="small muted">You have seen this one before.</p>` : ""}
-      <h1 id="question" class="q-h" tabindex="-1">${qHtml}</h1>
-      ${swap ? `<p class="sr-only">This one needs sight. A button after the four photos swaps it for another question.</p>` : ""}
-      ${hint ? `<p class="muted">${gloss(hint)}</p>` : ""}
-      ${tip}
-    </div>
-    <div id="control" class="stack">${control}</div>
-    ${swap ? `<p class="small center" id="swap-row"><button type="button" class="link" id="swap">Can't see the photos? Swap this question</button></p>` : ""}
-    <div id="reveal" class="stack"></div>`;
-  if (swap) document.getElementById("swap").addEventListener("click", swapPhotos);
-  wireNav();
-  if (!open) paintAnswer(k);
-  else if (guess) wireGuess(it, answerGuess, state.slider, v => { state.slider = v; });
-  else if (state.mode === "confidence") {
-    const slider = document.getElementById("conf");
-    const read = () => {
-      document.getElementById("conf-num").textContent = slider.value + "%";
-      document.getElementById("conf-words").textContent = confWords(Number(slider.value));
-    };
-    slider.addEventListener("input", () => { state.slider = Number(slider.value); read(); });
-    read();
-    document.getElementById("lock").addEventListener("click", () => answer(Number(slider.value) / 100));
-  } else {
-    document.getElementById("say-yes").addEventListener("click", () => answer(1));
-    document.getElementById("say-no").addEventListener("click", () => answer(0));
-  }
+  $app.innerHTML = questionHtml(k);
+  wireQuestion(k);
   toTop("question");
+}
+function questionHtml(k, top) {
+  const it = state.list[k], guess = state.mode === "guess", open = k >= state.answers.length;
+  const title = guess ? Guess.titleOf(it) : it.q, qHtml = gloss(title), hint = guess && it.f && it.f.hint;
+  const tip = open && store.plays === 0 && k < 4 && qHtml.includes('class="term"') ? `<p class="small muted">Tap an underlined word for a plain-English definition.</p>` : "";
+  const tap = open && guess && store.plays === 0 && listed(it) && !state.answers.some(r => listed(r.it)) ? `<p class="small muted tap">One tap locks it in.</p>` : "";
+  const again = open && (guess ? Guess.idsOf(it) : [it.id]).every(id => state.seenBefore.has(id));
+  let control = "";
+  const swap = open && guess && it.photos && !state.challenge;   // a friend's round is the same for both, so nothing is swapped there
+  const key = c => top ? "" : `<kbd aria-hidden="true">${c}</kbd>`;   // the keys work while the question has the focus, which the opening one does not take
+  const sure = !guess && open && state.mode === "confidence", slide = sure || (guess && Guess.isSlide(it));
+  if (guess) control = Guess.controlHtml(it, open, state.slider);
+  else if (sure) {
+    control = Guess.slideHtml({ type: "pct" }, { id: "conf", out: "conf-out", max: 100, step: 10, value: state.slider === null ? 50 : state.slider, label: "How likely is it that the answer is yes?", ends: ["definitely no", "definitely yes"], button: "Lock it in" });
+  } else if (open) {
+    control = `<div class="yn"><button class="btn ans" id="say-yes" type="button">Yes${key("Y")}</button><button class="btn ans" id="say-no" type="button">No${key("N")}</button></div>`;
+  }
+  return `
+    <section class="field${slide ? " tight" : ""}"><div class="wrap">
+      ${top || ""}${navHtml()}
+      <div class="q-body">
+        ${again ? `<p class="small muted">You have seen this one before.</p>` : ""}
+        <h1 id="question" class="q-h${brief(title)}" tabindex="-1">${qHtml}</h1>
+        ${swap ? `<p class="sr-only">This one needs sight. A button after the four photos swaps it for another question.</p>` : ""}
+        ${hint ? `<p class="muted">${gloss(hint)}</p>` : sure ? `<p class="muted" aria-hidden="true">How likely is it that the answer is yes?</p>` : ""}
+        ${tip}${tap}
+      </div>
+    </div></section>
+    <div id="control" class="control${slide ? "" : " on-field"}${open && !slide ? " fill" : ""}${listed(it)}">${control}${swap ? `<p class="small center wrap" id="swap-row"><button type="button" class="link" id="swap">Can't see the photos? Swap this question</button></p>` : ""}</div>
+    <div id="reveal" class="reveal wrap"></div>`;
+}
+// Moves a pin, its stem and the large number to where its slider is.
+function movePin(slider, num, unit) {
+  const slide = slider.closest(".slide"), p = Number(slider.value) / Number(slider.max);
+  Guess.showReading(slide.querySelector(".reading"), p, num, unit);
+  slide.querySelector(".knob").style.left = slide.querySelector(".stem").style.left = p * 100 + "%";
+}
+// The whole edge can be pressed or dragged, and so can the field above it: at once with a mouse, and with a finger once it moves sideways,
+// so that scrolling past never sets a guess.
+function dragPin(slider, read) {
+  const slide = slider.closest(".slide"), inner = slider.parentElement;
+  let from = null, live = false;
+  const put = e => { const r = inner.getBoundingClientRect(); slider.value = Math.round(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * Number(slider.max)); read(); };
+  slide.querySelectorAll(".stage, .edge").forEach(z => {
+    z.addEventListener("pointerdown", e => {
+      if (e.button || performance.now() - state.shownAt < 350) return;
+      from = e.clientX; live = e.pointerType === "mouse" || z.classList.contains("edge");
+      try { z.setPointerCapture(e.pointerId); } catch (err) {}
+      if (live) { slide.classList.add("drag"); put(e); }
+    });
+    z.addEventListener("pointermove", e => { if (from === null) return; if (!live && Math.abs(e.clientX - from) > 8) live = true; if (live) put(e); });
+    ["pointerup", "pointercancel"].forEach(n => z.addEventListener(n, () => {
+      if (live) slider.focus({ preventScroll: true });   // so that the arrow keys and Enter carry on from there
+      from = null; live = false; slide.classList.remove("drag");
+    }));
+  });
 }
 // Puts another question in place of the photos, and deals this browser no more of them.
 function swapPhotos() {
@@ -3497,7 +3674,34 @@ function swapPhotos() {
   store.noPhotos = true; saveStore();
   state.list[state.index] = other; state.slider = null;
   if (state.answers.length) saveRound();
-  renderQuestion();
+  if (!state.opening) { renderQuestion(); return; }
+  renderStart("", true);
+  document.getElementById("question").focus({ preventScroll: true });
+}
+function wireQuestion(k) {
+  const it = state.list[k], guess = state.mode === "guess";
+  wireNav();
+  const swap = document.getElementById("swap");
+  if (swap) swap.addEventListener("click", swapPhotos);
+  if (k < state.answers.length) paintAnswer(k);
+  else if (guess) wireGuess(it, answerGuess, state.slider, v => { state.slider = v; });
+  else if (state.mode === "confidence") {
+    const slider = document.getElementById("conf");
+    const read = () => {
+      const v = Number(slider.value);
+      movePin(slider, v + "%", confWords(v));
+      slider.setAttribute("aria-valuetext", `${v}%, ${confWords(v)}`);
+      document.getElementById("lock").textContent = `Lock in ${v}%`;
+    };
+    const moved = () => { state.slider = Number(slider.value); read(); };
+    slider.addEventListener("input", moved);
+    dragPin(slider, moved);
+    read();
+    document.getElementById("lock").addEventListener("click", () => answer(Number(slider.value) / 100));
+  } else {
+    document.getElementById("say-yes").addEventListener("click", () => answer(1));
+    document.getElementById("say-no").addEventListener("click", () => answer(0));
+  }
 }
 // Wires the controls of a guess question. say(g) gets the answer. A slider starts at the position it was left at, if any.
 function wireGuess(it, say, at, keep) {
@@ -3505,23 +3709,28 @@ function wireGuess(it, say, at, keep) {
   $app.querySelectorAll("[data-yn]").forEach(b => b.addEventListener("click", () => say(b.dataset.yn === "1")));
   const slider = document.getElementById("slider");
   if (!slider) return;
-  const out = document.getElementById("readout"), btn = document.getElementById("lock");
+  const out = document.getElementById("readout"), btn = document.getElementById("lock"), slide = slider.closest(".slide");
   let guess = null;
+  const show = () => movePin(slider, ...Guess.parts(Guess.say(it.f, Guess.at(it.f, Number(slider.value) / Number(slider.max)))));
   const read = () => {
     guess = Guess.at(it.f, Number(slider.value) / Number(slider.max));
     if (keep) keep(Number(slider.value));
     slider.classList.remove("unset"); out.classList.remove("unset");
-    out.textContent = Guess.say(it.f, guess); slider.setAttribute("aria-valuetext", Guess.say(it.f, guess));
-    btn.disabled = false;
+    show(); slider.setAttribute("aria-valuetext", Guess.say(it.f, guess));
+    btn.removeAttribute("aria-disabled"); btn.textContent = "Lock in " + Guess.say(it.f, guess);
   };
   slider.addEventListener("input", read);
-  slider.addEventListener("pointerup", read);   // a tap that leaves the handle where it is still counts as a guess
-  slider.addEventListener("keydown", e => { if (e.key === "Enter" && !btn.disabled) { e.preventDefault(); e.stopPropagation(); say(guess); } });   // or the same press would go on to the next question
-  btn.addEventListener("click", () => { if (guess !== null) say(guess); });
-  if (typeof at === "number") read();           // back from looking at an earlier question: the handle is where it was left
+  // Enter locks the guess in, and stops there: the page's own Enter key would go straight on to the next question.
+  slider.addEventListener("keydown", e => { if (e.key === "Enter" && guess !== null) { e.preventDefault(); e.stopPropagation(); say(guess); } });
+  btn.addEventListener("click", () => {
+    if (guess !== null) { say(guess); return; }
+    const knob = slide.querySelector(".knob"); knob.classList.remove("nudge"); void knob.offsetWidth; knob.classList.add("nudge");
+  });
+  dragPin(slider, read);
+  if (typeof at === "number") read(); else movePin(slider, ...Guess.unknown(it.f));   // back from looking at an earlier question: the pin is where it was left
   Guess.layoutMarks();
 }
-const asking = () => state.screen === "question" && state.view === state.index && state.answers.length <= state.index;
+const asking = () => (state.screen === "question" || (state.screen === "start" && state.opening)) && state.view === state.index && state.answers.length <= state.index;
 function answer(p) {
   if (!asking()) return;
   const q = state.list[state.index];
@@ -3533,6 +3742,13 @@ function answerGuess(g) {
   settle(Guess.result(it, g), Guess.idsOf(it));
 }
 function settle(r, ids) {
+  // Answering the question on the start screen begins the round.
+  if (state.opening) {
+    state.opening = false; enterQuiz(); setScreen("question");
+    const x = document.getElementById("extras"); if (x) x.remove();
+    if (r.it) Guess.preload(state.list);
+  }
+  const tap = $app.querySelector(".tap"); if (tap) tap.remove();
   state.answers.push(r);
   ids.forEach(remember);
   saveRound();
@@ -3541,18 +3757,33 @@ function settle(r, ids) {
   wireNav();
   try { document.getElementById("verdict").focus({ preventScroll: true }); } catch (e) {}
   // A slider or a list stays above its answer, so the answer may start below the fold.
-  const v = r.it && $app.querySelector(".verdict");
-  if (v && v.getBoundingClientRect().bottom > window.innerHeight - 90) v.scrollIntoView({ block: v.offsetHeight > window.innerHeight * 0.6 ? "start" : "center" });
+  if (r.it) showVerdict($app.querySelector(".verdict"), Guess.isSlide(r.it));
+}
+// Brings an answer into view. After a guess on the ruler the number travels to the truth first, and the page follows once it is there,
+// unless the reader has moved on.
+function showVerdict(v, slid) {
+  const show = smooth => {
+    if (!v.isConnected) return;
+    // The note under the answer comes into view with it, where both fit. On wide windows it stands beside the answer.
+    const h = window.innerHeight, box = v.getBoundingClientRect(), why = v.parentElement.querySelector(".why"), note = why ? why.getBoundingClientRect() : box;
+    const bottom = note.top >= box.bottom && note.bottom - box.top < h - 150 ? note.bottom : box.bottom, behavior = smooth ? "smooth" : "auto";
+    if (bottom <= h - 84) return;
+    if (bottom === box.bottom && box.height > h * 0.6) v.scrollIntoView({ behavior, block: "start" }); else window.scrollBy({ top: bottom - h + 88, behavior });
+  };
+  if (!slid || reducedMotion()) { show(false); return; }
+  const y = window.scrollY;
+  setTimeout(() => { if (Math.abs(window.scrollY - y) < 4) show(true); }, 950);
 }
 // The answer to one question: the verdict, the note and the detail. o may add the mode, a streak and how the challenger did.
 function revealHtml(r, it, o) {
   const kind = markOf(r), guess = !!r.it, q = guess ? Guess.bankOf(it) : it;
   let tag, word, body;
   if (guess) {
-    tag = kind === "good" ? (it.f && it.f.type !== "pick" ? "Right on. One point" : "Right. One point") : kind === "meh" ? "Close. Half a point" : "Not this time";
-    const line = it.f ? Guess.compare(it.f, r.g) : "";
-    word = Guess.truthOf(it);
-    body = `${line ? `<p>${esc(line)}</p>` : ""}<p>${gloss(Guess.answerText(it))}</p>`;
+    tag = kind === "good" ? (it.f && it.f.type !== "pick" ? "Right on. One point" : "Right. One point") : kind === "meh" ? "Close. Half a point" : "Not this time. No points";
+    // What was slid to or picked. A picked answer may have scrolled out of view.
+    const line = it.f && it.f.type !== "pick" ? Guess.compare(it.f, r.g) : kind === "good" ? "" : it.kind === "quad" ? `You picked: ${Guess.saidOf(r)}. That one is ${it.claims[r.g].q.a ? "true" : "not true"}.` : it.photos ? `You picked photo ${"ABCD"[r.g]}, which is real.` : it.kind === "pick" ? `You picked ${Guess.saidOf(r)}.` : "", slid = it.f && it.f.type !== "pick", quad = it.kind === "quad";
+    word = quad ? (it.oddFalse ? "Not true" : "True") : Guess.truthOf(it);
+    body = `${quad ? `<p class="claim" id="verdict-claim">${esc(it.claims[it.answer].text)}</p>` : line && slid ? `<p>${esc(line)}</p>` : ""}<p>${gloss(Guess.answerText(it))}</p>${line && !slid ? `<p class="small their">${esc(line)}</p>` : ""}`;
   } else {
     tag = kind === "good" ? "Correct" : kind === "bad" ? "Not this time" : "On the fence";
     if (o.mode === "confidence") {
@@ -3562,19 +3793,19 @@ function revealHtml(r, it, o) {
     word = q.a ? "Yes" : "No";
     body = `<p>${gloss(q.short)}</p>`;
   }
-  if (o.streak >= 3) tag += ` · ${o.streak} in a row`;
+  if (o.streak >= 3) tag += ` · ${o.streak} in a row`; else if (o.so) tag += ` · ${o.so} so far`;
   const t = o.theirs;
   const their = typeof t === "number" ? `<p class="small their">Your challenger ${t === 2 ? "got this one right" : t === 0 ? "got this one wrong" : guess ? "was close on this one" : "sat on the fence here"}.</p>` : "";
   return `
-    <section class="verdict ${kind}" id="verdict" tabindex="-1" aria-labelledby="verdict-tag verdict-word">
+    <section class="verdict ${kind}" id="verdict" tabindex="-1" aria-labelledby="verdict-tag verdict-word${guess && it.kind === "quad" ? " verdict-claim" : ""}">
       <p class="verdict-tag" id="verdict-tag">${ICON[kind]}<span>${tag}</span></p>
       <p class="verdict-word${guess ? " long" : ""}" id="verdict-word">${esc(word)}</p>
       ${body}
       ${their}
     </section>
-    ${q.safety ? `<aside class="why"><p class="eyebrow">Worth knowing</p><p>${gloss(q.safety)}</p></aside>` : ""}
+    <div class="side">${q.safety ? `<aside class="why"><p class="eyebrow">Worth knowing</p><p>${gloss(q.safety)}</p></aside>` : ""}
     ${guess ? Guess.othersHtml(it) : ""}
-    ${detailsBlock(guess ? Guess.sourceOf(it) : q, q.detail ? "More detail and sources" : "Sources")}`;
+    ${detailsBlock(guess ? Guess.sourceOf(it) : q, q.detail ? "More detail and sources" : "Sources")}</div>`;
 }
 // The answer to question k, under the question.
 function paintAnswer(k, fresh) {
@@ -3582,11 +3813,17 @@ function paintAnswer(k, fresh) {
   const current = k === state.index && !state.finished, last = k === state.list.length - 1;
   let streak = 0;
   if (fresh) for (let i = k; i >= 0 && markOf(state.answers[i]) === "good"; i--) streak++;
+  // The score so far, once there is one. With percentages the line already says enough.
+  const done = state.answers.slice(0, k + 1), won = done.reduce((sum, x) => sum + (guess ? x.grade : markOf(x) === "good" ? 1 : 0), 0);
+  const so = !fresh || !k || !won || state.mode === "confidence" ? "" : guess ? pts(won) : `${won} of ${k + 1}`;
   const control = document.getElementById("control"), swap = document.getElementById("swap-row");
   if (swap) swap.remove();
+  control.classList.remove("fill");
+  if (fresh) state.shownAt = performance.now();
   if (guess) Guess.mark(r, control); else control.innerHTML = "";
+  if (fresh && guess && Guess.isSlide(it) && !reducedMotion()) Guess.travel(control, it.f, r.g);
   const label = !current ? (state.finished ? "Back to my result" : `Back to question ${state.index + 1}`) : !last ? "Next question" : store.bonus ? "See my result" : "One last question";
-  document.getElementById("reveal").innerHTML = `${revealHtml(r, it, { mode: state.mode, streak, theirs: ch && ch.theirs ? ch.theirs[k] : null })}
+  document.getElementById("reveal").innerHTML = `${revealHtml(r, it, { mode: state.mode, streak, so, theirs: ch && ch.theirs ? ch.theirs[k] : null })}
     <p class="small center pass-on"><button type="button" class="link" id="pass">Send this question to a friend</button> <span class="muted" id="pass-status" role="status"></span></p>
     <div class="next-row"><button class="btn btn-primary btn-big btn-block" id="next" type="button">${label}</button></div>`;
   document.getElementById("pass").addEventListener("click", () => sendDare(guess ? { it } : { q: it }, msg => { const el = document.getElementById("pass-status"); if (el) el.textContent = msg; }));
@@ -3611,10 +3848,10 @@ function renderBonus() {
   setScreen("bonus");
   const guess = state.mode === "guess";
   $app.innerHTML = `
-    <p class="eyebrow">One last question, just for fun</p>
-    <div class="q-body"><h1 id="question" class="q-h" tabindex="-1">${esc(guess ? BONUS.it.f.q : BONUS.q)}</h1></div>
-    <div id="control" class="stack unscored">${guess ? Guess.controlHtml(BONUS.it, true, null) : `<div class="yn"><button class="btn ans" id="say-yes" type="button">Yes<kbd aria-hidden="true">Y</kbd></button><button class="btn ans" id="say-no" type="button">No<kbd aria-hidden="true">N</kbd></button></div>`}</div>
-    <div id="reveal" class="stack" aria-live="polite"></div>`;
+    <section class="field${guess ? " tight" : ""}"><div class="wrap"><p class="eyebrow">One last question, just for fun</p>
+    <div class="q-body"><h1 id="question" class="q-h" tabindex="-1">${esc(guess ? BONUS.it.f.q : BONUS.q)}</h1></div></div></section>
+    <div id="control" class="control unscored${guess ? "" : " on-field fill"}">${guess ? Guess.controlHtml(BONUS.it, true, null) : `<div class="yn"><button class="btn ans" id="say-yes" type="button">Yes<kbd aria-hidden="true">Y</kbd></button><button class="btn ans" id="say-no" type="button">No<kbd aria-hidden="true">N</kbd></button></div>`}</div>
+    <div id="reveal" class="reveal wrap" aria-live="polite"></div>`;
   if (guess) wireGuess(BONUS.it, answerBonus, null);
   else {
     document.getElementById("say-yes").addEventListener("click", () => answerBonus(true));
@@ -3628,7 +3865,8 @@ function answerBonus(g) {
   store.bonus = true; saveStore();
   const guess = typeof g === "number", control = document.getElementById("control");
   const grade = guess ? Guess.grade(BONUS.it, g) : g === BONUS.a ? 1 : 0, kind = grade === 1 ? "good" : grade ? "meh" : "bad";
-  if (guess) Guess.mark({ it: BONUS.it, g, grade }, control); else control.innerHTML = "";
+  control.classList.remove("fill"); state.shownAt = performance.now();
+  if (guess) { Guess.mark({ it: BONUS.it, g, grade }, control); if (!reducedMotion()) Guess.travel(control, BONUS.it.f, g); } else control.innerHTML = "";
   document.getElementById("reveal").innerHTML = `
     <section class="verdict ${kind}">
       <p class="verdict-tag">${ICON[kind]}<span>${kind === "bad" ? "Not this time" : kind === "meh" ? "Close" : guess ? "Right on" : "Correct"}</span></p>
@@ -3641,6 +3879,7 @@ function answerBonus(g) {
   const next = document.getElementById("next");
   next.addEventListener("click", renderResults);
   try { next.focus({ preventScroll: true }); } catch (e) {}
+  showVerdict(document.querySelector("#reveal .verdict"), guess);
 }
 
 /* ---------- Results ---------- */
@@ -3899,24 +4138,36 @@ function renderResults() {
   const next = kept.next = kept.next || (nextGuess ? Guess.draw(Guess.LENGTHS.includes(state.length) ? state.length : 20, true) : drawRound(state.length)), seen = new Set(store.seen);
   const againLabel = next.every(it => (nextGuess ? Guess.idsOf(it) : [it.id]).every(id => !seen.has(id))) ? `Play ${next.length} new questions` : "Play again";
 
+  // The score stands on the same edge as the guesses did, and a challenger's score beside it.
+  const at = x => Math.max(0, Math.min(1, x / n)), step = n <= 10 ? 1 : n <= 20 ? 2 : 5, notes = [s.unsure ? "Amber squares are the ones where you said 50/50. They are not marked wrong, but they do not add to your score." : "", guess && s.close ? "Amber squares are close guesses, worth half a point each." : ""].filter(Boolean);
+  const scoreTicks = [...Array.from({ length: Math.ceil(n / step) }, (_, i) => i * step), n].map(v => `<i class="t maj" style="left:${at(v) * 100}%"></i>${v > 0 && n - v >= step ? `<span class="tl" style="left:${at(v) * 100}%">${v}</span>` : ""}`).join("") + `<span class="tl s">0</span><span class="tl e">${n}</span>`;
   const head = `
-    <section class="card result">
-      <p class="eyebrow">Your result</p>
-      <div class="score" aria-hidden="true"><span id="score-num">${pts(s.right)}</span><span class="score-of">/${n}</span></div>
-      <div class="grid${n > 20 ? " many" : ""}" aria-hidden="true">${state.answers.map((r, i) => `<i class="${markOf(r)}" style="--i:${i}"></i>`).join("")}</div>
-      ${s.unsure ? `<p class="small muted">Amber squares are the ones where you said 50/50. They are not marked wrong, but they do not add to your score.</p>` : ""}
-      ${guess && s.close ? `<p class="small muted">Amber squares are close guesses, worth half a point each.</p>` : ""}
-      <h2 class="finding">${esc(FINDINGS[key].title)}</h2>
-      <p>${esc(findingLine(key, s, an))}</p>
-      ${split}
-      ${compare}
+    <section class="field tight"><div class="wrap">
+      ${topBar(true)}
+      <div class="told">
+        <p class="eyebrow">Your result</p>
+        <h2 class="finding">${esc(FINDINGS[key].title)}</h2>
+        <p>${esc(findingLine(key, s, an))}</p>
+        <div class="grid${n > 20 ? " many" : ""}" aria-hidden="true">${state.answers.map((r, i) => `<i class="${markOf(r)}" style="--i:${i}"></i>`).join("")}</div>
+        ${compare}
+      </div>
+    </div></section>
+    <div class="slide done score-edge" aria-hidden="true">
+      <div class="stage"><div class="inner"><div class="reading" data-p="${at(s.right)}"><b id="score-num">${pts(s.right)}</b> <span>out of ${n}</span></div><i class="stem" style="left:${at(s.right) * 100}%"></i></div></div>
+      <div class="edge"><div class="inner">${scoreTicks}<span class="knob" style="left:${at(s.right) * 100}%"></span>
+        ${ch && ch.theirs ? `<div class="marks" id="marks"><span class="mark-lab friend" data-p="${at(theirPoints(ch))}">Your challenger <b>${pts(theirPoints(ch))}</b></span></div>` : ""}
+      </div></div>
+    </div>`;
+  const toll = `
+    <section class="toll">
       <div class="result-actions">
-        <button class="btn btn-primary btn-big" id="share-main" type="button">${icon("share")}<span class="lab">Share my result</span></button>
+        <button class="btn btn-ink btn-big" id="share-main" type="button">${icon("share")}<span class="lab">Share my result</span></button>
         <button class="btn btn-big" id="again" type="button">${againLabel}</button>
       </div>
-      ${HAS_YESNO && HAS_GUESS ? `<p class="small center"><button class="link" id="switch-mode" type="button">${state.mode === "guess" ? "Try a yes-or-no round" : "Try a best-guess round"}</button></p>` : ""}
       <p class="small muted" id="share-status" role="status"></p>
-      ${unseen > 0 ? `<p class="small muted">${unseen} of the ${QUESTIONS.length} questions are still new to you.</p>` : ""}
+      ${HAS_YESNO && HAS_GUESS ? `<p class="small"><button class="link" id="switch-mode" type="button">${state.mode === "guess" ? "Try a yes-or-no round" : "Try a best-guess round"}</button>${unseen > 0 ? ` <span class="muted">${unseen} of the ${QUESTIONS.length} questions are still new to you.</span>` : ""}</p>` : ""}
+      ${split}
+      ${notes.map(t => `<p class="small muted">${t}</p>`).join("")}
     </section>`;
 
   let confCard = "";
@@ -3988,10 +4239,12 @@ function renderResults() {
 
   $app.innerHTML = `
     <h1 class="sr-only" id="result-h" tabindex="-1">Your result: ${pts(s.right)} out of ${n}. ${esc(FINDINGS[key].title)}.</h1>
-    ${topBar(true)}
     ${head}
-    ${confCard}
+    <div class="after"><div>
+    ${toll}
     ${share}
+    </div><div>
+    ${confCard}
     ${misses}
     ${resourcesBlock()}
     <details>
@@ -3999,7 +4252,9 @@ function renderResults() {
       <div class="body"><div>${state.answers.map((r, i) => reviewItem(r, i)).join("")}</div></div>
     </details>
     <div class="row"><button class="btn btn-primary" id="again-2" type="button">${againLabel}</button><button class="btn" id="home" type="button">Back to the start</button></div>
-    <footer>Facts last checked ${esc(CONFIG.checked)}. Each answer lists how recent its sources are.</footer>`;
+    <footer>Facts last checked ${esc(CONFIG.checked)}. Each answer lists how recent its sources are.</footer>
+    </div></div>`;
+  Guess.layoutMarks();
 
   let picture = null;
   const drawing = resultImage(s, key).then(b => { picture = b; return b; }).catch(() => null);
@@ -4115,73 +4370,77 @@ async function resultImage(s, key) {
   const MONO = '"IBM Plex Mono", ui-monospace, Menlo, monospace';
   const BODY = '"IBM Plex Sans", "Segoe UI", system-ui, sans-serif';
   // Slow fonts get a few seconds, then the picture is drawn with the ones at hand.
-  try { await Promise.race([Promise.all([document.fonts.load(`700 100px ${DISPLAY}`), document.fonts.load(`500 30px ${MONO}`), document.fonts.load(`500 30px ${BODY}`)]), new Promise(r => setTimeout(r, 2500))]); } catch (e) {}
-  const COL = { bg: "#0e141a", ink: "#e8edf1", muted: "#9aa8b4", accent: "#98a9ff", good: "#57d3a9", bad: "#ff8fa6", meh: "#f2c867" };
+  try { await Promise.race([Promise.all([document.fonts.load(`700 100px ${DISPLAY}`), document.fonts.load(`400 30px ${MONO}`), document.fonts.load(`500 30px ${BODY}`), document.fonts.load(`600 32px ${BODY}`)]), new Promise(r => setTimeout(r, 2500))]); } catch (e) {}
+  const COL = { field: "#2742d6", on: "#ffffff", on2: "#dfe5ff", bg: "#f3f4f8", ink: "#131c26", muted: "#566472", knob: "#0c1330", good: "#57d3a9", bad: "#ff8fa6", meh: "#f2c867" };
   const box = (px, py, w, h, r, fill) => {
     x.beginPath(); x.moveTo(px + r, py);
     x.arcTo(px + w, py, px + w, py + h, r); x.arcTo(px + w, py + h, px, py + h, r);
     x.arcTo(px, py + h, px, py, r); x.arcTo(px, py, px + w, py, r);
     x.closePath(); x.fillStyle = fill; x.fill();
   };
+  // The same picture as the result page: a blue field, its lower edge the ruler, the score on a pin.
+  const edge = 846, left = pad, span = W - 2 * pad, at = v => left + span * v / s.n;
   x.fillStyle = COL.bg; x.fillRect(0, 0, W, H);
-  [COL.good, COL.bad, COL.good].forEach((col, i) => box(pad + i * 36, pad, 28, 28, 7, col));
-  x.fillStyle = COL.muted; x.font = `500 30px ${MONO}`; x.textBaseline = "middle";
-  // The name runs along the top. Canvas letter spacing is newer than the rest, so it is used only where it exists.
-  if ("letterSpacing" in x) x.letterSpacing = "8px";
-  x.fillText("WHAT'S UP WITH AI?", pad + 124, pad + 15);
-  if ("letterSpacing" in x) x.letterSpacing = "0px";
-  x.textBaseline = "alphabetic";
-  // A half is drawn beside the whole number, because at this size the fonts' own half is too small to read.
-  const whole = Math.floor(s.right), part = s.right - whole;
-  let numW = 0;
-  x.fillStyle = COL.ink;
-  if (whole || !part) { x.font = `700 290px ${DISPLAY}`; x.fillText(String(whole), pad - 10, 400); numW = x.measureText(String(whole)).width; }
-  if (part) { x.font = `700 ${whole ? 170 : 290}px ${DISPLAY}`; x.fillText("½", pad - 10 + numW, whole ? 340 : 400); numW += x.measureText("½").width; }
-  x.fillStyle = COL.muted; x.font = `700 130px ${DISPLAY}`;
-  x.fillText("/" + s.n, pad + numW, 400);
-  const many = s.n > 20, two = s.n > 10, size = many ? 40 : two ? 64 : 76, gap = many ? 6 : two ? 12 : 14, per = many ? 20 : 10, top = 462;
+  x.fillStyle = COL.field; x.fillRect(0, 0, W, edge);
+  x.textBaseline = "alphabetic"; x.textAlign = "left";
+  x.fillStyle = COL.on; x.font = `700 50px ${DISPLAY}`; x.fillText("What's Up With AI?", pad, 116);
+  const many = s.n > 20, two = s.n > 10, size = many ? 40 : two ? 60 : 72, gap = many ? 6 : two ? 11 : 13, per = many ? 20 : 10, top = 158;
   answers.forEach((r, i) => box(pad + (i % per) * (size + gap), top + Math.floor(i / per) * (size + gap), size, size, size * 0.22, COL[markOf(r)]));
+  const gridEnd = top + Math.ceil(s.n / per) * (size + gap) - gap;
+  // The score, over its place on the ruler and kept inside the picture.
+  const px = at(s.right), score = pts(s.right);
+  x.font = `700 250px ${DISPLAY}`;
+  const w = x.measureText(score).width, cx = Math.max(pad - 14 + w / 2, Math.min(W - pad + 14 - w / 2, px));
+  x.textAlign = "center"; x.fillStyle = COL.on; x.fillText(score, cx, edge - 128);
+  x.font = `500 38px ${BODY}`; x.fillStyle = COL.on2;
+  const of = `out of ${s.n}`, ow = x.measureText(of).width;
+  x.fillText(of, Math.max(pad - 14 + ow / 2, Math.min(W - pad + 14 - ow / 2, cx)), edge - 68);
+  x.fillStyle = COL.on; x.fillRect(px - 4, edge - 54, 8, 54);
+  // The lines of the ruler, with every number named that has room.
+  const step = s.n <= 10 ? 1 : s.n <= 20 ? 2 : 5;
+  x.font = `400 30px ${MONO}`;
+  for (const v of [...Array.from({ length: Math.ceil(s.n / step) }, (_, i) => i * step), s.n]) {
+    x.fillStyle = COL.ink; x.fillRect(at(v) - 2, edge, 4, 44);
+    if (v && v < s.n && s.n - v < step) continue;   // no room for its number beside the last one
+    x.fillStyle = COL.muted; x.textAlign = v === 0 ? "left" : v === s.n ? "right" : "center"; x.fillText(String(v), at(v) + (v === 0 ? -2 : v === s.n ? 2 : 0), edge + 88);
+  }
+  x.beginPath(); x.arc(px, edge, 36, 0, Math.PI * 2); x.fillStyle = COL.on; x.fill();
+  x.beginPath(); x.arc(px, edge, 28, 0, Math.PI * 2); x.fillStyle = COL.knob; x.fill();
+  x.textAlign = "left";
   const where = siteUrl().replace(/^https?:\/\//, "").replace(/\/(index\.html)?$/, "");
-  const footY = where ? H - pad - 46 : H - pad;
   const wrap = text => {
     const out = [];
     let line = "";
     for (const w of text.split(" ")) {
-      if (line && x.measureText(line + " " + w).width > W - 2 * pad) { out.push(line); line = w; }
+      if (line && x.measureText(line + " " + w).width > span) { out.push(line); line = w; }
       else line = line ? line + " " + w : w;
     }
     if (line) out.push(line);
     return out;
   };
-  const BIG = `700 54px ${DISPLAY}`;   // the longest finding fits on one line at this size
+  // Between the squares and the score: the finding, and the question that got the player where there is room for it.
+  const room = edge - 128 - 214 - gridEnd, BIG = `700 56px ${DISPLAY}`;
   x.font = BIG;
   const lines = wrap(FINDINGS[key].share.replace(/\.$/, ""));
-  // Everything below the squares sits midway between them and the footer, so it never crowds either. The question is left off when there is no room.
-  const gridEnd = top + Math.ceil(s.n / per) * (size + gap) - gap, room = footY - 60 - gridEnd;
   const got = gotMe(answers)[0];
-  let hook = [], hookFont = "", step = 0;
-  const tall = h => lines.length * 66 + (h.length ? 44 + 46 + h.length * step : 0);
-  for (const [px, lead] of got ? [[40, 52], [34, 45]] : []) {
-    hookFont = `500 ${px}px ${BODY}`; step = lead;
-    x.font = hookFont;
-    hook = wrap(got.q);
-    if (tall(hook) <= room - 40) break;
+  let hook = [], hookFont = "", lead = 0;
+  for (const [size, gapY] of got ? [[34, 45], [30, 40]] : []) {
+    hookFont = `500 ${size}px ${BODY}`; lead = gapY; x.font = hookFont;
+    hook = wrap(gotLine(got));
+    if (lines.length * 66 + 18 + hook.length * lead <= room) break;
     hook = [];
   }
-  let y = gridEnd + (room - tall(hook)) / 2 + 52;
-  x.fillStyle = COL.accent; x.font = BIG;
+  let y = gridEnd + Math.max(18, (room - lines.length * 66 - (hook.length ? 18 + hook.length * lead : 0)) / 2) + 50;
+  x.fillStyle = COL.on; x.font = BIG;
   for (const l of lines) { x.fillText(l, pad, y); y += 66; }
   if (hook.length) {
-    y += 16;
-    x.fillStyle = COL.muted; x.font = `500 30px ${BODY}`;
-    x.fillText(gotLead(got), pad, y);
-    y += 54;
-    x.fillStyle = COL.ink; x.font = hookFont;
-    for (const l of hook) { x.fillText(l, pad, y); y += step; }
+    y += 4; x.fillStyle = COL.on2; x.font = hookFont;
+    for (const l of hook) { x.fillText(l, pad, y); y += lead; }
   }
-  x.fillStyle = COL.muted; x.font = `500 30px ${BODY}`;
-  x.fillText(mode === "guess" ? "Guesses about where AI really stands. How close can you get?" : "About half the answers are yes. How many can you get?", pad, footY);
-  if (where) { x.font = `500 28px ${MONO}`; x.fillText(where, pad, H - pad); }
+  x.fillStyle = COL.ink; x.font = `600 32px ${BODY}`;
+  const call = mode === "guess" ? "How close can you get?" : "How many can you get?";
+  x.fillText(call, pad, H - 58);
+  if (where) { x.font = `400 28px ${MONO}`; x.fillStyle = COL.muted; x.textAlign = "right"; x.fillText(where, W - pad, H - 58); x.textAlign = "left"; }
   return new Promise(resolve => c.toBlob(resolve, "image/png"));
 }
 
@@ -4203,12 +4462,15 @@ document.addEventListener("keydown", e => {
 window.addEventListener("popstate", () => {
   if (history.state && history.state.learn) { renderLearn(); return; }
   if (state.screen === "learn") { closeLearn(); return; }
+  // Forward, after Back: on with the round that was left.
+  const left = history.state && history.state.quiz && state.screen === "start" ? loadRound() : null;
+  if (left && (!state.challenge || sameRound(left.ch, state.challenge))) { resumeRound(left); return; }
   const before = state.challenge, coded = /[?&]c=/.test(location.search);
   // A challenge played through to its result is over, and so is one whose code has left the address.
   // Going back must not offer it again as if it were new.
-  if (state.challenge && (state.screen === "results" || !coded)) state.challenge = null;
+  if (state.challenge && (state.screen === "results" || (state.screen === "question" && state.finished) || !coded)) state.challenge = null;
   // A challenge that was set aside while an older round was finished comes back.
-  if (!state.challenge && state.parked && coded) state.challenge = state.parked;
+  if (state.parked && coded) state.challenge = state.parked;
   state.parked = null;
   if (state.screen !== "start" || before !== state.challenge) renderStart();
   try { if (!state.challenge && /[?&]c=/.test(location.search)) history.replaceState(history.state, "", location.pathname); } catch (e) {}
@@ -4221,7 +4483,16 @@ function goHome() {
   renderStart();
 }
 
-if (location.hash === "#learn") renderLearn(); else renderStart();
+// The second tap of a double-tap lands on whatever has just come up under the finger. It counts for nothing, except on the arrows and squares, which
+// are there to be pressed quickly.
+$app.addEventListener("click", e => {
+  if (e.detail > 0 && performance.now() - state.shownAt < 350 && e.target.closest("a, summary, button:not(.arrow):not(.dot)")) { e.preventDefault(); e.stopPropagation(); }
+}, true);
+
+if (location.hash === "#learn") { state.screen = "boot"; renderLearn(); }
+else if (state.challenge || state.dare || loadRound()) renderStart();
+// A fresh round waits a moment for the photo check, so that a photo question can be in it.
+else Promise.race([PHOTOS.checked, new Promise(go => setTimeout(go, 400))]).then(() => { if (!$app.firstElementChild) renderStart(); });
 </script>
 </body>
 </html>
