@@ -3,8 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Feedback test: shared by link only. Take this line out to let search engines list the page. -->
+<meta name="robots" content="noindex">
 <title>What's Up With AI? A quick quiz on where AI really stands</title>
-<meta name="description" content="Quick yes-or-no questions about where AI really stands. About half the answers are yes. Some sound like science fiction and already happened. Can you tell which?">
+<meta name="description" content="Quick questions about where AI really stands: what it can do, how it behaves and how people are dealing with it. Some of it sounds like science fiction and has already happened.">
 <!-- Link previews need an absolute address for the picture. These two assume the page is served from
      https://www.scotthuston.com/ai-questions/ ; change them if it lives somewhere else.
      There is deliberately no og:url: it would mark every challenge link as the same page, and some sites then drop the challenge. -->
@@ -12,11 +14,11 @@
 <meta name="twitter:image" content="https://www.scotthuston.com/ai-questions/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="What's Up With AI? Ten quick questions. About half the answers are yes.">
+<meta property="og:image:alt" content="What's Up With AI? Quick questions about where AI really stands.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="What's Up With AI?">
 <meta property="og:title" content="What's Up With AI?">
-<meta property="og:description" content="Ten yes-or-no questions about where AI really stands. About half the answers are yes. Can you tell which?">
+<meta property="og:description" content="Ten quick questions about where AI really stands. Some of it sounds like science fiction and has already happened. Some of it you'd expect by now, and it hasn't.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f4f8">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0e141a">
@@ -446,9 +448,9 @@ setTimeout(function () {
    The link-preview image tags in the <head> also carry the public address and need updating if it changes.
    feedbackUrl is the page where people send a note about a question. It is feedback.html in this folder, which needs a form
    service connected first (see the top of its script). While feedbackUrl is "", the links to it are not shown.
-   modes lists the ways of playing the start screen offers: "yesno" and "guess". Leave one out and the page shows no trace of it
-   (the page title, the description and the link-preview text in the <head> speak of yes-or-no questions, so reword those too). */
-const CONFIG = { siteUrl: "", checked: "November 24, 2026", feedbackUrl: "", modes: ["yesno", "guess"] };
+   modes lists the ways of playing the start screen offers, the first one chosen to begin with: "yesno" and "guess". Leave one out and the page shows no trace of it
+   (the link-preview text in the <head> fits either way of playing). */
+const CONFIG = { siteUrl: "", checked: "November 24, 2026", feedbackUrl: "", modes: ["guess", "yesno"] };
 
 /* ---------- Where to learn more ----------
    Shown as the "Keep exploring" card at the end of the results. Neutral data comes first, then the case
@@ -2667,7 +2669,7 @@ try { document.fonts.ready.then(Guess.layoutMarks); } catch (e) {}
 const STORE_KEY = "can-ai-do-this.v1", ROUND_KEY = "can-ai-do-this.round", LAST_KEY = "can-ai-do-this.last";
 const LENGTHS = [10, 20, 50];
 function loadStore() {
-  const blank = { seen: [], plays: 0, best: {}, mode: okMode("quick"), length: 10, bonus: false };
+  const blank = { seen: [], plays: 0, best: {}, mode: okMode(CONFIG.modes[0] === "guess" ? "guess" : "quick"), length: 10, bonus: false };
   try {
     const s = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
     if (!s || typeof s !== "object") return blank;
@@ -3237,8 +3239,8 @@ function renderStart(notice) {
     <form id="start" class="start">
       ${HAS_YESNO && HAS_GUESS ? `
       <div class="modes" role="radiogroup" aria-label="How to play">
-        <input type="radio" name="play" id="play-yesno" value="yesno"${guess ? "" : " checked"}><label for="play-yesno"><b>Yes or no</b><span>Quick calls. About half the answers are yes.</span></label>
         <input type="radio" name="play" id="play-guess" value="guess"${guess ? " checked" : ""}><label for="play-guess"><b>Best guess</b><span>Slide to a number or pick an answer. Close counts.</span></label>
+        <input type="radio" name="play" id="play-yesno" value="yesno"${guess ? "" : " checked"}><label for="play-yesno"><b>Yes or no</b><span>Quick calls. About half the answers are yes.</span></label>
       </div>` : ""}
       <button class="btn btn-primary btn-big btn-block" type="submit">Play</button>
       <p class="small muted center" id="start-note"></p>
