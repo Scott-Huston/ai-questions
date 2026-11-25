@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Feedback test: shared by link only. Take this line out to let search engines list the page. -->
 <meta name="robots" content="noindex">
-<title>What's Up With AI? A quick quiz on where AI really stands</title>
+<title>What's up with AI? A quick quiz on where AI really stands</title>
 <meta name="description" content="Quick guesses about where AI really stands: what it can do, how it behaves and how people are dealing with it. Some of it sounds like science fiction and has already happened.">
 <!-- Link previews need an absolute address for the picture. These two assume the page is served from
      https://www.scotthuston.com/ai-questions/ ; change them if it lives somewhere else.
@@ -14,10 +14,10 @@
 <meta name="twitter:image" content="https://www.scotthuston.com/ai-questions/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="What's Up With AI? Ten quick guesses about where AI really stands.">
+<meta property="og:image:alt" content="What's up with AI? Ten quick guesses about where AI really stands.">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="What's Up With AI?">
-<meta property="og:title" content="What's Up With AI?">
+<meta property="og:site_name" content="What's up with AI?">
+<meta property="og:title" content="What's up with AI?">
 <meta property="og:description" content="Ten quick guesses about where AI really stands. Some of it sounds like science fiction and has already happened. Some of it you'd expect by now, and it hasn't.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#2742d6">
@@ -25,7 +25,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232b47d6'/%3E%3Ctext x='32' y='48' font-family='Arial,Helvetica,sans-serif' font-size='46' font-weight='700' text-anchor='middle' fill='white'%3E?%3C/text%3E%3C/svg%3E">
 <!-- iPhones use this picture, not the icon above, when the quiz is added to the home screen or saved as a favorite. -->
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="apple-mobile-web-app-title" content="What's Up With AI?">
+<meta name="apple-mobile-web-app-title" content="What's up with AI?">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -3432,7 +3432,7 @@ const siteLink = ([page, url], inside) => `<a href="${esc(url)}"${page ? ` data-
 const pageNamed = () => ({ "#learn": "learn", "#about": "about" })[location.hash] || "";
 // The row along the top of the start screen, the results and the pages: the name, and the menu.
 function topBar(home) {
-  const name = `<span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>What's Up With AI?`;
+  const name = `<span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>What's up with AI?`;
   return `<div class="topbar">${home ? `<a class="brand" id="brand" href="${esc(location.pathname)}">${name}</a>` : `<p class="brand">${name}</p>`}
     <nav class="menu" id="menu" aria-label="More about this quiz"><button class="tab" id="menu-b" type="button" aria-expanded="false" aria-controls="menu-list">Learn more<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <ul class="menu-list" id="menu-list" hidden>${siteLinks().map(l => `<li>${siteLink(l, `<b>${l[2]}</b>${l[0] ? "" : `<i aria-hidden="true">↗</i>`}<span>${l[3]}</span>`)}</li>`).join("")}</ul></nav></div>`;
@@ -3483,7 +3483,7 @@ function renderPage(name) {
   if (state.screen !== "learn") state.learnFrom = state.screen;
   setScreen("learn");
   const about = name === "about";
-  document.title = `${about ? "About this quiz" : "Read more about AI"} · What's Up With AI?`;
+  document.title = `${about ? "About this quiz" : "Read more about AI"} · What's up with AI?`;
   $app.innerHTML = `
     <section class="field"><div class="wrap">
       ${topBar(true)}
@@ -4050,7 +4050,7 @@ function shareLinks(text, url) {
     links.push(["LinkedIn", `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`]);
     links.push(["Reddit", `https://www.reddit.com/submit?url=${enc(url)}&title=${enc(text.split("\n")[0])}`]);
   }
-  links.push(["Email", `mailto:?subject=${enc("What's Up With AI?")}&body=${enc(text)}`]);
+  links.push(["Email", `mailto:?subject=${enc("What's up with AI?")}&body=${enc(text)}`]);
   return links;
 }
 function renderResults() {
@@ -4287,7 +4287,7 @@ async function resultImage(s, key) {
   x.fillStyle = COL.bg; x.fillRect(0, 0, W, H);
   x.fillStyle = COL.field; x.fillRect(0, 0, W, edge);
   x.textBaseline = "alphabetic"; x.textAlign = "left";
-  x.fillStyle = COL.on; x.font = `700 50px ${DISPLAY}`; x.fillText("What's Up With AI?", pad, 116);
+  x.fillStyle = COL.on; x.font = `700 50px ${DISPLAY}`; x.fillText("What's up with AI?", pad, 116);
   const two = s.n > 10, size = two ? 81 : 150, gap = two ? 11 : 20, per = two ? 10 : 5, top = 160;
   const pics = await Promise.all(answers.map(r => artImage(stampOf(r.it), markOf(r))));
   answers.forEach((r, i) => {
