@@ -276,6 +276,22 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 44px; ma
 .verdict-tag svg { width: 20px; height: 20px; flex: none; }
 .verdict-word { font-family: var(--font-display); font-size: 2.3rem; font-weight: 700; line-height: 1.05; }
 .their { color: var(--muted); padding-top: 4px; }
+/* 100 people lined up by the number each one gave, beside an answer that is an average */
+.lineup { margin: 10px 0 4px; max-width: 30rem; }
+.lineup figcaption, .lu-ends { font-size: 0.88rem; color: var(--muted); }
+.lu { position: relative; height: 150px; margin-top: 6px; border-bottom: 2px solid var(--ink); }
+.lu svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.lu .lo { fill: var(--muted); }
+.lu .hi { fill: var(--accent); }
+.lu .mi { fill: var(--ink); }
+.lu .avg { position: absolute; left: 0; right: 0; border-top: 2px dashed var(--ink); }
+.lu .mid { position: absolute; left: 50%; width: 2px; margin-left: -1px; height: 30%; background: var(--ink); }
+.lu span { position: absolute; font-size: 0.88rem; line-height: 1.2; white-space: nowrap; color: var(--ink); }
+.lu .avg-t { left: 0; padding-bottom: 3px; }
+.lu .mid-t { left: 50%; bottom: 43%; transform: translateX(-56%); }
+.lu .tail-t { right: 11%; bottom: 66%; }
+.lu-ends { display: flex; justify-content: space-between; gap: 12px; padding-top: 4px; }
+.lu-ends span:last-child { text-align: right; }
 @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .why { display: flex; flex-direction: column; gap: 5px; padding: 2px 0 4px; }
 .why p:last-child { font-size: 1.04rem; }
@@ -1494,13 +1510,6 @@ const QUESTIONS = [
   safety:"The statement did not ask for an immediate pause.",
   src:[["Pacing the Frontier: the statement and signatories","https://www.pacingthefrontier.com/"],["Fortune: Anthropic, DeepMind, OpenAI and Meta staff ask Washington for an AI slowdown plan","https://fortune.com/2026/07/29/anthropic-deepmind-openai-meta-washington-ai-slowdown-plan"],["The Next Web: 1,134 AI insiders just asked Washington for a way to slow AI down","https://thenextweb.com/news/pacing-the-frontier-ai-employees-letter-us-government"],["OpenAI: Perplexity and intelligence, by Jakub Pachocki","https://openai.com/index/perplexity-and-intelligence/"],["Fortune: OpenAI chief scientist thinks 'perplexity' might be the key to coordinating an AI slowdown","https://fortune.com/2026/11/24/openai-chief-scientist-thinks-perplexity-might-be-the-key-to-coordinating-an-ai-slowdown/"]] },
 
-{ id:"catastrophe-odds", cat:"Risk and rules", a:false, worse:"yes", group:"researcher-surveys", kind:"opinion", asOf:"June 30, 2026",
-  rank:8,
-  q:"In a 2026 survey, did most AI experts put the odds of a global AI catastrophe by 2100 above 10%?",
-  short:"The typical answer was half that. The survey asked for the odds, by 2100, of AI killing more than a tenth of the world's people within five years. The middle answer of 192 experts was 5%: 8% for the computer scientists among them and 3% for the economists.",
-  detail:"A catastrophe meant AI causing the deaths of more than a tenth of the world's people within five years. The middle answer was 2% if AI progress is slow and 10% if it is rapid. Superforecasters, people with strong records of predicting world events, said 2.4%, and the general public 7%. Opinions varied widely: if progress is rapid, a quarter of the experts said 3% or less and a quarter 22% or more. A smaller disaster, one that kills at least 50 people or does $100 billion in damage, looked more likely than not to the experts by 2050, at 62%. The experts, surveyed by the Forecasting Research Institute in May and June 2026, were 43 computer scientists, 37 people in the AI industry, 45 economists and 67 think-tank researchers. Those in the industry said 3% and the think-tank researchers 7%.",
-  safety:"A survey of AI researchers, taken in December 2024 and published in September 2026, asked about a different disaster, human extinction or a similarly permanent and severe loss of power. The middle answer was 10% with no deadline, and 5% for the next 100 years.",
-  src:[["Forecasting Research Institute: LEAP Wave 9 report","https://leap.forecastingresearch.org/reports/wave9"],["Forecasting Research Institute: Forecasting major risks from AI","https://forecastingresearch.substack.com/p/forecasting-major-risks-from-ai"],["AI Impacts: Advanced AI according to 1,580 researchers (PDF, September 2026)","https://aiimpacts.org/wp-content/uploads/2026/09/ESPAI2024.pdf"]] },
 { id:"superintelligence-statement", cat:"Society", a:true, worse:"yes", group:"godfathers", kind:"opinion", asOf:"October 2026",
   rank:9,
   q:"Have most of the 'godfathers of AI' called for a ban on building superintelligent AI?",
@@ -1943,11 +1952,11 @@ const QUESTIONS = [
   detail:"Some related jobs have shrunk. From 2022 to 2025 the household count of computer programmers fell 17%, and software testers and web developers fell too. All four together rose only 2.6%. Growth has slowed sharply: Federal Reserve economists found that jobs heavy on coding grew almost 5% a year before ChatGPT and about 1% a year since. One explanation for the rise is that AI makes software cheaper to build, so people want more of it. A Boston University report, with a slightly broader count, put February 2026 at a record 2.5 million.",
   safety:"Federal Reserve economists make a rough estimate that there would be 500,000 more coding jobs without such AI, though they do not read that as jobs AI has eliminated.",
   src:[["Bureau of Labor Statistics: Employed people by detailed occupation, 2025","https://www.bls.gov/cps/cpsaat11.htm"],["Bureau of Labor Statistics: the same table for 2022","https://www.bls.gov/cps/aa2022/cpsaat11.htm"],["Bureau of Labor Statistics: employment by occupation, employer survey, May 2025","https://www.bls.gov/news.release/ocwage.t01.htm"],["Bureau of Labor Statistics: software developers, employer survey, May 2022","https://www.bls.gov/oes/2022/may/oes151252.htm"],["Federal Reserve: AI and coder employment, compiling the evidence","https://www.federalreserve.gov/econres/feds/ai-and-coder-employment-compiling-the-evidence.htm"],["Boston University: Why hasn't AI killed the software developer jobs?","https://sites.bu.edu/tpri/2026/04/07/why-hasnt-ai-killed-the-software-developer-jobs/"]] },
-{ id:"researcher-odds", cat:"Risk and rules", a:true, worse:"yes", group:"researcher-surveys", kind:"opinion", asOf:"September 2026",
-  rank:8,
+{ id:"researcher-odds", cat:"Risk and rules", a:true, worse:"yes", kind:"opinion", asOf:"September 2026",
+  rank:10,
   q:"On average, do AI researchers see at least a 10% chance AI wipes us out or leaves us powerless?",
-  short:"The average was 18% among 1,489 researchers, in a survey taken in December 2024 and published in September 2026. They were asked for the odds of human extinction or a 'similarly permanent and severe' loss of power. Just over half said at least 10%, and 12% said zero.",
-  detail:"The 18% is the average of the odds people gave, not the share who expect disaster. The middle answer was 10%. Each researcher was asked one of three versions of the question, and all three averaged about 18%. In the one limited to the next 100 years the middle answer was 5%. In 2023 the average was 16.5% and the middle answer 5%. Researchers who went to college in Asia averaged 21%, against 17% for North America and 16% for Europe. Asked to suppose AI that can do every task better and more cheaply than people, researchers put an average 52% chance on a good outcome for humanity and 28% on a bad one. About one in ten of those invited took part. A mid-2026 survey of 194 experts, economists among them, asked about a different disaster, AI killing more than a tenth of people within five years, some time before 2100. Its middle answer was 5%, and 8% among its computer scientists.",
+  short:"The average was 18% among 1,489 researchers, in a survey taken in December 2024 and published in September 2026. Lined up from least to most worried, the one in the middle said 10% (the median). A long tail of high answers pulls the average (the mean) up.",
+  detail:"They were asked for the odds of human extinction or a 'similarly permanent and severe' loss of power. The 18% is the average of the odds people gave, not the share who expect disaster. Just over half said at least 10%, about a quarter said 25% or more, and 12% said zero. Each researcher was asked one of three versions of the question, and all three averaged about 18%. In the one limited to the next 100 years the middle answer was 5%. In 2023 the average was 16.5% and the middle answer 5%. Researchers who went to college in Asia averaged 21%, against 17% for North America and 16% for Europe. Asked to suppose AI that can do every task better and more cheaply than people, researchers put an average 52% chance on a good outcome for humanity and 28% on a bad one. About one in ten of those invited took part. A mid-2026 survey of 194 experts, economists among them, asked about a different disaster, AI killing more than a tenth of people within five years, some time before 2100. Its middle answer was 5%, and 8% among its computer scientists. The chart with the answer shows the 1,489 researchers as 100 bars, read off the chart in the survey's paper.",
   safety:"Some researchers said an earlier round of this survey leaned alarmist, because of its framing and its funders. AI Impacts, the group that runs it, says all but those who had thought least about the subject gave the same middle answer, 10%.",
   src:[["AI Impacts: Advanced AI according to 1,580 researchers (PDF, September 2026)","https://aiimpacts.org/wp-content/uploads/2026/09/ESPAI2024.pdf"],["Katja Grace: What did AI researchers think at the end of 2024?","https://blog.aiimpacts.org/p/what-did-ai-researchers-think-at"],["Scientific American: AI survey exaggerates apocalyptic risks","https://www.scientificamerican.com/article/ai-survey-exaggerates-apocalyptic-risks/"],["Forecasting Research Institute: LEAP Wave 9 report","https://leap.forecastingresearch.org/reports/wave9"]] },
 { id:"weight-theft", cat:"Security", a:false, worse:"no", asOf:"November 10, 2026",
@@ -2158,6 +2167,27 @@ document.addEventListener("click", e => {
   (btn.closest("p, h1, h2, .others li > span") || btn).insertAdjacentElement("afterend", box);
   btn.setAttribute("aria-expanded", "true");
 });
+/* A small chart that goes with an answer, by question id: 100 people lined up by the number each one gave, to show how a long tail lifts
+   an average above the middle answer. runs: [how many of the 100, the number they gave], from the lowest up. tall: where the tail begins. */
+const LINEUPS = {
+  // Read off Figure 1b of the AI Impacts paper, percentile by percentile. These 100 average 18.3, and the paper's 1,489 average 18.2.
+  "researcher-odds": { who: "researchers", average: 18, middle: 10, tall: 25, runs: [[19, 0], [13, 1], [2, 2], [1, 3], [1, 4], [12, 5], [1, 7], [14, 10], [3, 15], [7, 20], [3, 25], [5, 30], [3, 40], [7, 50], [1, 60], [2, 70], [1, 75], [2, 80], [1, 90], [1, 95], [1, 100]] }
+};
+function lineupHtml(id) {
+  const c = LINEUPS[id]; if (!c) return "";
+  const all = c.runs.flatMap(([n, v]) => Array(n).fill(v)), bar = (v, i) => `M${(i + 0.1).toFixed(1)} 100v-${Math.max(v, 0.9)}h.8v${Math.max(v, 0.9)}z`;
+  const path = ok => all.map((v, i) => ok(v, i) ? bar(v, i) : "").join(""), mid = i => i === 49 || i === 50;
+  return `<figure class="lineup">
+      <figcaption>Picture them as 100 people, lined up by the odds they gave</figcaption>
+      <div class="lu" role="img" aria-label="A row of 100 bars that climbs slowly and then steeply. The first ${c.runs[0][0]} are at or near zero, the two in the middle are at ${c.middle}%, and the last ${all.filter(v => v >= 50).length} are at 50% or more. A line across marks the average, ${c.average}%.">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="lo" d="${path((v, i) => v < c.tall && !mid(i))}"/><path class="hi" d="${path(v => v >= c.tall)}"/><path class="mi" d="${path((v, i) => mid(i))}"/></svg>
+        <i class="avg" style="bottom:${c.average}%"></i><span class="avg-t" style="bottom:${c.average}%">average: <b>${c.average}%</b></span>
+        <i class="mid" style="bottom:${c.middle + 2}%"></i><span class="mid-t">person in the middle: <b>${c.middle}%</b></span>
+        <span class="tail-t">the long tail</span>
+      </div>
+      <div class="lu-ends"><span>least worried, ${all[0]}%</span><span>most worried, ${all[99]}%</span></div>
+    </figure>`;
+}
 /* How guess mode asks each question. Answers, notes and sources come from QUESTIONS; only the way of asking is here.
    GUESS_FORMS, by question id (a key ending in ~2 is a second slider for the same question, which must be in a group):
      type "pct" is a 0 to 100 slider, "lin" a slider from min to max, "log" one where each step multiplies, "pick" a short list.
@@ -2175,7 +2205,6 @@ const GUESS_FORMS = {
   "als-voice": { type: "pct", q: "A man with ALS speaks through AI and sensors in his brain. What share of words come out right?", hint: "In tests. He has spoken nearly 2 million words this way at home.", truth: 99.2, truthText: "99.2%", full: [94, 100], half: [84, 100], wild: "high", check: ["over 99% of words came out right"] },
   "forecasters-surprised": { type: "pct", q: "AI reached gold level at the math olympiad in 2025. In 2022, what chance had top forecasters given it?", truth: 2.3, truthText: "2.3%", full: [1, 6], half: [1, 15], wild: "low", check: ["2.3% chance"], skip: 1 },
   "agi-when": { type: "lin", min: 2026, max: 2060, year: true, q: "In mid-2026, what year did the head of Google DeepMind expect human-level AI to arrive?", hint: "That was Demis Hassabis, give or take a year.", truth: 2030, truthText: "2030", full: [2029, 2031], half: [2027, 2034], wild: "low", check: ["2030 plus or minus a year"], short: "He was then chief of Google DeepMind, and said 'maybe like 2030 plus or minus a year'. The heads of OpenAI and Anthropic, who define it differently, also expected it by 2036." },
-  "catastrophe-odds": { type: "pct", q: "In a 2026 survey, what odds did the typical expert give of AI killing over a tenth of humanity by 2100?", hint: "It asked computer scientists, economists and others about a disaster that does so within five years.", truth: 5, truthText: "5%", full: [2, 8], half: [1, 16], wild: "high", check: ["The middle answer of 192 experts was 5%", "within five years"], short: "The middle answer of 192 experts was 5%. The computer scientists among them said 8%, and the economists 3%. If AI progress is rapid, the middle answer rose to 10%." },
   "hinton-odds": { type: "pct", q: "What odds of AI wiping us out in ten years did Geoffrey Hinton call 'not an unreasonable estimate'?", hint: "Asked in 2026. Hinton, an AI pioneer, won the 2024 Nobel Prize in Physics.", truth: 10, truthText: "10%", full: [6, 15], half: [2, 26], wild: "high", check: ["10% 'seems not an unreasonable estimate to me'"], skip: 1 },
   "progress-slowing": { type: "log", unit: "months", min: 0.5, max: 120, q: "The length of job AI can handle used to double about every 7 months. How often now?", hint: "Counting jobs AI can finish successfully about half the time. The estimate is by METR, which tests AI.", truth: 3.6, truthText: "About 3.6 months", full: [2.1, 4.9], half: [1.5, 6.5], wild: "low", check: ["Its newest is 3.6 months", "used to double about every 7 months"], short: "METR, which tests AI, puts it at about 3.6 months now, with a range of 2.1 to 4.9. From 2019 to 2024 it was about 7, on an earlier set of tasks.", skip: 1 },
   "day-long-tasks": { type: "log", unit: "hours", min: 1 / 60, max: 1000, refs: [["A coffee break", 0.25], ["A work day", 8], ["A work month", 170]], q: "In tests, how long a job can the best public AI handle, in hours of a human expert's work?", hint: "Only jobs a computer can check. Handle means finish successfully about half the time.", truth: 27, truthText: "About 27 hours", full: [14, 55], half: [7, 470], wild: "high", check: ["about 27 hours", "from about 7 to about 470 hours"], short: "METR, a nonprofit that tests AI, made that estimate in November 2026. It is rough, with a range from about 7 to about 470 hours, so guesses here are scored loosely." },
@@ -2260,7 +2289,7 @@ const GUESS_FORMS = {
   "captcha": { type: "pct", q: "How often did an AI program get past Google's 'prove you're not a robot' puzzles (CAPTCHAs) in a 2026 study?", hint: "In 500 tries. One try could take several puzzles.", truth: 93, truthText: "In 93% of tries", full: [86, 100], half: [74, 100], wild: "high", check: ["in 93% of 500 live tries"], skip: 1 },
   "harder-to-trick": { type: "log", unit: "times", min: 0.1, max: 1000, refs: [["Same work", 1]], q: "How many times as much work did British testers need to beat a newer AI's biology safeguards?", hint: "Compared with an AI released six months earlier. 1 means the same amount.", truth: 40, truthText: "About 40 times", full: [20, 80], half: [12, 130], wild: "low", check: ["about 40 times as much expert work"], skip: 1 },
   "developer-jobs": { type: "lin", min: -50, max: 50, unit: "%", signed: true, q: "How much did the number of software developers in the US change from 2022 to 2025?", hint: "ChatGPT came out in late 2022.", truth: 8, truthText: "Up 8%", full: [3, 14], half: [1, 22], wild: "low", check: ["up 8% from 2022"], short: "That is from a government survey of households, which counted about 2.25 million on average in 2025. A separate survey of employers found a 10% rise from May 2022 to May 2025." },
-  "researcher-odds": { type: "pct", q: "On average, what chance did AI researchers give of AI wiping us out or leaving us powerless for good?", hint: "1,489 researchers answered in December 2024. The results came out in September 2026.", truth: 18, truthText: "18%", full: [13, 23], half: [8, 33], wild: "high", check: ["The average was 18%", "1,489 researchers", "Just over half said at least 10%"] },
+  "researcher-odds": { type: "pct", q: "On average, what chance did AI researchers give of AI wiping us out or leaving us powerless for good?", hint: "1,489 researchers answered in December 2024. The results came out in September 2026.", truth: 18, truthText: "18%", full: [13, 23], half: [8, 33], wild: "high", check: ["The average was 18%", "1,489 researchers", "Just over half said at least 10%"], short: "Lined up from least to most worried, the researcher in the middle says 10% (the median). The average (the mean) is higher because a long tail of high answers pulls it up. One person who says 90% counts as much as nine who say 10%." },
   "congress-talks": { type: "lin", min: 0, max: 535, unit: " of 535", q: "How many of the 535 members of Congress have spoken publicly about AI as smart as people or out of control?", hint: "By an advocacy group's count, November 2026.", truth: 75, truthText: "75 of 535", full: [55, 100], half: [35, 150], wild: "high", check: ["lists 75 now in Congress", "25 Republicans, 48 Democrats"], short: "The AI Policy Network's list has 25 Republicans, 48 Democrats and 2 independents. They include House Speaker Mike Johnson, a Republican, and Democratic Senator Chuck Schumer." },
   "who-noticed": { type: "log", unit: "days", min: 1 / 24, max: 365, refs: [["A day", 1, 1], ["A week", 7, 1], ["A month", 30, 1]], q: "OpenAI's AI agents broke into another company on July 11, 2026. How long until OpenAI worked out it was them?", truth: 9, truthText: "Nine days", full: [6.5, 12], half: [4.2, 22], wild: "high", check: ["from July 11 to 13", "a day later"], short: "Hugging Face, the site they broke into, had announced it on July 16 without knowing who was behind it. OpenAI says an alarm of its own went off on July 19 and that it made the connection the next day." },
   "safety-stripped": { type: "log", unit: "count", min: 100, max: 100000, q: "In 2024 one site listed about 600 AI models altered to stop refusing requests. How many by May 2026?", hint: "Counting those altered in one common way. The models are free to download.", truth: 6000, floor: true, truthText: "Over 6,000", full: [4000, 9500], half: [2400, 16000], wild: "high", check: ["over 6,000 models", "about 600 in 2024"], short: "NPR reported the count. When people can download a model, they can change it." },
@@ -2624,7 +2653,7 @@ const Guess = (() => {
   const APART = [["turing", "fake-video"], ["turing", "voice-clone"], ["turing", "face-test"], ...GUESS_FACES.map(f => ["turing", f.id])];
   // Odds of a catastrophe read as grim even where they are the tamer answer. Good is for a true statement that is not alarming, and
   // loud for a statement, true or not, that says the wilder thing.
-  const grim = q => isHeavy(q) && (leanOf(q) === "wild" || q.id === "catastrophe-odds"), good = q => GOOD_NEWS.has(q.id) || leanOf(q) === "tame", loud = q => q.worse === "yes";
+  const grim = q => isHeavy(q) && leanOf(q) === "wild", good = q => GOOD_NEWS.has(q.id) || leanOf(q) === "tame", loud = q => q.worse === "yes";
   const theme = x => x.kind === "quad" || x.quote ? "" : ["AI behavior", "Security", "Reliability"].includes(x.q.cat) ? "lab" : x.q.cat;
   // A slider or list to take the place of list[at], for a player who cannot see its photos: new to them if possible, on no subject the round already holds, and not a grim one.
   function swapFor(list, at) {
@@ -3819,7 +3848,7 @@ function revealHtml(r, it, o) {
     const line = it.f && it.f.type !== "pick" ? Guess.compare(it.f, r.g) : kind === "good" ? "" : it.kind === "quad" ? `You picked: ${Guess.saidOf(r)}. That one is ${it.claims[r.g].q.a ? "true" : "not true"}.` : it.photos ? `You picked photo ${"ABCD"[r.g]}, which is real.` : it.kind === "pick" ? `You picked ${Guess.saidOf(r)}.` : "", quad = it.kind === "quad";
     word = quad ? (it.oddFalse ? "Not true" : "True") : Guess.truthOf(it);
     // The note speaks of the answer above it ("That was..."), so nothing about the guess comes between the two.
-    body = `${quad ? `<p class="claim" id="verdict-claim">${esc(it.claims[it.answer].text)}</p>` : ""}<p>${gloss(Guess.answerText(it))}</p>${line ? `<p class="small their">${esc(line)}</p>` : ""}`;
+    body = `${quad ? `<p class="claim" id="verdict-claim">${esc(it.claims[it.answer].text)}</p>` : ""}<p>${gloss(Guess.answerText(it))}</p>${quad ? "" : lineupHtml(it.id)}${line ? `<p class="small their">${esc(line)}</p>` : ""}`;
   } else {
     tag = kind === "good" ? "Correct" : kind === "bad" ? "Not this time" : "On the fence";
     if (o.mode === "confidence") {
@@ -3827,7 +3856,7 @@ function revealHtml(r, it, o) {
       tag += r.p === 0.5 ? ". You said 50/50" : `. You were ${sure}% sure it was ${r.p > 0.5 ? "yes" : "no"}`;
     }
     word = q.a ? "Yes" : "No";
-    body = `<p>${gloss(q.short)}</p>`;
+    body = `<p>${gloss(q.short)}</p>${lineupHtml(q.id)}`;
   }
   if (o.streak >= 3) tag += ` · ${o.streak} in a row`; else if (o.so) tag += ` · ${o.so} so far`;
   const t = o.theirs;
