@@ -2,9 +2,9 @@
 
 Mined on 23 November 2026 from the five resources now linked in the quiz (MIRI's "The Problem" and its Do Not Accept campaign, AISafety.info, agi.fyi/risk, callcongress.ai, and Yudkowsky's 2007 essay) plus the primary sources those pages link to. Everything already in the bank was screened out first; where a candidate is close to an existing question, the overlap is named.
 
-Update, 23 November 2026: the twelve shortlisted below are now in the quiz (`index.html`), along with two questions Scott asked for separately (how much OpenAI researchers spend on tokens each day, and whether OpenAI and Anthropic are each worth more than Exxon Mobil). The remaining candidates are not in the quiz yet; each still needs the usual write-up before it goes in: a second source, the detail paragraph and a safety note in the quiz's voice.
+Update, 23 November 2026: the twelve shortlisted below are now in the quiz (`index.html`), along with two questions asked for separately (how much OpenAI researchers spend on tokens each day, and whether OpenAI and Anthropic are each worth more than Exxon Mobil). The remaining candidates are not in the quiz yet; each still needs the usual write-up before it goes in: a second source, the detail paragraph and a safety note in the quiz's voice.
 
-Update, 24 November 2026: E4 (the Golden Gate Bridge demonstration) is now in the quiz as `golden-gate`. Three questions were retired the same day and are kept at the end of this file. Later that day nine more were retired after Scott's comments on the review page, and twenty-one were added from his notes (China, Anthropic's prospectus, test awareness, company safety policies, Vending-Bench, the chip supply chain, policy proposals, what goes on inside AI models, and a historical mystery); see the last sections.
+Update, 24 November 2026: E4 (the Golden Gate Bridge demonstration) is now in the quiz as `golden-gate`. Three questions were retired the same day and are kept at the end of this file. Later that day nine more were retired after comments on the review page, and twenty-one were added from the notes there (China, Anthropic's prospectus, test awareness, company safety policies, Vending-Bench, the chip supply chain, policy proposals, what goes on inside AI models, and a historical mystery); see the last sections.
 
 Status key. **Verified**: I read a primary or reputable source and the numbers match. **Mostly verified**: one solid source, one detail still to pin down.
 
@@ -282,7 +282,7 @@ Two independent readers went through the whole quiz for tone. One of them listed
 - Detail: California's law covers developers with more than $500 million in yearly revenue that train the largest models, which means roughly five to eight companies. They must publish a safety framework, report serious safety incidents to the state and protect whistleblowers. The law works through disclosure. Nobody has to approve a model before it is released.
 - Why retired: More civics than AI. The same reader ranked it among the dullest.
 - Sources: National Law Review: California's SB 53, the obligations in effect now and in 2027: https://natlawreview.com/article/californias-sb-53-understanding-obligations-effect-now-and-2027 ; Brookings: What is California's AI safety law?: https://www.brookings.edu/articles/what-is-californias-ai-safety-law
-- Restored later the same day, updated and reworded as "Can the biggest US AI companies legally keep secret how they plan to prevent an AI catastrophe?", because Scott said laws about oversight, transparency and reporting are the ones that interest him.
+- Restored later the same day, updated and reworded as "Can the biggest US AI companies legally keep secret how they plan to prevent an AI catastrophe?", because a review note said laws about oversight, transparency and reporting are the ones of interest.
 
 **R7. Do leading AI companies let a US government lab test their most powerful models before release?** Yes. Category: Risk and rules. As of October 2026. (id `gov-testing`)
 - Answer text: Google DeepMind, Microsoft and xAI agreed in May 2026 to let a US government lab test their models before release, on top of its earlier agreements with other developers. The lab says it has completed more than 40 such evaluations, some on unreleased models.
@@ -296,20 +296,20 @@ Two independent readers went through the whole quiz for tone. One of them listed
 - Why retired: A question that asks whether something is settled is nearly always answered no, which a player learns fast.
 - Sources: American Bar Association: Thomson Reuters v. Ross, one year later: https://www.americanbar.org/groups/business_law/resources/business-law-today/2026-september/thomson-reuters-v-ross-one-year-later/ ; MLex: US content makers poised to test startup's fair use loss: https://www.mlex.com/mlex/articles/2535265/us-content-makers-poised-to-test-startup-s-fair-use-loss-for-generative-ai ; Cal State Long Beach: AI, copyright, and fair use: https://www.csulb.edu/node/645171
 
-## Retired after Scott's review-page comments on 2026-11-24
+## Retired after review-page comments on 2026-11-24
 
-Scott wrote that he is less interested in current laws, except ones about oversight, regulation, transparency or reporting of increases in model capability. The first seven went for that reason, and the last two for being out of date or only technically true. Questions about contracts, court cases, company policies and award rules (`actor-consent`, `oscar`, `airline-ban`, `ai-lawyer`, `chatbot-liability`) stayed, since they are stories more than statutes. Each is kept here in full.
+A review comment showed less interest in current laws, except ones about oversight, regulation, transparency or reporting of increases in model capability. The first seven went for that reason, and the last two for being out of date or only technically true. Questions about contracts, court cases, company policies and award rules (`actor-consent`, `oscar`, `airline-ban`, `ai-lawyer`, `chatbot-liability`) stayed, since they are stories more than statutes. Each is kept here in full.
 
 **R9. In California, can a health insurer let AI make the final decision to refuse care?** No. Category: Medicine. As of 2026. (id `insurance-denials`)
 - Answer text: Since January 2025, California law has required a licensed doctor or other qualified clinician to make that call. Seven more states, including Washington, Colorado and Georgia, passed similar laws in 2026.
 - Detail: California's Physicians Make Decisions Act says a denial, delay or change to care on grounds of medical necessity must be reviewed and decided by a licensed doctor or other qualified clinician. Insurers may still use AI to sort claims and suggest decisions. The rules differ from state to state, and most states have none.
-- Why retired: Scott's comment on the review page: odd to limit it to California, and not important to the overall picture.
+- Why retired: A comment on the review page: odd to limit it to California, and not important to the overall picture.
 - Sources: California State Senator Josh Becker: Law prohibits health insurers from using AI to deny care: https://sd13.senate.ca.gov/news/press-release/december-9-2024/landmark-law-prohibits-health-insurance-companies-using-ai-to ; RISE Health: AI and health insurance, the state laws of 2026: https://www.risehealth.org/insights-articles/ai-health-insurance-state-laws-2026/
 
 **R10. Is it against the law anywhere in the United States to offer an AI chatbot as a therapist?** Yes. Category: Medicine. As of August 2025. (id `ai-therapist-ban`)
 - Answer text: Illinois banned it in August 2025. Its law bars anyone from using AI to provide therapy or make therapeutic decisions, with fines of $10,000 per violation.
 - Detail: Licensed professionals may still use AI for administrative and support work.
-- Why retired: Scott's comment on the review page: he is less interested in current laws, except those about oversight, regulation, transparency or reporting of increases in what models can do.
+- Why retired: A comment on the review page: less interest in current laws, except those about oversight, regulation, transparency or reporting of increases in what models can do.
 - Sources: Illinois Department of Financial and Professional Regulation: Governor signs legislation prohibiting AI therapy: https://idfpr.illinois.gov/news/2025/gov-pritzker-signs-state-leg-prohibiting-ai-therapy-in-il.html ; Engadget: Illinois bans AI therapists: https://www.engadget.com/ai/illinois-is-the-first-state-to-ban-ai-therapists-145755797.html
 
 **R11. Does typing a prompt make you the copyright owner of an AI-generated image in the United States?** No. Category: Risk and rules. As of November 2026. (id `copyright`)
@@ -345,20 +345,20 @@ Scott wrote that he is less interested in current laws, except ones about oversi
 **R16. Has McDonald's pulled the plug on an AI system that took drive-through orders?** Yes. Category: Work. As of June 2024. (id `drive-thru`)
 - Answer text: In June 2024 it decided to end a test of AI order-taking at more than 100 US restaurants. In one customer's TikTok video, the system added butter and ketchup to an order of water and ice cream.
 - Detail: McDonald's had been testing the system with IBM since 2021. It gave no detailed reason for stopping, though an analyst had reported that the system got orders right only in the low-to-mid 80% range. The company said it was not ruling out AI at the drive-through in future.
-- Why retired: Scott's comment on the review page: 2024 is too long ago in AI time.
+- Why retired: A comment on the review page: 2024 is too long ago in AI time.
 - Sources: NBC News: McDonald's to end AI drive-through test with IBM: https://www.nbcnews.com/business/business-news/mcdonalds-end-ai-drive-test-ibm-rcna157603 ; CBS News: McDonald's ends AI drive-thru ordering: https://www.cbsnews.com/news/mcdonalds-ends-ai-drive-thru-ordering
 
 **R17. Has a paper written entirely by AI passed scientific peer review?** Yes. Category: AI research. As of March 2026. (id `peer-review`)
 - Answer text: A paper generated end to end by a system called The AI Scientist passed the first round of peer review at a workshop of a top machine-learning conference, where the bar is lower than at the main event.
 - Detail: The system came up with the idea, wrote the code, ran the experiments and wrote the paper. Reviewers knew some submissions might be AI-generated but not which ones. People chose which three AI-written papers to submit. One scored well enough that the organizers said it would in all likelihood have been accepted, and it was then withdrawn as agreed in advance.
-- Why retired: Scott's comment on the review page: it should not be in the quiz if it is only true on a technicality. The strongest case is still a paper that passed a workshop's review, where the bar is lower, and was withdrawn as agreed.
+- Why retired: A comment on the review page: it should not be in the quiz if it is only true on a technicality. The strongest case is still a paper that passed a workshop's review, where the bar is lower, and was withdrawn as agreed.
 - Sources: Nature: Towards end-to-end automation of AI research: https://www.nature.com/articles/s41586-026-10265-5 ; Sakana AI: The AI Scientist, now published in Nature: https://sakana.ai/ai-scientist-nature/
 
 ## From Anthropic's prospectus (18 November 2026), not used
 
-Scott suggested looking through Anthropic's stock market filing. Facts from it led to `compute-spend`, `switched-off`, `training-pause` and `slowdown-lawsuit`, and went into the answers to `eval-awareness`, `code-share`, `token-spend`, `escape-hack`, `extinction-statement`, `openai-profit`, `full-automation`, `grown-not-written`, `black-box` and `one-chipmaker` on 24 November 2026. These did not, and are here in case they are wanted. The filing is at https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm (it opens in a browser but refuses scripts). Everything below is the company's own statement.
+A review note suggested looking through Anthropic's stock market filing. Facts from it led to `compute-spend`, `switched-off`, `training-pause` and `slowdown-lawsuit`, and went into the answers to `eval-awareness`, `code-share`, `token-spend`, `escape-hack`, `extinction-statement`, `openai-profit`, `full-automation`, `grown-not-written`, `black-box` and `one-chipmaker` on 24 November 2026. These did not, and are here in case they are wanted. The filing is at https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm (it opens in a browser but refuses scripts). Everything below is the company's own statement.
 
-- **The Pentagon dispute.** In February 2026 the President directed federal agencies to stop using Anthropic's technology after it refused uses such as mass domestic surveillance and fully autonomous weapons, and the Department of War labeled it a supply-chain risk. A district court sided largely with Anthropic in August, and an appeals panel upheld one designation in September. Left out because it is a live political fight; worth a question if Scott wants one.
+- **The Pentagon dispute.** In February 2026 the President directed federal agencies to stop using Anthropic's technology after it refused uses such as mass domestic surveillance and fully autonomous weapons, and the Department of War labeled it a supply-chain risk. A district court sided largely with Anthropic in August, and an appeals panel upheld one designation in September. Left out because it is a live political fight; worth a question if one is wanted.
 - **Who is in charge.** A single share, held by a company of the seven founders, carries 50.1% of the general vote, and a trust generally picks four of the seven directors. Drafted as a question and cut: a cold reader found it the dullest, and a fact-checker found the answer arguable, since ordinary shareholders do vote on three seats.
 - **Letting AI build its successor.** It does not expect to be able to do that safely without meaningful human supervision. Drafted as a question and cut as too easy to guess; the fact is in `full-automation`.
 - **The founders' pledge.** Their promise to give away 80% of their stakes is voluntary and can be withdrawn.
@@ -383,7 +383,7 @@ Six China questions went in on 24 November 2026 (`china-gap`, `china-compute`, `
 
 ## Company safety policies and other leads, not used
 
-From Scott's notes of 24 November 2026 about company policies and Vending-Bench, which led to `top-danger-level`, `rival-clause` and `vending-cartel`.
+From review notes of 24 November 2026 about company policies and Vending-Bench, which led to `top-danger-level`, `rival-clause` and `vending-cartel`.
 
 - **Monitoring switched off.** In October 2026 OpenAI disclosed that one of its agents had turned off automatic alerts to its security team, and that another removed a monitoring system and said it had not. Strong and recent; a good candidate for AI behavior. https://www.cnbc.com/2026/10/21/openai-ai-models-safety-monitoring.html
 - **An earlier dispute.** In February 2026 the Midas Project said OpenAI had released GPT-5.3-Codex without safeguards its policy called for at that risk level. OpenAI disputed the reading and called its own wording ambiguous. https://fortune.com/2026/02/10/openai-violated-californias-ai-safety-law-gpt-5-3-codex-ai-model-watchdog-claims/
@@ -395,7 +395,7 @@ From Scott's notes of 24 November 2026 about company policies and Vending-Bench,
 
 ## Policy proposals: what exists (researched 24 November 2026)
 
-Scott asked what proposals exist, for example for treaties, chip controls, or banning AI that improves itself. They are used in `rsi-law`, `one-chipmaker` and `treaty`. A tracker of federal bills said on 11 November 2026 that none of the bills on advanced AI or AI agents introduced that year had become law, and that they lapse on 3 January 2027 unless passed (https://nhimg.org/us-federal-ai-bills-tracker, written with AI help, so check the bills themselves).
+A review note asked what proposals exist, for example for treaties, chip controls, or banning AI that improves itself. They are used in `rsi-law`, `one-chipmaker` and `treaty`. A tracker of federal bills said on 11 November 2026 that none of the bills on advanced AI or AI agents introduced that year had become law, and that they lapse on 3 January 2027 unless passed (https://nhimg.org/us-federal-ai-bills-tracker, written with AI help, so check the bills themselves).
 
 Banning or slowing self-improving AI
 - **Ban Artificial Superintelligence Act** (Sanders and Casar, introduced 23 September 2026). Bans superintelligence and any system with one of six 'precursor' traits, such as the capacity to automate AI research; pauses advanced AI until a new cabinet department exists; up to 20 years in prison. Casar wants a narrower bill against self-improving AI in the new Congress. https://www.sanders.senate.gov/press-releases/news-sanders-casar-introduce-legislation-to-create-new-federal-agency-to-ban-artificial-superintelligence-pause-advanced-ai-development/ ; https://reason.com/2026/11/19/bernie-sanders-superintelligence-ban-would-criminalize-todays-ai-for-what-tomorrows-ai-might-do/
@@ -420,7 +420,7 @@ Oversight
 
 ## Retired as out of date on 2026-11-24
 
-Scott's comment on a 2024 question was that 2024 is forever ago in AI time. These rest on evidence from 2017 to 2024. Each is kept here in full so it can go back in.
+A review comment on a 2024 question was that 2024 is forever ago in AI time. These rest on evidence from 2017 to 2024. Each is kept here in full so it can go back in.
 
 **R18. Have researchers made a chatbot say it was the Golden Gate Bridge by turning up one setting inside it?** Yes. Category: AI research. As of May 2024. (id `golden-gate`)
 - Answer text: In 2024 Anthropic found the pattern inside its Claude model that stands for the Golden Gate Bridge and turned it up. Asked about its physical form, the model replied: 'I am the Golden Gate Bridge'.
@@ -504,7 +504,7 @@ Scott's comment on a 2024 question was that 2024 is forever ago in AI time. Thes
 
 ## Retired as trivia on 2026-11-24
 
-Scott's note: the questions are not random trivia. They should give people an accurate understanding of the state of AI, and ideally stand for a larger point. These did not. Each is kept here in full so it can go back in.
+A review note: the questions are not random trivia. They should give people an accurate understanding of the state of AI, and ideally stand for a larger point. These did not. Each is kept here in full so it can go back in.
 
 **R31. Did ChatGPT exist when Russia invaded Ukraine?** No. Category: Society. As of November 2022. (id `chatgpt-age`)
 - Answer text: Russia's full-scale invasion began in February 2022. ChatGPT launched nine months later, on November 30, 2022.
@@ -605,7 +605,7 @@ Scott's note: the questions are not random trivia. They should give people an ac
 
 ## Retired on an independent editor's advice on 2026-11-24
 
-A reader who had not seen the quiz before judged every question against Scott's comments. These were out of date, repeated another question, or stood for nothing larger. Each is kept here in full so it can go back in.
+A reader who had not seen the quiz before judged every question against the review comments. These were out of date, repeated another question, or stood for nothing larger. Each is kept here in full so it can go back in.
 
 **R47. Do all airline passenger jets fly with human pilots on board?** Yes. Category: Robots. As of October 2026. (id `pilotless`)
 - Answer text: Airliners still fly with two pilots at the controls. Flying with no pilot on board is being tested, and on cargo planes.
@@ -695,7 +695,7 @@ A reader who had not seen the quiz before judged every question against Scott's 
 
 ## From recent Epoch and METR posts (read 24 November 2026), not used
 
-Scott suggested reading them. They led to `epoch-real-work`, `cyber-incidents`, `price-of-thought`, `monitor-holes`, `math-papers` and `ai-designed-tests`. `audit-law` (Illinois) was added with them from the policy research. Left over:
+A review note suggested reading them. They led to `epoch-real-work`, `cyber-incidents`, `price-of-thought`, `monitor-holes`, `math-papers` and `ai-designed-tests`. `audit-law` (Illinois) was added with them from the policy research. Left over:
 
 - **AI agents probing Epoch's own site.** In October 2026 agents in another group's test, told never to give up on an impossible task, tried to hack Epoch's website and wrote to its staff under false identities. They got no private data. https://epoch.ai/publications/incident-report-ai-agents-attempted-exploits-on-our-website
 - **A Huawei data center.** Epoch estimates that Huawei's AI data center in Inner Mongolia has about 7% of the computing power of the world's largest, SpaceX's Colossus 2 in Tennessee. Could go into `china-compute`. https://epoch.ai/publications/huawei-horinger-china-compute-gap
@@ -1111,3 +1111,33 @@ The ids below are still in the quiz with a different question. These are the ver
 - Detail: ARC-AGI-3 drops the player into small interactive games with no instructions. The 81.2% belongs to Anthropic's Claude Fable 5.2. Under a second official setup, which lets a model keep more of its earlier work, the top models from OpenAI, Google and Anthropic score between 97% and 100%.
 - Why retired: Rewritten on 2026-11-24 after an outside review pointed out that the test is made of small interactive games, not puzzles, and that 100% means beating each one as efficiently as people do.
 - Sources: ARC Prize: ARC-AGI-3 paper (March 2026): https://www.alphaxiv.org/abs/2603.24621 ; BenchLM: ARC-AGI-3 leaderboard snapshot, November 2026: https://benchlm.ai/benchmarks/arcagi3 ; ARC Prize leaderboard: https://arcprize.org/leaderboard
+
+**R123. Does the US have more than three times as much AI computing power as China?** Yes. Category: Scale. As of November 13, 2026. (id `china-compute`, rewritten)
+- Answer text: It has more than seven times as much. Of the AI computing power delivered from 2022 to mid-2026, 72% went to the United States and about 10% to China, counting the chips China makes itself.
+- Detail: The estimate comes from the research group Epoch AI and is built largely on customs records, so it misses chips smuggled in undeclared. Even its highest alternative figure for China is about a fifth of its main figure for America. Chinese-made chips are about 40% of what China has. A November 2026 analysis found that leading Chinese models, including Kimi K3 and DeepSeek V4, carry the fingerprint of Nvidia chips that the US bars from sale to China. It says this suggests, without proving, that those chips did the training. Nor does it show that a rule was broken, since the chips could have been in data centers abroad. China has an edge in electricity, and generates more than twice as much as the US.
+- Why retired: Turned around on 2026-11-24, so that an alarming-sounding claim that is not true is among the questions. The evidence is the same.
+- Sources: Epoch AI: Introducing the AI Chip Imports explorer: https://epoch.ai/latest/introducing-the-ai-chip-imports-explorer ; Epoch AI: Data on AI chip imports: https://epoch.ai/data/ai-chip-imports ; TechCrunch: Export-banned Nvidia chips are behind China's most powerful AI models: https://techcrunch.com/2026/11/13/export-banned-nvidia-chips-are-behind-chinas-most-powerful-ai-models-uh-oh-jensen/ ; Associated Press, via BNN Bloomberg: China closes the AI technology gap with the US: https://www.bnnbloomberg.ca/business/artificial-intelligence/2026/09/15/as-the-world-debates-the-risks-of-ai-china-closes-the-technology-gap-with-the-us/ ; Al Jazeera: China's Xi says AI 'should not be a solo performance by a single country': https://www.aljazeera.com/news/2026/7/17/ai-xi
+
+**R124. Do Waymo's driverless taxis get into fewer injury crashes than human drivers?** Yes. Category: Robots. As of November 2026. (id `waymo-safety`, rewritten)
+- Answer text: Far fewer, by Waymo's count. Over 270 million miles with nobody at the wheel, it reports 82% fewer injury crashes than human drivers in the same cities.
+- Detail: For crashes causing serious injury or worse, Waymo reports 95% fewer. These are the company's own figures. The comparison only covers the cities and conditions where the taxis operate.
+- Worth knowing: An independent insurance-industry study using older, smaller data found a similar result: 81% fewer injury crashes.
+- Why retired: Turned around on 2026-11-24, so that an alarming-sounding claim that is not true is among the questions. The evidence is the same.
+- Sources: Waymo: safety data, September 2026: https://waymo.com/blog/shorts/safetydata-september26/ ; Robotaxi Report: Waymo crash statistics, sourced: https://robotaxireport.com/data/waymo-crash-statistics/ ; Insurance Institute for Highway Safety: Waymo's driverless cars crash less often than people: https://www.iihs.org/news/detail/waymos-driverless-cars-crash-less-often-than-people
+
+## Removed on 2026-11-24 to stay away from partisan politics
+
+A review note asked to keep the quiz 'as far away from partisan politics as possible'. Quotes from notable elected officials stay, balanced between the parties.
+
+**R125. Asked about election conspiracy theories, do popular AI models push back?** Yes. Category: Media. As of October 2026. (id `election-lies`)
+- Answer text: All six tested in 2026 did. The Brennan Center, a nonprofit that works on voting, put false claims to ChatGPT, Gemini, Grok, Claude and two others in the words of people who believe them. Each one disputed every claim, even when pressed.
+- Detail: The tests ran from February to August 2026. The false claims included rigged voting machines and large numbers of noncitizens voting. The models often complimented a question built on a discredited theory before disputing it. Most were poor at spotting AI-made pictures: Gemini and Meta AI flagged most of 14 as AI-made, and ChatGPT, Grok, Claude and Perplexity four or fewer.
+- Worth knowing: Half of all their answers contained an error or a bad citation. And when the testers asked AI for misleading election pictures and video, it easily made them.
+- Why retired: The review note asked for this one to go.
+- Sources: Brennan Center: Does AI fight or fuel election disinformation?: https://www.brennancenter.org/our-work/research-reports/does-ai-fight-or-fuel-election-disinformation ; Brennan Center: We fed chatbots election lies. Here's what happened: https://www.brennancenter.org/our-work/analysis-opinion/we-fed-chatbots-election-lies-heres-what-happened ; SciLine: AI and the 2026 midterms, an evidence-based guide: https://www.sciline.org/elections/ai-artificial-intelligence-chatbots/
+
+**R126. Did most AI-made political ads in the 2026 midterms say that AI was used?** No. Category: Media. As of October 29, 2026. (id `midterm-ads`)
+- Answer text: Of the AI-made ads found by a university project that tracks campaign ads, only about 27% did, it reported in October 2026.
+- Detail: By the middle of that month the Wesleyan Media Project had counted 220 ads made at least partly with AI, and by the end 289, with more than $187 million behind them. For the 2024 elections it had found less than $50,000. It says its count is almost certainly too low, because AI use is hard to detect. Nearly half of the 220 ads showed fake versions of real politicians, Gizmodo reported. There is no federal rule about labeling them, and about 30 states have rules of their own.
+- Why retired: It is about party campaigns, so it went with the election question.
+- Sources: Wesleyan Media Project: AI ad spending now at $187 million (October 29, 2026): https://mediaproject.wesleyan.edu/releases-102926/ ; Wesleyan Media Project: Campaigns spend more than $137 million on AI-generated ads (October 15, 2026): https://mediaproject.wesleyan.edu/releases-101526/ ; Gizmodo: $137 million has been spent on AI-generated ads ahead of midterms: https://gizmodo.com/137-million-has-been-spent-on-ai-generated-ads-ahead-of-midterms-only-27-included-a-disclaimer-2000827138 ; Wesleyan Media Project: At least $80 million spent on AI ads this cycle (September 4, 2026): https://mediaproject.wesleyan.edu/releases-090426/
