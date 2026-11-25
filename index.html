@@ -195,6 +195,41 @@ main.fielded:empty { background: var(--field); }
 .field .intro { color: var(--on-field-2); font-size: clamp(0.92rem, 1.6vw, 1.05rem); line-height: 1.4; max-width: 62ch; text-wrap: pretty; margin-bottom: 16px; }
 .field.tight { padding-bottom: 4px; }
 .lede { font-size: 1.08rem; max-width: 34rem; }
+.field a.brand { text-decoration: none; padding: 13px 0; margin: -13px 0; }
+/* The menu: opens when a mouse rests on it, or when its button is pressed. */
+.menu { position: relative; margin-left: auto; }
+.menu > .tab { gap: 7px; }
+.menu svg { flex: none; width: 13px; height: 13px; transition: transform .18s ease; }
+.menu > .tab[aria-expanded="true"] svg { transform: rotate(180deg); }
+.menu-list { position: absolute; z-index: 40; top: 100%; right: 0; width: min(20.5rem, calc(100vw - 40px)); margin: 4px 0 0; padding: 7px; list-style: none; background: var(--surface); color: var(--ink); border-radius: 16px; box-shadow: 0 0 0 1px rgba(9, 16, 52, .08), 0 22px 50px rgba(9, 16, 52, .34); transform-origin: calc(100% - 3rem) 0; animation: drop .16s ease-out; }
+.menu-list::before { content: ""; position: absolute; left: 30%; right: 0; bottom: 100%; height: 10px; }
+.menu-list a { display: grid; grid-template-columns: 1fr auto; gap: 0 10px; padding: 11px 14px 12px; border-radius: 10px; text-decoration: none; }
+.field .menu-list a { color: inherit; }
+.menu-list a:hover { background: var(--accent-soft); }
+.menu-list a[aria-current] { background: var(--bg); }
+.field .menu-list a:focus-visible { outline-color: var(--accent); outline-offset: -3px; }
+.menu-list b { font-weight: 600; font-size: 1.02rem; }
+.menu-list span { grid-column: 1 / -1; color: var(--muted); font-size: 0.88rem; line-height: 1.35; }
+.menu-list i { font-style: normal; color: var(--muted); }
+@keyframes drop { from { opacity: 0; transform: translateY(-6px) scale(0.98); } }
+/* The pages behind the menu */
+.field .back { margin: 2px 0 0; padding: 12px 0; }
+.field .page-h { padding: 14px 0 10px; display: flex; flex-direction: column; gap: 10px; }
+.field .page-h h1 { font-size: clamp(2.1rem, min(6.2vw, 8.4vh), 4.2rem); font-weight: 800; letter-spacing: -0.022em; line-height: 1; max-width: 17ch; }
+.field .page-h p { max-width: 46ch; font-size: clamp(1.02rem, 1.7vw, 1.2rem); color: var(--on-field-2); }
+.page { padding: 26px 0 40px; display: flex; flex-direction: column; gap: 22px; }
+.page > .card { max-width: 44rem; }
+.rows { display: flex; flex-direction: column; }
+.rows section { display: grid; gap: 6px 40px; padding: 22px 0 24px; border-bottom: 1px solid var(--line); }
+.rows section:first-child { padding-top: 0; } .rows section:last-child { border-bottom: 0; }
+.rows h2 { font-size: 1.22rem; line-height: 1.2; }
+.rows section > div { display: flex; flex-direction: column; gap: 10px; max-width: 62ch; }
+@media (min-width: 760px) { .rows section { grid-template-columns: 14rem 1fr; } }
+#forgot:empty { display: none; }
+.site-foot { border-top: 1px solid var(--line); padding: 16px 0 0; display: flex; flex-wrap: wrap; gap: 4px 28px; align-items: center; justify-content: space-between; }
+.site-foot ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 22px; }
+.site-foot a { display: inline-flex; align-items: center; min-height: 44px; padding: 0; color: var(--muted); }
+.site-foot a:hover { color: var(--ink); }
 .extras { display: flex; flex-direction: column; gap: 18px; padding: 22px 0 64px; }
 .note { color: var(--muted); max-width: 46ch; text-wrap: balance; }
 .foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 28px; border-top: 1px solid var(--line); padding-top: 10px; }
@@ -393,7 +428,7 @@ details.res-more { border: 0; background: none; }
 details.res-more > summary { padding: 11px 0; font-weight: 500; font-size: 0.92rem; color: var(--accent); }
 details.res-more > .body { padding: 0; }
 [hidden] { display: none !important; }
-.topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
+.topbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 12px; min-height: 44px; }
 .tab { font: inherit; font-weight: 600; font-size: 0.95rem; color: var(--accent); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; min-height: 44px; display: inline-flex; align-items: center; text-decoration: none; white-space: nowrap; }
 .tab:hover { border-color: var(--accent); }
 .arrow { flex: none; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-size: 1.5rem; line-height: 1; padding: 0 0 4px; display: grid; place-items: center; }
@@ -447,7 +482,7 @@ button.dot::after { content: ""; position: absolute; inset: -14px -2px; }
 @keyframes nudge { 0%, 100% { margin-left: -24px; } 30% { margin-left: -38px; } 70% { margin-left: -10px; } }
 @media (prefers-reduced-motion: reduce) { .g-range.unset ~ .knob, .g-range.unset ~ .knob.nudge { animation: none; } }
 @media (forced-colors: active) {
-  .pick, .photo { border: 2px solid ButtonText; }
+  .pick, .photo, .menu-list { border: 2px solid ButtonText; }
   .edge { border-top: 2px solid CanvasText; }
   .t, .stem, .span { forced-color-adjust: none; background: CanvasText; }
   .bands > i, .dot, .legend i { forced-color-adjust: none; }
@@ -509,6 +544,7 @@ button.dot::after { content: ""; position: absolute; inset: -14px -2px; }
   .fill .pick { font-size: 1.28rem; min-height: 104px; padding: 18px 26px; }
 }
 .pick:disabled { opacity: 1; cursor: default; }
+.pick, .verdict { overflow-wrap: anywhere; }
 .on-field .right, .on-field .pick.right { background: var(--f-good); color: var(--f-ink); }
 .on-field .wrong, .on-field .pick.wrong { background: var(--f-bad); color: var(--f-ink); }
 .on-field .pick.near { background: var(--f-meh); color: var(--f-ink); }
@@ -546,7 +582,8 @@ span.bar { display: block; }
 .missed .small { grid-column: 2; }
 footer { color: var(--muted); font-size: 0.85rem; }
 @media (prefers-reduced-motion: reduce) {
-  .btn, .disc { transition: none; }
+  .btn, .disc, .menu svg { transition: none; }
+  .menu-list { animation: none; }
   .verdict, .dot.pop, .grid i { animation: none; }
 }
 </style>
@@ -568,8 +605,9 @@ setTimeout(function () {
    It is added to shared results. Left empty, the page uses its own address.
    The link-preview image tags in the <head> also carry the public address and need updating if it changes.
    feedbackUrl is the page where people send a note about a question. It is feedback.html in this folder, which needs a form
-   service connected first (see the top of its script). While feedbackUrl is "", the links to it are not shown. */
-const CONFIG = { siteUrl: "", checked: "November 25, 2026", feedbackUrl: "" };
+   service connected first (see the top of its script). While feedbackUrl is "", the links to it are not shown.
+   repoUrl is where the code is. While it is "", the links to it are not shown. */
+const CONFIG = { siteUrl: "", checked: "November 25, 2026", feedbackUrl: "", repoUrl: "https://github.com/Scott-Huston/ai-questions" };
 
 /* ---------- Where to learn more ----------
    Shown as the "Keep exploring" card at the end of the results. Neutral data comes first, then the case
@@ -3144,45 +3182,116 @@ function resourcesBlock() {
       ${resourceGroups()}
     </section>`;
 }
-// The row along the top of the start screen, the results and the Learn more page: the name, and the way to the other one.
-function topBar(learn) {
-  return `<div class="topbar"><p class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>What's Up With AI?</p>${learn ? `<a class="tab" id="learn" href="#learn">Learn more</a>` : `<button class="tab" id="learn-back" type="button">Back</button>`}</div>`;
+// Where the menu and the footer lead: pages of this one file, a page for notes, and the code. A name, an address, what it is and a word about it.
+function siteLinks() {
+  return [["about", "#about", "About this quiz", "How it works, who makes it, your privacy"], ["learn", "#learn", "Read more about AI", "The data, then the case from each side"]]
+    .concat(CONFIG.feedbackUrl ? [["", CONFIG.feedbackUrl, "Send a note", "Something wrong, out of date or confusing?"]] : [], CONFIG.repoUrl ? [["", CONFIG.repoUrl, "See the code", "On GitHub, with every answer in it"]] : []);
 }
+const siteLink = ([page, url], inside) => `<a href="${esc(url)}"${page ? ` data-page="${page}"${page === pageNamed() ? ' aria-current="page"' : ""}` : ' target="_blank" rel="noopener"'}>${inside}</a>`;
+// Which page the address names, if any.
+const pageNamed = () => ({ "#learn": "learn", "#about": "about" })[location.hash] || "";
+// The row along the top of the start screen, the results and the pages: the name, and the menu.
+function topBar(home) {
+  const name = `<span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>What's Up With AI?`;
+  return `<div class="topbar">${home ? `<a class="brand" id="brand" href="${esc(location.pathname)}">${name}</a>` : `<p class="brand">${name}</p>`}
+    <nav class="menu" id="menu" aria-label="More about this quiz"><button class="tab" id="menu-b" type="button" aria-expanded="false" aria-controls="menu-list">Learn more<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <ul class="menu-list" id="menu-list" hidden>${siteLinks().map(l => `<li>${siteLink(l, `<b>${l[2]}</b>${l[0] ? "" : `<i aria-hidden="true">↗</i>`}<span>${l[3]}</span>`)}</li>`).join("")}</ul></nav></div>`;
+}
+function siteFoot(text) {
+  return `<footer class="site-foot"><p>${text}</p><ul>${siteLinks().map(l => `<li>${siteLink(l, l[2])}</li>`).join("")}</ul></footer>`;
+}
+function setMenu(open, focus) {
+  const b = document.getElementById("menu-b"), list = document.getElementById("menu-list");
+  if (!b || list.hidden !== open) return;
+  b.setAttribute("aria-expanded", String(open)); list.hidden = !open;
+  if (!open && focus) b.focus({ preventScroll: true });
+}
+// A mouse opens the menu by resting on it and closes it by leaving. Touch and the keyboard press its button.
 function wireTopBar() {
-  const go = document.getElementById("learn"), back = document.getElementById("learn-back");
-  if (go) go.addEventListener("click", e => {
-    if (e.metaKey || e.ctrlKey || e.shiftKey) return;
-    e.preventDefault();
-    try { history.pushState({ learn: 1 }, "", "#learn"); } catch (err) {}
-    renderLearn();
-  });
-  // Opened from here, Back undoes that step in the browser's history. Opened straight from a link, there is no step to undo.
-  if (back) back.addEventListener("click", () => {
-    try { if (history.state && history.state.learn) { history.back(); return; } } catch (e) {}
-    closeLearn();
+  const menu = document.getElementById("menu"), brand = document.getElementById("brand");
+  if (brand && state.screen === "results") brand.addEventListener("click", e => { if (!(e.metaKey || e.ctrlKey || e.shiftKey)) { e.preventDefault(); goHome(); } });
+  if (!menu) return;
+  const b = document.getElementById("menu-b"), items = [...menu.querySelectorAll("li a")];
+  let leaving = 0, opened = 0;
+  menu.addEventListener("pointerenter", e => { clearTimeout(leaving); if (e.pointerType === "mouse" && b.getAttribute("aria-expanded") === "false") { setMenu(true); opened = performance.now(); } });
+  menu.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") leaving = setTimeout(() => setMenu(false), 260); });
+  // The press that comes with resting a mouse on the button leaves the menu open.
+  b.addEventListener("click", () => { if (performance.now() - opened > 500) setMenu(b.getAttribute("aria-expanded") === "false"); });
+  menu.addEventListener("focusout", e => { if (!menu.contains(e.relatedTarget) && e.relatedTarget) setMenu(false); });
+  menu.addEventListener("keydown", e => {
+    const at = items.indexOf(document.activeElement), go = i => { e.preventDefault(); setMenu(true); items[(i + items.length) % items.length].focus(); };
+    if (e.key === "Escape") { if (b.getAttribute("aria-expanded") === "true") { e.preventDefault(); setMenu(false, true); } }
+    else if (e.key === "ArrowDown") go(at + 1);
+    else if (e.key === "ArrowUp") go(at < 0 ? -1 : at - 1);
+    else if (e.key === "Home" && at >= 0) go(0);
+    else if (e.key === "End" && at >= 0) go(-1);
   });
 }
-function renderLearn() {
+document.addEventListener("pointerdown", e => { if (!e.target.closest || !e.target.closest("#menu")) setMenu(false); });
+$app.addEventListener("click", e => {
+  const a = e.target.closest("a[data-page]");
+  if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  e.preventDefault(); openPage(a.dataset.page);
+});
+// A page opens over whatever is on screen, and Back returns to that. Going from one page to the other adds no second step.
+function openPage(name) {
+  try { if (state.screen === "learn") history.replaceState(history.state, "", "#" + name); else history.pushState({ learn: 1 }, "", "#" + name); } catch (err) {}
+  renderPage(name);
+}
+function renderPage(name) {
   if (state.screen === "results") state.resultScroll = window.scrollY;
   if (state.screen !== "learn") state.learnFrom = state.screen;
   setScreen("learn");
+  const about = name === "about";
+  document.title = `${about ? "About this quiz" : "Read more about AI"} · What's Up With AI?`;
   $app.innerHTML = `
-    ${topBar(false)}
-    <div class="stack-sm">
-      <h1 class="q-h" id="learn-h" tabindex="-1">Learn more</h1>
-      <p class="lede">${RES_LEDE}</p>
-    </div>
-    <section class="card stack" aria-labelledby="learn-h">${resourceGroups()}</section>
-    <footer>Facts last checked ${esc(CONFIG.checked)}.</footer>`;
+    <section class="field"><div class="wrap">
+      ${topBar(true)}
+      <button class="link back" id="learn-back" type="button">‹ Back to the quiz</button>
+      <div class="page-h"><h1 id="learn-h" tabindex="-1">${about ? "About this quiz" : "Read more about AI"}</h1>
+      <p>${about ? "A guessing game about where artificial intelligence really stands: what it can do, how it behaves, who is building it and how people are responding." : RES_LEDE}</p></div>
+    </div></section>
+    <div class="wrap page">${about ? aboutRows() : `<section class="card stack" aria-labelledby="learn-h">${resourceGroups()}</section>`}
+    ${siteFoot(`Facts last checked ${esc(CONFIG.checked)}.`)}</div>`;
   wireTopBar();
+  // Opened from here, Back undoes that step in the browser's history. Opened straight from a link, there is no step to undo.
+  document.getElementById("learn-back").addEventListener("click", () => {
+    try { if (history.state && history.state.learn) { history.back(); return; } } catch (e) {}
+    closeLearn();
+  });
+  const forget = document.getElementById("forget");
+  if (forget) forget.addEventListener("click", () => {
+    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+    clearRound(); clearLast(); state.dealt = 0;
+    store = loadStore(); state.length = store.length;
+    document.getElementById("forgot").textContent = "Done. This browser no longer remembers which questions you have seen or how you did.";
+  });
   toTop("learn-h");
 }
+function aboutRows() {
+  const code = CONFIG.repoUrl ? `<a href="${esc(CONFIG.repoUrl)}" target="_blank" rel="noopener">GitHub</a>` : "", rows = [
+    ["How it works", `<p>Take your best guess, then see what the evidence says. A right pick, or a guess inside the green band around the truth, scores one point. A guess near it scores half a point.</p>
+      <p>Sliders for things like money, people and time climb by multiplying (10, 100, 1,000 and so on), because the ranges are huge. Words with a dotted underline, like ${gloss("Turing test")}, show a plain-English definition when you tap them.</p>`],
+    ["Where the questions come from", `<p>There are ${QUESTIONS.length} of them, built on published studies, company and government reports, court records, surveys and news reporting. Every answer links to its sources and shows how recent the evidence is.</p>
+      <p>The quiz tries to pick questions which surprise in both directions, so the truth is sometimes wilder than people expect and sometimes tamer. The ones that seem to matter most tend to come up first.</p>`],
+    ["Keeping it right", `<p>AI moves fast, and several answers changed during 2026. The whole bank was last checked on ${esc(CONFIG.checked)}.</p>
+      ${CONFIG.feedbackUrl ? `<p>If an answer looks wrong or out of date, <a href="${esc(CONFIG.feedbackUrl)}" target="_blank" rel="noopener">send a note</a>. You don't have to say who you are.</p>` : CONFIG.repoUrl ? `<p>If an answer looks wrong or out of date and you use GitHub, <a href="${esc(CONFIG.repoUrl)}/issues" target="_blank" rel="noopener">open an issue</a> there.</p>` : ""}`],
+    ["Who makes it", `<p>This is an independent project. No one is paying for it, apart from its maker covering the hosting. There are no ads, nothing to buy and no accounts.</p>
+      <p>${store.bonus ? esc(BONUS.short) : "How much of it AI wrote is the bonus question at the end of your first round."}</p>`],
+    ["Your privacy", `<p>Nothing you answer is sent anywhere. Your browser remembers which questions you have seen, so that new rounds stay fresh, and your last result, so that you can come back to it. <button type="button" class="link" id="forget">Forget my history</button></p>
+      <p class="small" id="forgot" role="status"></p>
+      <p>A link you share holds the questions and how close each guess was, and nothing about you. The page is hosted by GitHub and its lettering comes from Google, so those two see that a browser asked for it, as on any site.</p>`],
+    ["Pictures, type and code", `<p>In the photo questions, the real portraits are official US government pictures, which are in the public domain. The others were made with ChatGPT. The type is Bricolage Grotesque and IBM Plex.</p>
+      ${code ? `<p>The code and all the questions are on ${code}. Every answer is in there, so it is one big spoiler.</p>` : ""}`]
+  ];
+  return `<div class="rows">${rows.map(([h, html]) => `<section><h2>${h}</h2><div>${html}</div></section>`).join("")}</div>`;
+}
 function closeLearn() {
-  try { if (location.hash === "#learn") history.replaceState(history.state, "", location.pathname + location.search); } catch (e) {}
+  try { if (pageNamed()) history.replaceState(history.state, "", location.pathname + location.search); } catch (e) {}
   if (state.learnFrom === "results") renderResults();
   else if (state.learnFrom === "question" && state.answers.length) showQuestion(state.view);   // opened while reading the first answer
   else {
-    // Learn more was reloaded, so what it was opened from is known only from the history: a round, or its result.
+    // The page was reloaded, so what it was opened from is known only from the history: a round, or its result.
     const quiz = state.learnFrom === "boot" && history.state && history.state.quiz, left = quiz ? loadRound() : null, last = quiz && !left ? loadLast() : null;
     state.screen = "start";
     if (left || last) resumeRound(left || last, !left); else renderStart("", state.opening);
@@ -3203,12 +3312,10 @@ if (RAW_C && !state.challenge) {
   bootNotice = /^[qc][0-9a-z]{16}/.test(RAW_C) ? "That challenge was made in an older version of the quiz." : "That challenge link didn't work.";
   try { history.replaceState(history.state, "", location.pathname); } catch (e) {}
 }
+const TITLE = document.title;
 function setScreen(name) {
   state.screen = name; state.shownAt = performance.now();
-  // Questions are asked on the blue field, which runs to the edges of the screen and tints the browser's bar.
-  const field = name === "start" || name === "question" || name === "bonus" || name === "results";
-  $app.classList.toggle("fielded", field);
-  document.querySelectorAll('meta[name="theme-color"]').forEach((m, i) => { m.content = field ? ["#2742d6", "#2339c4"][i] : ["#f3f4f8", "#0e141a"][i]; });
+  document.title = TITLE;
 }
 function toTop(focusId) {
   window.scrollTo(0, 0);
@@ -3230,7 +3337,7 @@ function renderStart(notice, fresh) {
   let body;
   if (ch) {
     const n = ch.list.length;
-    body = `<section class="field"><div class="wrap">${topBar(true)}${note}
+    body = `<section class="field"><div class="wrap">${topBar()}${note}
       <div class="hello challenge">
         <p class="eyebrow" id="ch-h">You've been challenged</p>
         <h1 class="q-h">${!ch.theirs ? `A friend sent you this exact set of ${n} questions.` : `A friend got ${pts(theirPoints(ch))} out of ${n} on this exact set of questions.`}</h1>
@@ -3244,14 +3351,14 @@ function renderStart(notice, fresh) {
       </div></div></section>`;
   } else if (dare) {
     const slide = Guess.isSlide(dare), title = Guess.titleOf(dare);
-    body = `<section class="field${slide ? " tight" : ""}"><div class="wrap">${topBar(true)}${note}<p class="eyebrow" id="dare-h">A friend sent you this one</p>
+    body = `<section class="field${slide ? " tight" : ""}"><div class="wrap">${topBar()}${note}<p class="eyebrow" id="dare-h">A friend sent you this one</p>
       <div class="q-body"><h1 class="q-h${brief(title)}">${gloss(title)}</h1>
       ${dare.f && dare.f.hint ? `<p class="muted">${gloss(dare.f.hint)}</p>` : ""}</div></div></section>
       <div id="dare-control" class="control${slide ? "" : " on-field"}${listed(dare)}">${Guess.controlHtml(dare, true, null)}</div>
       <div id="dare-reveal" class="reveal wrap"></div>`;
   } else if (!open) {
     const n = saved.list.length, done = saved.ps.length === n, marks = saved.ps.map((g, i) => markOf(Guess.result(saved.list[i], g)));
-    body = `<section class="field"><div class="wrap">${topBar(true)}${note}
+    body = `<section class="field"><div class="wrap">${topBar()}${note}
       <div class="hello resume">
         <p class="eyebrow" id="resume-h">Unfinished round</p>
         <h1 class="q-h">${done ? `You answered all ${n} questions but did not see your result.` : `You stopped at question ${saved.ps.length + 1} of ${n}.`}</h1>
@@ -3263,7 +3370,7 @@ function renderStart(notice, fresh) {
     // The same question again on the way back from another page, with the pin where it was left.
     if (state.dealt !== len || state.answers.length) { deal(); state.dealt = len; }
     state.opening = true;
-    body = questionHtml(0, topBar(true) + note + `<p class="intro" id="start-note">${len === 20 ? "Twenty" : "Ten"} quick guesses about where AI really stands.<span class="more"> About ${minutes(len)}, and every answer has its sources.</span></p>`);
+    body = questionHtml(0, topBar() + note + `<p class="intro" id="start-note">${len === 20 ? "Twenty" : "Ten"} quick guesses about where AI really stands.<span class="more"> About ${minutes(len)}, and every answer has its sources.</span></p>`);
   }
   const options = open ? `
     <p class="note" id="start-rule">Close counts. A near miss scores half a point.</p>
@@ -3277,17 +3384,7 @@ function renderStart(notice, fresh) {
   $app.innerHTML = `${body}
     <div class="wrap extras" id="extras">${options}
     ${last ? `<p class="small muted">Your last round: ${pts(roundPoints(last))} out of ${last.list.length}. <button type="button" class="link" id="last">See that result again</button></p>` : ""}
-    <details>
-      <summary>How this quiz works</summary>
-      <div class="body">
-        <p>A right pick, or a guess inside the green band around the truth, scores one point. A guess near it scores half a point. Sliders for things like money, people and time climb by multiplying (10, 100, 1,000 and so on), because the ranges are huge.</p>
-        <p>Each answer links to its sources and shows how recent the evidence is. The whole bank of ${total} questions was last checked on ${esc(CONFIG.checked)}. AI moves fast, and several answers changed during 2026.</p>
-        <p>Words with a dotted underline, like ${gloss("Turing test")}, show a plain-English definition when you tap them.</p>
-        <p>Nothing you answer is sent anywhere. Your browser remembers which questions you have seen, so that new rounds stay fresh, and your last result, so that you can come back to it. <button type="button" class="link" id="forget">Forget my history</button></p>
-        <p>This is an independent project. No one is paying for it, apart from its maker covering the hosting. It tries to pick questions which surprise in both directions. The ones that seem to matter most tend to come up first.${CONFIG.feedbackUrl ? ` If an answer looks wrong or out of date, <a href="${esc(CONFIG.feedbackUrl)}" target="_blank" rel="noopener">send a note</a>.` : ""}</p>
-      </div>
-    </details>
-    <footer>An independent quiz. Facts last checked ${esc(CONFIG.checked)}.</footer></div>`;
+    ${siteFoot(`An independent quiz. Facts last checked ${esc(CONFIG.checked)}.`)}</div>`;
   wireTopBar();
   if (open) {
     wireQuestion(0);
@@ -3318,12 +3415,6 @@ function renderStart(notice, fresh) {
   on("fresh-round", () => { if (dare) startRound(); else begin(); });
   on("resume", () => { clearDare(); resumeRound(saved); });
   on("last", () => resumeRound(last, true));
-  on("forget", () => {
-    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
-    clearRound(); clearLast(); state.dealt = 0;
-    store = loadStore(); state.length = store.length;
-    renderStart("Done. This browser no longer remembers which questions you have seen or how you did.");
-  });
   Guess.layoutMarks();
   window.scrollTo(0, 0);
 }
@@ -3826,8 +3917,8 @@ function renderResults() {
       <div class="body"><div>${state.answers.map((r, i) => reviewItem(r, i)).join("")}</div></div>
     </details>
     <div class="row"><button class="btn btn-primary" id="again-2" type="button">${againLabel}</button><button class="btn" id="home" type="button">Back to the start</button></div>
-    <footer>Facts last checked ${esc(CONFIG.checked)}. Each answer lists how recent its sources are.</footer>
-    </div></div>`;
+    </div></div>
+    <div class="wrap">${siteFoot(`Facts last checked ${esc(CONFIG.checked)}. Each answer lists how recent its sources are.`)}</div>`;
   Guess.layoutMarks();
 
   let picture = null;
@@ -4020,7 +4111,7 @@ document.addEventListener("keydown", e => {
 });
 // Back from a round or a result lands on the start screen. A round in progress is saved, so it can be picked up again.
 window.addEventListener("popstate", () => {
-  if (history.state && history.state.learn) { renderLearn(); return; }
+  if (pageNamed()) { renderPage(pageNamed()); return; }
   if (state.screen === "learn") { closeLearn(); return; }
   // Forward, after Back: on with the round that was left.
   const left = history.state && history.state.quiz && state.screen === "start" ? loadRound() : null;
@@ -4048,7 +4139,7 @@ $app.addEventListener("click", e => {
   if (e.detail > 0 && performance.now() - state.shownAt < 350 && e.target.closest("a, summary, button:not(.arrow):not(.dot)")) { e.preventDefault(); e.stopPropagation(); }
 }, true);
 
-if (location.hash === "#learn") { state.screen = "boot"; renderLearn(); }
+if (pageNamed()) { state.screen = "boot"; renderPage(pageNamed()); }
 else if (state.challenge || state.dare || loadRound()) renderStart();
 // A fresh round waits a moment for the photo check, so that a photo question can be in it.
 else Promise.race([PHOTOS.checked, new Promise(go => setTimeout(go, 400))]).then(() => { if (!$app.firstElementChild) renderStart(); });
