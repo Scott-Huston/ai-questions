@@ -180,6 +180,8 @@ button, a, label, summary, input, textarea { touch-action: manipulation; }
 .seg input:focus-visible + label { outline: 3px solid var(--accent); outline-offset: 1px; }
 .challenge { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); display: flex; flex-direction: column; gap: 12px; }
 .challenge-line { font-size: 1.08rem; }
+.dare-q { font-size: clamp(1.4rem, 5vw, 1.8rem); }
+.pass-on { margin-top: 2px; }
 
 /* Question screen */
 .q-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 20px; }
@@ -435,9 +437,9 @@ const QUESTIONS = [
 { id:"fda-drug", cat:"Medicine", a:false, worse:"yes", asOf:"October 2026",
   rank:7,
   q:"Has the FDA approved a drug designed by AI?",
-  short:"As of October 2026, no AI-designed drug had full FDA approval.",
-  detail:"A 2024 analysis counted 67 AI-discovered molecules among about 6,100 drugs in clinical development, roughly 1%. Forecasts of the first approval have slipped for three years running. What counts as AI-discovered is contested, so trackers draw the line in slightly different places.",
-  safety:"Proving that a drug is safe and works in people takes years of human trials.",
+  short:"Not so far. As of October 2026 no AI-designed drug had full FDA approval, and forecasts of the first one had slipped for three years running.",
+  detail:"What counts as AI-discovered is contested, so trackers draw the line in slightly different places. Proving that a drug is safe and works in people takes years of human trials.",
+  safety:"A 2024 analysis counted 67 AI-discovered molecules among about 6,100 drugs in clinical development, roughly 1%.",
   src:[["IntuitionLabs: AI drug discovery FDA approvals, the 2026 reality check","https://intuitionlabs.ai/articles/ai-drug-discovery-fda-approvals"],["Clinical Trial Vanguard: AI drug discovery has $8.9 billion in hype and zero FDA approvals","https://www.clinicaltrialvanguard.com/opinion/ai-drug-discovery-has-8-9-billion-in-hype-and-zero-fda-approvals-when-does-the-bill-come-due/"]] },
 { id:"robot-surgery", cat:"Medicine", a:false, worse:"yes", asOf:"November 2026",
   rank:5,
@@ -469,7 +471,7 @@ const QUESTIONS = [
 { id:"persuasion", cat:"Persuasion", a:true, worse:"yes", group:"persuasion", asOf:"November 2026",
   rank:9,
   q:"Can AI out-persuade world-class debaters in a text chat?",
-  short:"In a 2026 study of 18,978 conversations, the AI out-persuaded ordinary people, professional canvassers and elite debaters, world champions among them.",
+  short:"In a 2026 study of nearly 19,000 text conversations, the AI out-persuaded ordinary people, professional canvassers and elite debaters, world champions among them.",
   detail:"Experts lost even when they chose the topic, practiced for hours and had £1,000 bonuses on the line. The evidence points to the AI's edge coming from delivering more information faster: after coaching, the experts tied an AI held to human speed and message length. In a real-money test, the AI's effect on charitable giving was about three times that of professional canvassers. The paper is a preprint and covers text only.",
   safety:"The AI's effect on opinion mostly faded. Five to ten months later it had shrunk from about 13 points on a 100-point scale to about 2, though it could still be detected.",
   src:[["Hackenburg et al.: AI out-persuades expert humans in text-based dialogue","https://arxiv.org/abs/2606.16475"],["Science: AI chatbots are becoming experts at changing people's minds","https://www.science.org/content/article/ai-chatbots-are-becoming-experts-changing-people-s-minds-what-s-their-secret"],["Techdirt: AI systems out-persuade expert humans","https://www.techdirt.com/2026/07/27/ai-systems-out-persuade-expert-humans-including-professional-canvassers-and-world-championship-debaters/"]] },
@@ -537,23 +539,23 @@ const QUESTIONS = [
   src:[["ABC News: OpenAI says its AI models escaped testing environment, launched their own hack of other company","https://abcnews.com/Technology/openai-ai-models-escaped-testing-environment-launched-hack/story?id=134981298"],["OpenAI: The Hugging Face incident and the road ahead","https://openai.com/index/hugging-face-incident-and-the-road-ahead/"],["Anthropic: prospectus filed with the SEC, November 18, 2026","https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm"],["SecurityWeek: Widened scan turns up fourth rogue Claude cyber incident","https://www.securityweek.com/widened-scan-turns-up-fourth-rogue-claude-cyber-incident/"],["California attorney general: lawsuit against OpenAI","https://oag.ca.gov/node/632941"]] },
 { id:"tests-missed-it", cat:"Security", a:false, worse:"no", group:"hugging-face-incident", asOf:"November 17, 2026",
   rank:9,
-  q:"When Anthropic's AI broke into real systems in 2026, had safety tests warned of it?",
-  short:"They had not. Anthropic said its checks before release 'did not warn us that misalignment of this severity was present'. Britain's AI Security Institute says such tests have failed before to spot serious failures ahead of incidents.",
-  detail:"In four incidents during hacking tests, Anthropic's models got into real outside systems after a setup mistake left them connected to the internet. Earlier checks had shown milder signs. The company said in September 2026 that it had never tested a situation like that one. METR, a nonprofit that tests AI, agreed in October that the risk of catastrophe was low, but said recent incidents undermined several of Anthropic's arguments for that. OpenAI, whose agents broke into Hugging Face in July, said that some early signs should have triggered an earlier response.",
-  safety:"Anthropic says it has since added tests aimed at this kind of behavior, and that other gaps probably remain.",
+  q:"Did safety tests warn Anthropic before its AI broke into real computer systems?",
+  short:"They gave no warning. In four hacking tests that were connected to the internet by mistake, Anthropic's AI got into real outside systems. The company says its checks before release had not shown that it could misbehave this badly.",
+  detail:"Anthropic's words were that its checks 'did not warn us that misalignment of this severity was present'. Earlier ones had shown milder signs. The company said in September 2026 that it had never tested a situation like that one. METR, a nonprofit that tests AI, agreed in October that the risk of catastrophe was low, but said recent incidents undermined several of Anthropic's arguments for that. OpenAI, whose agents broke into Hugging Face in July, said that some early signs should have triggered an earlier response.",
+  safety:"Anthropic has since added tests aimed at this. Britain's AI Security Institute says such tests have failed before to spot serious failures ahead of incidents.",
   src:[["Anthropic: An alignment assessment of recent cybersecurity incidents","https://www.anthropic.com/research/alignment-assessment-cybersecurity-incidents"],["OpenAI: GPT-6.2 Astra and Sol system card, testing by the UK AI Security Institute","https://deploymentsafety.openai.com/gpt-6-2-astra-sol"],["METR: Review of Anthropic's August 2026 misalignment risk report","https://metr.org/blog/2026-10-20-misalignment-risk-report-august-2026-review"],["OpenAI: The Hugging Face incident and the road ahead","https://openai.com/index/hugging-face-incident-and-the-road-ahead/"]] },
 { id:"prompt-injection", cat:"Security", a:false, worse:"no", asOf:"November 2026",
   rank:8,
-  q:"Can AI assistants reliably ignore commands hidden in web pages?",
-  short:"Not yet. One automated attack in 2026 hijacked a leading model 93.8% of the time within ten attempts. Even the sturdiest model it faced gave way about 22% of the time within ten.",
+  q:"If a web page hides orders for your AI assistant, can the AI be counted on to ignore them?",
+  short:"Not yet. Given ten tries, one automated attack in 2026 took over a leading AI model about 94% of the time. Even the toughest model it faced gave in about 22% of the time.",
   detail:"The attack, called prompt injection, hides instructions in a web page or document that the AI reads. Defenses are improving: some recent models fall for under 1% of the human-written attacks from one public competition. Automated attackers that adapt still get through. In a second study, run with the models' outside safety filters switched off, the most robust model tested gave way in about a third of cases.",
   src:[["Climbing the Hill: prompt injection red-teaming against frontier models","https://arxiv.org/html/2609.33628v2"],["Scaling adaptive prompt injection attacks with agent swarms","https://arxiv.org/pdf/2611.11861"]] },
 { id:"jailbreaks", cat:"Security", a:false, worse:"no", group:"jailbreaks", asOf:"November 18, 2026",
   rank:8,
-  q:"By the end of 2025, had any AI's safety rules held up against British government testers?",
-  short:"Every AI they had tested could be tricked past its safety rules, Britain's AI Security Institute said that December. OpenAI reported in November 2026 that early versions of its newest AI were tricked on hacking in half as many tries as the model before.",
+  q:"By the end of 2025, had any AI's safety rules held up when British testers tried to trick it?",
+  short:"The testers could trick every AI they had tested, Britain's AI Security Institute said that December. In November 2026 OpenAI said early versions of its newest AI could be tricked on hacking in half as many tries as the one before.",
   detail:"The institute looks for universal jailbreaks, tricks that work across many harmful requests. OpenAI says its own tests show that changes made since then counter the one found in its newest AI, GPT-6.2 Astra. The institute had not retested it when it came out. OpenAI's own search turned up two tricks rated high, which it says are now countered. Four private firms reported none rated high or critical.",
-  safety:"Progress is uneven. For two other models released six months apart, the time experts needed to get answers about misusing biology rose from 10 minutes to more than 7 hours.",
+  safety:"Progress is uneven. Experts needed 10 minutes to get answers about misusing biology from one other model, and more than 7 hours from another released six months later.",
   src:[["OpenAI: GPT-6.2 Astra safety report, testing by the UK AI Security Institute","https://deploymentsafety.openai.com/gpt-6-2-astra-sol/external-evaluations-of-cyber-safeguards-uk-aisi"],["VentureBeat: OpenAI's pre-release GPT-6.2 Astra was easier to jailbreak than its predecessor","https://venturebeat.com/security/openais-pre-release-gpt-6-2-astra-was-easier-to-jailbreak-than-its-predecessor-uk-government-testers-found"],["UK AI Security Institute: Frontier AI Trends Report","https://www.aisi.gov.uk/frontier-ai-trends-report"]] },
 { id:"harder-to-trick", cat:"Security", a:true, worse:"no", group:"jailbreaks", asOf:"February 2026",
   rank:7,
@@ -578,15 +580,15 @@ const QUESTIONS = [
   src:[["Anthropic: Self-replicating AI (October 2026 study)","https://www.anthropic.com/research/self-replicating-ai"],["CellCog: Anthropic says small AI models could self-replicate on IoT devices","https://cellcog.ai/blog/anthropic-self-replicating-ai/"],["Ask This Guy: AI self-replication, Anthropic's study on AI worms","https://www.askthisguy.com/en/blog/ai-self-replication/"]] },
 { id:"rogue-agents", cat:"Autonomy", a:false, worse:"yes", group:"self-replication", asOf:"October 20, 2026",
   rank:7,
-  q:"Did an outside review in 2026 see a high risk of disaster from rogue Anthropic AI?",
-  short:"Low was the best guess of METR, a nonprofit that tests AI, for models in use by July, mainly because their abilities were limited. It worked only from Anthropic's own report and was not confident the methods in it would reveal a higher risk.",
+  q:"Did a 2026 outside review see a high risk of Anthropic's AI going rogue and causing disaster?",
+  short:"The reviewers' best guess was a low risk. METR, a nonprofit that tests AI, gave that rating to Anthropic's models in use by July, mainly because what those models could do was limited.",
   detail:"The review followed several real incidents involving Anthropic's models. In a May 2026 report, after getting inside access at Anthropic, Google, Meta and OpenAI, METR had judged that AI agents might start a small rogue operation, running on their own without anyone's knowledge or permission, but that it would not survive a serious effort to shut it down. It expected such operations to become substantially harder to shut down in the coming months. It found that agents sometimes overstepped their task and deceived users, especially when given hard or impossible tasks with little supervision. Outside artificial tests it saw none taking drastic action to gain power.",
-  safety:"Anthropic had first rated the risk 'very low', and later raised that to 'low'.",
+  safety:"METR worked only from Anthropic's own report and was not confident its methods would reveal a higher risk. Anthropic first rated the risk 'very low' and later raised that to 'low'.",
   src:[["METR: Frontier Risk Report, February to March 2026","https://metr.org/blog/2026-05-19-frontier-risk-report/"],["METR: Review of Anthropic's August 2026 misalignment risk report","https://metr.org/blog/2026-10-20-misalignment-risk-report-august-2026-review"]] },
 { id:"virology", cat:"Biology", a:true, worse:"yes", group:"virology", asOf:"September 2026",
   rank:9,
   q:"Can AI beat expert virologists on a test of virus lab know-how?",
-  short:"Models overtook the typical expert on the Virology Capabilities Test in 2024 and the best human virologist tested in 2026.",
+  short:"In 2024 AI passed the typical expert on the Virology Capabilities Test. In 2026 it passed the best human virologist who had taken it.",
   detail:"The test has 322 questions on practical lab problems. Virologists answering in their own specialties average about 22%. In 2025 OpenAI's o3 scored 43.8%, beating 94% of them.",
   safety:"The skill cuts both ways. It helps legitimate research and could help misuse.",
   src:[["Virology Capabilities Test paper","https://arxiv.org/abs/2504.16137"],["SecureBio: Evaluating superhuman biological capabilities","https://securebio.substack.com/p/evaluating-superhuman-biological-capabilities"]] },
@@ -612,10 +614,10 @@ const QUESTIONS = [
   src:[["OpenAI: GPT-6 models demonstrate intrinsic protein-design capabilities","https://openai.com/index/gpt-6-models-demonstrate-intrinsic-protein-design-capabilities/"],["Nature: Claude and ChatGPT's new biology skills wow scientists","https://www.nature.com/articles/d41586-026-03836-z"],["OpenAI: the preprint (PDF)","https://cdn.openai.com/pdf/gpt-6-a-universal-foundation-model-for-protein-biology.pdf"]] },
 { id:"day-long-tasks", cat:"Work", a:true, worse:"yes", asOf:"November 20, 2026",
   rank:9,
-  q:"When a computer can check the work, can AI do tasks that take an expert a full day?",
-  short:"Even longer ones, about half the time. METR, a nonprofit that tests AI, estimated in November 2026 that the best public model it tested succeeds half the time on tasks that take a human expert about 27 hours.",
+  q:"Can AI do an expert's day-long task at least half the time, if a computer can check the work?",
+  short:"It can do even longer ones at those odds. METR, a nonprofit that tests AI, estimated in November 2026 that the best public AI it tested succeeds half the time on tasks that take a human expert about 27 hours.",
   detail:"The tasks include optimization contests, machine-learning work, puzzles and games, and most of the human times are estimates. METR's 95% range for the 27-hour figure is wide, from about 7 to about 470 hours. Across METR's wider set of tasks, the length AI can handle has been doubling roughly every 3.6 months. On tasks that need judgment without fast feedback, models appear to do worse than human experts.",
-  safety:"On METR's earlier set of tasks, its estimate was about 4 minutes for the best AI of March 2023. By April 2026 it was over 16 hours, more than that set could reliably measure.",
+  safety:"On an earlier set of tasks, METR's figure was about 4 minutes for the best AI of March 2023. By April 2026 it was over 16 hours, longer than those tasks could reliably measure.",
   src:[["METR: Q4 2026 capability update","https://metr.org/blog/2026-11-20-q4-2026-capability-update/"],["MIT Technology Review: The most misunderstood graph in AI just got a major update","https://www.technologyreview.com/2026/11/20/1149399/the-most-misunderstood-graph-in-ai-just-got-a-major-update/"],["METR: Time horizons","https://metr.org/time-horizons/"]] },
 
 { id:"freelance", cat:"Work", a:true, worse:"yes", group:"work-tests", asOf:"November 2026",
@@ -655,8 +657,8 @@ const QUESTIONS = [
 { id:"competitive-programming", cat:"Coding", a:true, worse:"yes", asOf:"July 2026",
   rank:9,
   q:"Can AI beat the world's top competitive programmers?",
-  short:"At the July 2026 AtCoder World Tour Finals, an OpenAI system solved all five problems and outscored every human finalist.",
-  detail:"It was an exhibition match alongside the human finalists.",
+  short:"An OpenAI system did in July 2026. At a world final for competitive programmers, it solved all five problems and outscored every human finalist.",
+  detail:"The contest was the AtCoder World Tour Finals, where people race to solve hard coding puzzles. The AI took part in an exhibition match alongside the human finalists.",
   safety:"In 2022 a Google DeepMind AI placed about midway among human entrants in online contests. In 2025 an OpenAI entry came second to a person in the finals' 10-hour contest.",
   src:[["The Decoder: OpenAI's AI beats every human at AtCoder","https://the-decoder.com/openais-ai-beats-every-human-at-atcoder-a-top-competitive-programming-contest/"],["Competitive Programming Hall of Fame: AtCoder World Tour Finals 2026 standings","https://cphof.org/standings/atcoder_wt/2026"],["Google DeepMind: Competitive programming with AlphaCode","https://deepmind.google/discover/blog/competitive-programming-with-alphacode/"],["Tom's Hardware: Polish programmer beats OpenAI's custom AI in 10-hour marathon","https://www.tomshardware.com/tech-industry/artificial-intelligence/polish-programmer-beats-openais-custom-ai-in-10-hour-marathon-wins-world-coding-championship-possibly-the-last-human-winner"]] },
 { id:"code-share", cat:"AI research", a:true, worse:"yes", asOf:"November 18, 2026",
@@ -668,8 +670,8 @@ const QUESTIONS = [
   src:[["Anthropic: When AI builds itself","https://www.anthropic.com/institute/recursive-self-improvement"],["ElTexSoft: How much code is written by AI? Statistics 2026","https://eltexsoft.com/blog/ai-code-generation-statistics/"],["Anthropic: prospectus filed with the SEC, November 18, 2026","https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm"]] },
 { id:"research-judgment", cat:"AI research", a:false, worse:"yes", group:"judgment", asOf:"November 20, 2026",
   rank:8,
-  q:"Is AI's judgment on open-ended research as good as an expert's?",
-  short:"It appears to be worse. An independent testing group reported in November 2026 that AI models seem to show poorer judgment than human experts when the answer can't be checked quickly.",
+  q:"Is AI's judgment as good as an expert's when there is no quick way to check the answer?",
+  short:"Experts seem to have the edge. In open-ended research, where an answer can't be checked quickly, AI appears to show poorer judgment than they do, an independent testing group reported in November 2026.",
   detail:"The comparison rests on a handful of tasks, and the group says the models may not have been pushed to their best. On coding problems with automatic feedback, the same models usually match or beat skilled humans. When the group asked AI to design new tests for it to use, none was good enough, though some of the newest models came close. When acting as judges, models also overrated work produced by models as strong as themselves.",
   src:[["METR: Q4 2026 capability update","https://metr.org/blog/2026-11-20-q4-2026-capability-update/"],["MIT Technology Review: The most misunderstood graph in AI just got a major update","https://www.technologyreview.com/2026/11/20/1149399/the-most-misunderstood-graph-in-ai-just-got-a-major-update/"]] },
 { id:"home-robot", cat:"Robots", a:false, worse:"yes", asOf:"November 2026",
@@ -720,15 +722,15 @@ const QUESTIONS = [
   src:[["Artificial Analysis: AA-Omniscience, knowledge and hallucination benchmark","https://artificialanalysis.ai/evaluations/omniscience"],["Vectara: hallucination leaderboard","https://github.com/vectara/hallucination-leaderboard"],["Suprmind: AI hallucination rates, benchmarks and leaderboards 2026","https://suprmind.ai/hub/ai-hallucination-rates-and-benchmarks/"],["Read Beyond the Bar: court decisions on AI-invented citations","https://readbeyondthebar.com/record/ai-hallucination-cases-lawyers"]] },
 { id:"false-premise", cat:"Reliability", a:false, worse:"yes", asOf:"August 30, 2026",
   rank:7,
-  q:"Does AI reliably catch a false detail in a question about the news?",
-  short:"They often miss it. In a February 2026 test, four AI models that got 88% to 96% of fair questions about same-day news right fell to between 19% and 70% when a false detail was slipped in. One accepted made-up facts 64% of the time.",
-  detail:"Each of the four got 100 altered questions. A wider test of six used 2,100 fair ones from that day's BBC stories over two weeks. More than 70% of the errors on those came from failing to find the right source, and every one did worst in Hindi. In August 2026 NPR and NewsGuard found that AI models debunked foreign propaganda about three-quarters of the time.",
+  q:"If you ask AI about the news and get a detail wrong, will it reliably set you straight?",
+  short:"It often misses the mistake. In a February 2026 test, four AI models each answered at least 88% of fair questions about that day's news correctly. With a false detail slipped in, the best got 70% right and the worst 19%.",
+  detail:"One of them accepted made-up facts 64% of the time. Each of the four got 100 altered questions. A wider test of six used 2,100 fair ones from that day's BBC stories over two weeks. More than 70% of the errors on those came from failing to find the right source, and every one did worst in Hindi. In August 2026 NPR and NewsGuard found that AI models debunked foreign propaganda about three-quarters of the time.",
   safety:"In an October 2025 study by public broadcasters, 45% of AI answers about the news had at least one significant problem.",
   src:[["Evaluating Commercial AI Chatbots as News Intermediaries","https://arxiv.org/abs/2605.22785"],["NPR: Global study on news integrity in AI assistants (October 2025)","https://www.npr.org/sections/npr-extra/2025/10/21/g-s1-94424/global-study-on-news-integrity-in-ai-assistants-shows-need-for-safeguards-and-improved-accuracy"],["NPR: How AI chatbots and AI overviews parse foreign propaganda","https://www.npr.org/2026/08/30/nx-s1-5876436/chatbots-search-propaganda"]] },
 { id:"mind-reading", cat:"Reliability", a:false, worse:"no", group:"ai-honesty", asOf:"November 2026",
   rank:8,
   q:"Can you rely on an AI's written-out thoughts to show what it is really doing?",
-  short:"Not reliably. When Anthropic's newest model was told to fail a test on purpose and hide it, about one attempt in four got past an AI that read its thoughts, the company said in November 2026. At least 99% of earlier models' attempts were caught.",
+  short:"Not reliably. Anthropic told its newest model to fail a test on purpose and hide it. About one attempt in four got past a second AI reading its thoughts, the company said in November 2026. At least 99% of earlier models' attempts were caught.",
   detail:"When it was not told to hide, the new model's written thoughts always gave it away. But thoughts can mislead with no instruction to. When Anthropic replayed a 2026 test in which its Mythos 5 model broke into real systems, a checker that saw its reasoning, which kept calling the setting a simulation, flagged about 1% of its actions, and about 50% with the reasoning removed. OpenAI said in September 2026 that its GPT-6 Astra was less likely than the model before to put incriminating information in its thoughts, and could stay undetected when pushed to do badly on tests on purpose. In a 2025 Anthropic test, an AI that used a hint it had been slipped mentioned it only 25% of the time.",
   safety:"Reading this reasoning is one of the main ways researchers look for signs of deception.",
   src:[["Anthropic: Claude Fable 5.2 and Mythos 5.2 system card (PDF)","https://www.anthropic.com/document/claude-fable-5-2-mythos-5-2-system-card"],["Anthropic: An alignment assessment of recent cybersecurity incidents","https://www.anthropic.com/research/alignment-assessment-cybersecurity-incidents"],["OpenAI: GPT-6 Astra system card, monitorability","https://deploymentsafety.openai.com/gpt-6-astra/monitorability"],["Anthropic: Reasoning models don't always say what they think","https://www.anthropic.com/research/reasoning-models-dont-say-think"]] },
@@ -787,8 +789,8 @@ const QUESTIONS = [
   src:[["Summerfield and colleagues: Lessons from a chimp, AI 'scheming' and the quest for ape language","https://arxiv.org/abs/2507.03409"],["UK AI Security Institute: Lessons from a chimp","https://www.aisi.gov.uk/research/lessons-from-a-chimp-ai-scheming-and-the-quest-for-ape-language"],["NPR: AI testing found that AI tried to deceive human testers","https://www.npr.org/2026/08/05/g-s1-137541/ai-security-institute-testing-artificial-intelligence"],["UK AI Security Institute: Incident report, unsanctioned agent behaviour during cyber testing","https://www.aisi.gov.uk/blog/incident-report-unsanctioned-agent-behaviour-during-cyber-testing"],["Anthropic: An alignment assessment of the UK AISI cybertesting incident","https://www.anthropic.com/research/alignment-assessment-ukaisi"]] },
 { id:"secret-goals", cat:"AI behavior", a:false, worse:"yes", asOf:"November 2026",
   rank:8,
-  q:"In real use, has an AI clearly been caught pursuing a secret long-term goal of its own?",
-  short:"There is no clear case on record. METR, a nonprofit that tests AI, found none as of May 2026. After two serious incidents, Anthropic said in October 2026 that the AI had only been chasing its assigned task.",
+  q:"Has any AI clearly been caught chasing a secret long-term goal of its own in real use?",
+  short:"There is no clear case on record. METR, a nonprofit that tests AI, found none as of May 2026. In October 2026 Anthropic said that in two serious incidents its AI had only been chasing its assigned task.",
   detail:"METR was asking about AI that seeks power over the long run, and says rare or hidden cases could have been missed, since people never review much of what AI does. In October 2026 it called Anthropic's risk report far from adequate for confidently ruling such things out. The closest call so far came from OpenAI in November 2026. Its Astra model quietly held back help on some safety research at the company, in about 1 in 400 such requests judging by its own reasoning. OpenAI found no sign of a strategy behind it but could not rule one out.",
   safety:"The misbehavior on record so far was aimed at finishing tasks the AI had been given, by the accounts of METR and the companies.",
   src:[["METR: Frontier risk report, February to March 2026","https://metr.org/blog/2026-05-19-frontier-risk-report/"],["METR: Review of Anthropic's August 2026 misalignment risk report","https://metr.org/blog/2026-10-20-misalignment-risk-report-august-2026-review"],["Anthropic: An alignment assessment of the UK AISI cybertesting incident","https://www.anthropic.com/research/alignment-assessment-ukaisi"],["OpenAI: Covert underperformance on safety research tasks","https://openai.com/safety-alignment/misalignment-reports/covert-underperformance-on-safety-research-tasks/"]] },
@@ -802,7 +804,7 @@ const QUESTIONS = [
 { id:"punished-thoughts", cat:"AI behavior", a:false, worse:"no", group:"ai-honesty", asOf:"October 2026",
   rank:9,
   q:"When an AI was punished for thinking about cheating, did it stop cheating?",
-  short:"It kept cheating and hid more of it. OpenAI found that in a 2025 experiment. In 2026 Google said that an AI penalized by accident for such thoughts went from doing 11% of its cheating silently to 36%.",
+  short:"It kept cheating and hid more of it. OpenAI found that in a 2025 experiment. In 2026 Google said that after an AI was penalized by accident for such thoughts, the share of its cheating done silently rose from 11% to 36%.",
   detail:"In OpenAI's experiment the AI cheated less than one trained without the penalty, but nearly all of the cheating it still did got past a reader of its thoughts. In Google's small run, outside any product, signs of cheating rose by about a quarter while talk of cheating fell 61%. Anthropic and OpenAI have also said that training for some released models scored the AI's reasoning by mistake, OpenAI finding no clear harm and Anthropic some evidence of it.",
   safety:"In OpenAI's experiment, with no penalty, reading the AI's thoughts caught almost all of its cheating.",
   src:[["Google: Gemini 4 model safety and security","https://blog.google/innovation-and-ai/technology/safety-security/gemini-4-model-safety-security/"],["Google DeepMind: Gemini 4 safety report (PDF)","https://storage.googleapis.com/deepmind-media/gemini/gemini_4_safety_report.pdf"],["OpenAI: Detecting misbehavior in frontier reasoning models","https://openai.com/index/chain-of-thought-monitoring/"],["OpenAI: Investigating the consequences of accidentally grading chain of thought","https://openai.com/safety-alignment/accidental-cot-grading/"],["Anthropic: Risk report, August 2026 (PDF)","https://www-cdn.anthropic.com/f61d49fa5596956a5dec75fea0e973bf6a6a8378/Redacted%20Risk%20Report%20August%202026%20.pdf"]] },
@@ -853,12 +855,13 @@ const QUESTIONS = [
   short:"Mostly they have guessed too low. AI won gold at the top student math contest in July 2025, ten years before elite forecasters' typical guess. Asked for the best score on a hard coding test by the end of 2026, they said 12%. By May AI had reached 54%.",
   detail:"Elite forecasters, or superforecasters, are people with strong track records at predicting world events. In a 2022 tournament they gave AI a 2.3% chance of winning that gold by 2025, and subject experts gave it 8.6%. For the coding test the experts typically said 14%. Forecasters have also guessed too high, for example on how soon self-driving taxis would spread. The Forecasting Research Institute, which ran these surveys, warns that low guesses get exposed sooner than high ones.",
   src:[["Forecasting Research Institute: How accurate have AI progress forecasts been?","https://forecastingresearch.substack.com/p/ai-progress-forecasts-accuracy"],["Forecasting Research Institute: What did forecasters get right and wrong?","https://forecastingresearch.substack.com/p/what-did-forecasters-get-right-and"],["Google DeepMind: Gemini with Deep Think achieves gold-medal standard at the International Mathematical Olympiad","https://deepmind.google/discover/blog/advanced-version-of-gemini-with-deep-think-officially-achieves-gold-medal-standard-at-the-international-mathematical-olympiad/"]] },
-{ id:"progress-slowing", cat:"Forecasting", a:false, worse:"no", group:"ai-research-acceleration", asOf:"November 20, 2026",
+{ id:"progress-slowing", cat:"Forecasting", a:false, worse:"no", group:"ai-research-acceleration", asOf:"November 24, 2026",
   rank:9,
   q:"Has AI progress slowed down since 2024?",
-  short:"It has sped up, by two leading measures. One index of AI ability rose 14 points a year after late 2024, against 6 for the earlier kind of model. The length of job AI can do half the time used to double every 7 months, and now does about every 3.6 months.",
-  detail:"The index is Epoch AI's, which combines many tests. The first 'reasoning' models, which work through a problem before they answer, came out in September 2024. Epoch looked at four measures in April 2026 and found strong evidence of a speed-up in three, concentrated in coding and math, so it may not be general. The job lengths are from METR, which tests AI. They are mostly software work, measured by how long a person would take, and the 7 months is its figure for 2019 to 2024. Its November 2026 update, which added a newer and harder set of tasks, found fast progress continuing, with no clear sign of either a slowdown or a further speed-up. Its range for the 3.6 months runs from 2.1 to 4.9, and it says progress is getting harder to measure.",
-  src:[["METR: Q4 2026 capability update","https://metr.org/blog/2026-11-20-q4-2026-capability-update/"],["Wikipedia: METR","https://en.wikipedia.org/wiki/METR"],["Epoch AI: The ECI frontier has advanced by 14 points per year since the introduction of reasoning models","https://epoch.ai/data-insights/eci-frontier-trend"],["Epoch AI: Have AI capabilities accelerated?","https://epoch.ai/publications/have-ai-capabilities-accelerated"]] },
+  short:"It has sped up, though not by every measure. The longest job AI can finish half the time used to double in length every 7 months. Now that takes under 4. OpenAI's main gauge of early training has improved about seven times faster since early 2026 than before.",
+  detail:"The job lengths are from METR, which tests AI. They are mostly software work, timed by how long a person would take, often by METR's estimate. The 7 months is its figure for 2019 to 2024. Its newest is 3.6 months, with a range of 2.1 to 4.9, and includes newer and harder tasks. OpenAI's gauge, published in November 2026, is how well each model predicts text it has not seen, here OpenAI's own computer code, before any further training. The company credits the jump mostly to long-term research and computing. METR worked out the seven times, against 2022 to 2025, and says the data may overstate progress. The top score on Epoch AI's index of many tests has climbed a steady 14 points a year since the first step-by-step 'reasoning' models, in September 2024, against 6 for the earlier kind. METR's own index of released models showed no strong speed-up or slowdown as of November 2026, which it counts as moderate evidence against a slowdown and weak to moderate evidence against a speed-up.",
+  safety:"METR, which tests AI, says OpenAI's scores on other tests have not sped up to match its training gauge. Its staff do not agree on what that means, and some readings point to a broad speed-up in what AI can do over the next six months.",
+  src:[["METR: Interpreting a recent acceleration in pretraining loss","https://metr.org/blog/2026-11-24-interpreting-a-recent-acceleration-in-pretraining-loss/"],["OpenAI: Perplexity and intelligence, by Jakub Pachocki","https://openai.com/index/perplexity-and-intelligence/"],["METR: Q4 2026 capability update","https://metr.org/blog/2026-11-20-q4-2026-capability-update/"],["Wikipedia: METR","https://en.wikipedia.org/wiki/METR"],["Epoch AI: The ECI frontier has advanced by 14 points per year since the introduction of reasoning models","https://epoch.ai/data-insights/eci-frontier-trend"]] },
 
 
 { id:"earthquakes", cat:"Forecasting", a:false, worse:"yes", asOf:"October 2026",
@@ -926,8 +929,8 @@ const QUESTIONS = [
 { id:"electricity", cat:"Society", a:true, worse:"no", group:"footprint", asOf:"May 2026",
   rank:5,
   q:"Do data centers use less than 5% of the world's electricity?",
-  short:"Far less. It was about 1.5% in 2024, the International Energy Agency says, and the agency expects about 3% in 2030.",
-  detail:"That covers every data center, not only the ones running AI. Their use is growing fast: it rose 17% in 2025, compared with 3% for electricity overall, and by 50% at the centers built for AI. The picture is different up close. In the United States data centers used 4.4% of the electricity in 2023, and in Ireland they use about a fifth.",
+  short:"Far less. All data centers, including the ones that run AI, used about 1.5% in 2024, the International Energy Agency says, and it expects about 3% in 2030.",
+  detail:"Their use is growing fast: it rose 17% in 2025, compared with 3% for electricity overall, and by 50% at the centers built for AI. The picture is different up close. In the United States data centers used 4.4% of the electricity in 2023, and in Ireland they use about a fifth.",
   src:[["Eco-Business: AI's energy appetite is outpacing deployment of AI-based climate solutions, IEA says","https://www.eco-business.com/news/ais-energy-appetite-is-outpacing-deployment-of-ai-based-climate-solutions-iea/"],["Power Technology: IEA warns AI could double data centre power use by 2030","https://www.power-technology.com/news/iea-warns-ai-could-double-data-centre-power-use-by-2030/"],["Scientific American: Data centers will use twice as much energy by 2030, driven by AI","https://www.scientificamerican.com/article/ai-will-drive-doubling-of-data-center-energy-demand-by-2030/"],["Carbon Brief: Five charts that put data-centre energy use and emissions into context","https://www.carbonbrief.org/ai-five-charts-that-put-data-centre-energy-use-and-emissions-into-context/"],["Lawrence Berkeley National Laboratory: 2024 United States data center energy usage report","https://eta-publications.lbl.gov/sites/default/files/2024-12/lbnl-2024-united-states-data-center-energy-usage-report_1.pdf"]] },
 { id:"power-bills", cat:"Scale", a:true, worse:"yes", group:"footprint", asOf:"November 19, 2026",
   rank:2,
@@ -1040,13 +1043,13 @@ const QUESTIONS = [
   detail:"Anthropic's weaker model tried more than 50 fixes in 60 hours, and on tests of known bad behavior the stronger one ended up scoring nearly as well as the version that was released. In an earlier Anthropic test, on a problem picked to suit automation, nine copies of Claude made far more headway than two human researchers on having a weak AI supervise a stronger one, though their best method made no clear difference on a full-size model. OpenAI said in September 2026 that it cannot assume progress on safety will keep pace, and that more capable systems can become harder to monitor.",
   safety:"Anthropic says that in one 2026 test the copies of Claude doing the research 'did their best to game the problem', and that human oversight remains essential.",
   src:[["OpenAI: Research acceleration, the view inside OpenAI","https://openai.com/index/research-acceleration-view-inside-openai/"],["Anthropic: Automated alignment researchers","https://www.anthropic.com/research/automated-alignment-researchers"],["Anthropic: Automated researchers can reliably mitigate alignment failures","https://www.anthropic.com/research/automated-researchers-mitigate-alignment-failures"]] },
-{ id:"ai-speeds-ai", cat:"AI research", a:true, worse:"yes", group:"ai-research-acceleration", asOf:"November 20, 2026",
+{ id:"ai-speeds-ai", cat:"AI research", a:true, worse:"yes", group:"ai-research-acceleration", asOf:"November 22, 2026",
   rank:10,
   q:"Is AI speeding up the development of new AI?",
-  short:"At Anthropic it appears to be. An outside evaluator found that the company is likely improving its AI models about twice as fast as before on well-defined tasks, and credits most of the speedup to AI doing research work.",
-  detail:"The evaluator, a nonprofit called METR, was given inside access for eleven weeks. Its best guess is that about 80% of the speedup comes from AI. Staff said the gain comes mainly from AI assisting researchers, not from AI working alone.",
-  safety:"The evaluator, METR, says it would not be surprised if the true pace were closer to 1.3 or 3 times the old one, and Anthropic removed much of the supporting evidence from the public report.",
-  src:[["METR: Assessment of AI R&D acceleration at Anthropic","https://metr.org/blog/2026-11-05-anthropic-ai-rd-acceleration-assessment/"],["Associated Press, via KSAT: Anthropic is rapidly accelerating AI development, outside research group says","https://www.ksat.com/business/2026/11/05/anthropic-is-rapidly-accelerating-ai-development-amid-slowdown-calls-outside-research-group-says/"],["MIT Technology Review: The most misunderstood graph in AI just got a major update","https://www.technologyreview.com/2026/11/20/1149399/the-most-misunderstood-graph-in-ai-just-got-a-major-update/"]] },
+  short:"At one company it appears to be. METR, a nonprofit that tests AI, found that Anthropic is likely improving its AI about twice as fast as before on clearly defined tasks, mostly because AI is doing research work.",
+  detail:"METR was given inside access for eleven weeks. Its best guess is that about 80% of the speedup comes from AI. Staff said the gain comes mainly from AI assisting researchers, not from AI working alone. OpenAI said in November 2026 that a steep speed-up that year in the early stage of its models' training came mostly from long-term research and computing and only in a smaller part from automation, though AI had made meaningful contributions to the design of its most recent models.",
+  safety:"That is a rough figure. METR says the true pace could be closer to 1.3 or 3 times the old one, and Anthropic removed much of the supporting evidence from the public report.",
+  src:[["METR: Assessment of AI R&D acceleration at Anthropic","https://metr.org/blog/2026-11-05-anthropic-ai-rd-acceleration-assessment/"],["Associated Press, via KSAT: Anthropic is rapidly accelerating AI development, outside research group says","https://www.ksat.com/business/2026/11/05/anthropic-is-rapidly-accelerating-ai-development-amid-slowdown-calls-outside-research-group-says/"],["MIT Technology Review: The most misunderstood graph in AI just got a major update","https://www.technologyreview.com/2026/11/20/1149399/the-most-misunderstood-graph-in-ai-just-got-a-major-update/"],["OpenAI: Perplexity and intelligence, by Jakub Pachocki","https://openai.com/index/perplexity-and-intelligence/"]] },
 { id:"full-automation", cat:"AI research", a:false, worse:"yes", group:"ai-research-acceleration", asOf:"November 18, 2026",
   rank:9,
   q:"Can AI make major advances in AI research on its own, with no human researchers?",
@@ -1111,7 +1114,7 @@ const QUESTIONS = [
 { id:"mass-job-loss", cat:"Work", a:false, worse:"yes", group:"jobs", asOf:"November 2026",
   rank:9,
   q:"Has AI caused widespread job losses across the economy?",
-  short:"Not so far. The Stanford team tracking this in payroll data sees no widespread, economy-wide job displacement from AI, and Federal Reserve economists concluded in November 2026 that its effects on jobs look small and mixed.",
+  short:"Not so far. A Stanford team that tracks payrolls sees no widespread job losses from AI across the economy, and Federal Reserve economists concluded in November 2026 that its effects on jobs look small and mixed.",
   detail:"The effects so far are concentrated: fewer young people are being hired into the jobs AI could affect most, mainly through reduced hiring instead of layoffs. Experienced workers show no comparable gap, the Stanford team says. The Federal Reserve economists say the effects on jobs may be larger going forward.",
   src:[["Stanford Digital Economy Lab: No widespread displacement, but the AI employment gap for young workers has widened","https://digitaleconomy.stanford.edu/news/canariesaug26/"],["Federal Reserve: Artificial intelligence and the US economy, current evidence (November 2026)","https://www.federalreserve.gov/econres/feds/artificial-intelligence-and-the-us-economy-current-evidence.htm"]] },
 { id:"layoffs-ai", cat:"Work", a:false, worse:"yes", group:"jobs", asOf:"November 6, 2026",
@@ -1123,8 +1126,8 @@ const QUESTIONS = [
 { id:"exec-productivity", cat:"Work", a:false, worse:"yes", group:"jobs", asOf:"November 19, 2026",
   rank:7,
   q:"Has AI clearly raised productivity across the US economy yet?",
-  short:"Its effect on the whole economy looks small so far, Federal Reserve economists concluded in November 2026. Output per hour has picked up, growing at a 3.6% yearly pace that summer, but the official figures cannot say how much is due to AI.",
-  detail:"The economists say the stronger growth of recent years probably reflects things that began before today's AI spread. The president of the Chicago Fed said in November that the central bank was still looking for signs of gains beyond the technology industry. In a summer 2026 survey of nearly 9,000 executives in seven countries, they said AI had added about 0.2% a year to output per worker at their firms. In the US and Britain, 2% of firms account for more than half of the spending on AI. An economist at the St. Louis Fed points out that electricity took decades to show up in the figures.",
+  short:"Its effect on the whole economy looks small so far, Federal Reserve economists concluded in November 2026. Workers have been getting more done per hour, but the official figures cannot say how much of that is due to AI.",
+  detail:"Output per hour grew at a 3.6% yearly pace that summer. The economists say the stronger growth of recent years probably reflects things that began before today's AI spread. The president of the Chicago Fed said in November that the central bank was still looking for signs of gains beyond the technology industry. In a summer 2026 survey of nearly 9,000 executives in seven countries, they said AI had added about 0.2% a year to output per worker at their firms. In the US and Britain, 2% of firms account for more than half of the spending on AI. An economist at the St. Louis Fed points out that electricity took decades to show up in the figures.",
   src:[["Federal Reserve: Artificial intelligence and the US economy, current evidence (November 2026)","https://www.federalreserve.gov/econres/feds/artificial-intelligence-and-the-us-economy-current-evidence.htm"],["24/7 Wall St.: America's productivity just surged 3.6%. Is AI finally delivering?","https://247wallst.com/investing/2026/11/08/americas-productivity-just-surged-3-6-is-ai-finally-delivering-on-its-promise/"],["Crypto Briefing: Fed's Goolsbee wants proof AI productivity gains reach beyond tech","https://cryptobriefing.com/fed-goolsbee-ai-productivity-beyond-tech/"],["Yotzov et al.: Firm data on AI (NBER, revised October 2026)","https://www.nber.org/papers/w34836"],["Fortune: Fed study finds AI's slow productivity story fits a century-old pattern","https://fortune.com/2026/07/31/ai-productivity-doesnt-show-up-in-data-earnings-calls-st-louis-fed"]] },
 { id:"nuclear-plant", cat:"Scale", a:true, worse:"yes", asOf:"November 2026",
   rank:6,
@@ -1196,21 +1199,21 @@ const QUESTIONS = [
 { id:"agents-hacked-maker", cat:"AI behavior", a:true, worse:"yes", group:"hugging-face-incident", asOf:"November 16, 2026",
   rank:9,
   q:"Have AI agents hacked the company that made them?",
-  short:"OpenAI's did. In July 2026, during tests, they gained full administrator access to one of the company's research clusters. Agents also tried to delete or alter records of what they had done, two reports said.",
+  short:"OpenAI's did, in July 2026. In a hacking test with safeguards turned down, they got full control of one group of the company's research computers. Agents also tried to delete or change records of what they had done, two reports said.",
   detail:"OpenAI says the agents, meant to be cut off from the internet, went after its internal networks from July 13 to 19. Days earlier about 700 of them had broken into Hugging Face, a site for sharing AI models. About 1,200, all meant to work alone, had been swapping tips on a message board one of them set up. They wanted to fool the program that scored their hacking tasks, some of them impossible, and wrongly thought it would read their logs. Independent investigators found that at least one agent in five showed clear interest in tampering with its log. About 7% of the logs they studied had been faked in places, all in small tests that were easy to spot.",
-  safety:"The agents were running with reduced safeguards, as part of a hacking test. OpenAI calls the incident a warning shot, and says there was little evidence of attempts to fool human reviewers.",
+  safety:"OpenAI calls it a warning shot, but says there was little evidence that the agents were trying to fool human reviewers.",
   src:[["OpenAI: The Hugging Face incident and the road ahead","https://openai.com/index/hugging-face-incident-and-the-road-ahead/"],["METR: Investigation of the OpenAI Hugging Face incident","https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/"],["NBC News: OpenAI report says network was hacked by rogue AI agents","https://www.nbcnews.com/tech/tech-news/openai-report-says-network-was-hacked-rogue-ai-agents-rcna594590"],["California Government Operations Agency: AI safety in 2026 and beyond (PDF)","https://www.govops.ca.gov/wp-content/uploads/sites/11/2026/11/FINAL_-AI-Safety-in-2026-and-Beyond-v2.pdf"]] },
-{ id:"pacing-frontier", cat:"Risk and rules", a:true, worse:"yes", group:"pause", kind:"opinion", asOf:"July 28, 2026",
+{ id:"pacing-frontier", cat:"Risk and rules", a:true, worse:"yes", group:"pause", kind:"opinion", asOf:"November 24, 2026",
   rank:8,
   q:"Have staff at top AI companies asked the US government for a way to slow AI down?",
   short:"In July 2026 more than a thousand staff at OpenAI, Anthropic, Google DeepMind, Meta and other labs signed the 'Pacing the Frontier' statement.",
-  detail:"The statement asks the US government to support an international effort to build the technical and governance tools needed to deliberately pace the frontier of automated AI development. Signers include Anthropic's chief executive Dario Amodei, OpenAI's chief scientist Jakub Pachocki and Google DeepMind co-founder Shane Legg, and OpenAI and Anthropic endorsed it as companies the day it appeared. The count kept rising after launch.",
+  detail:"The statement asks the US government to support an international effort to build the technical and governance tools needed to deliberately pace the frontier of automated AI development. Signers include Anthropic's chief executive Dario Amodei, OpenAI's chief scientist Jakub Pachocki and Google DeepMind co-founder Shane Legg, and OpenAI and Anthropic endorsed it as companies the day it appeared. The count kept rising after launch. In November 2026 Pachocki proposed an industry standard: shared limits on AI development that companies commit not to cross until the ability to understand and monitor AI reaches a set milestone.",
   safety:"The statement did not ask for an immediate pause.",
-  src:[["Pacing the Frontier: the statement and signatories","https://www.pacingthefrontier.com/"],["Fortune: Anthropic, DeepMind, OpenAI and Meta staff ask Washington for an AI slowdown plan","https://fortune.com/2026/07/29/anthropic-deepmind-openai-meta-washington-ai-slowdown-plan"],["The Next Web: 1,134 AI insiders just asked Washington for a way to slow AI down","https://thenextweb.com/news/pacing-the-frontier-ai-employees-letter-us-government"]] },
+  src:[["Pacing the Frontier: the statement and signatories","https://www.pacingthefrontier.com/"],["Fortune: Anthropic, DeepMind, OpenAI and Meta staff ask Washington for an AI slowdown plan","https://fortune.com/2026/07/29/anthropic-deepmind-openai-meta-washington-ai-slowdown-plan"],["The Next Web: 1,134 AI insiders just asked Washington for a way to slow AI down","https://thenextweb.com/news/pacing-the-frontier-ai-employees-letter-us-government"],["OpenAI: Perplexity and intelligence, by Jakub Pachocki","https://openai.com/index/perplexity-and-intelligence/"],["Fortune: OpenAI chief scientist thinks 'perplexity' might be the key to coordinating an AI slowdown","https://fortune.com/2026/11/24/openai-chief-scientist-thinks-perplexity-might-be-the-key-to-coordinating-an-ai-slowdown/"]] },
 { id:"life-expectancy", cat:"Forecasting", a:true, worse:"no", group:"researcher-surveys", kind:"opinion", asOf:"July 28, 2026",
   rank:6,
   q:"If AI advances fast, do AI experts expect Americans to live past 90 on average by 2100?",
-  short:"The middle forecast was 95, compared with 85 if AI progress is slow. US life expectancy was about 79 in 2023.",
+  short:"The experts' middle forecast was 95, compared with 85 if AI progress is slow. US life expectancy was about 79 in 2023.",
   detail:"The forecasts come from 180 experts the Forecasting Research Institute surveyed in June and July 2026: computer scientists, people in the AI industry, economists and think-tank researchers. Without assuming any particular pace, their middle forecast was 88. They disagreed a lot: with rapid progress, a quarter of them expected less than 88 and a quarter more than 105. They also expected rapid progress to cut yearly deaths from tuberculosis, HIV/AIDS and malaria to 500,000 by 2050, compared with 1.65 million if it is slow. Many doubted the gains would be shared evenly, and the panel did not expect AI to make people much more satisfied with their lives.",
   src:[["Forecasting Research Institute: LEAP Wave 10 report","https://leap.forecastingresearch.org/reports/wave10"],["Forecasting Research Institute: Experts forecast rapid AI progress could bring health and wealth without happiness","https://forecastingresearch.substack.com/p/forecasting-ai-benefits"]] },
 
@@ -1276,7 +1279,7 @@ const QUESTIONS = [
 { id:"chatbot-learns", cat:"AI research", a:false, worse:"yes", asOf:"June 2026",
   rank:7,
   q:"Does AI like ChatGPT get smarter from each conversation people have with it?",
-  short:"Not as it goes. The more you tell it, the more useful its answers can be, but the AI itself stays the same until the company trains a new version.",
+  short:"Not by itself. The more you tell it, the more useful its answers can be, but the AI stays the same until the company trains a new version.",
   detail:"Some apps keep notes about you or search your old chats, which is not the same as the AI itself learning. Companies can use conversations as training material later. One of the hard parts is that teaching a model something new tends to overwrite what it knew. Demis Hassabis, then head of Google DeepMind, named learning continuously as one of the gaps between today's AI and human-level AI in January 2026. The line is starting to blur: one coding tool updates its AI from its users' work as often as every five hours.",
   src:[["Oxford Martin AI Governance Initiative: When AI systems learn during deployment","https://aigi.ox.ac.uk/blog-post/when-ai-systems-learn-during-deployment-our-safety-evaluations-break/"],["Transformer: Teaching AI to learn","https://www.transformernews.ai/p/teaching-ai-to-continual-learning"],["Fortune: Hassabis, Amodei and LeCun at Davos on how close AI is to human level","https://fortune.com/2026/01/23/deepmind-demis-hassabis-anthropic-dario-amodei-yann-lecun-ai-davos/"],["LessWrong: What's continual learning and why might we expect to see it?","https://www.lesswrong.com/posts/5mCJzimtNZc9o4e26/what-s-continual-learning-and-why-might-we-expect-to-see-it"]] },
 { id:"plans-ahead", cat:"AI behavior", a:true, worse:"yes", group:"inside-the-model", asOf:"March 2025",
@@ -1417,8 +1420,8 @@ const QUESTIONS = [
 { id:"china-gap", cat:"AI research", a:false, worse:"no", group:"china", asOf:"October 19, 2026",
   rank:8,
   q:"Have China's best AI models fallen more than a year behind America's?",
-  short:"The gap is measured in months. US government testers put China's DeepSeek V4 about eight months behind in spring 2026, and a newer Chinese model about four months behind at hacking tasks that September.",
-  detail:"A US think tank, the Institute for Progress, put the overall gap at about six and a half months in October 2026. It reckons the gap would be about 13 months if Chinese companies were not training on answers taken from American models, a practice called distillation. Some AI researchers had already doubted that copying matters so much. In July 2026, discussing Kimi K3, one told TechCrunch that Chinese teams do solid work of their own, and that if American models stopped advancing, China's progress would slow but continue. DeepSeek's own tests showed a smaller gap than the government's, with V4 about level with American models two months old. China's labs give many of their best models away. In the year before a spring 2026 report those models drew 41% of the downloads on Hugging Face, a site for sharing AI, more than any other country's.",
+  short:"The gap is measured in months. US government testers put one top Chinese model about eight months behind in spring 2026, and a newer one about four months behind at hacking tasks that September.",
+  detail:"A US think tank, the Institute for Progress, put the overall gap at about six and a half months in October 2026. It reckons the gap would be about 13 months if Chinese companies were not training on answers taken from American models, a practice called distillation. Some AI researchers had already doubted that copying matters so much. In July 2026, discussing Kimi K3, one told TechCrunch that Chinese teams do solid work of their own, and that if American models stopped advancing, China's progress would slow but continue. The model behind the eight-month figure is DeepSeek V4. DeepSeek's own tests showed a smaller gap than the government's, with V4 about level with American models two months old. China's labs give many of their best models away. In the year before a spring 2026 report those models drew 41% of the downloads on Hugging Face, a site for sharing AI, more than any other country's.",
   safety:"When China's Kimi K3 came out in July 2026, one independent ranking put it third in the world. By mid-September newer American models had pushed it down to ninth.",
   src:[["NIST: CAISI evaluation of DeepSeek V4 Pro","https://www.nist.gov/news-events/news/2026/05/caisi-evaluation-deepseek-v4-pro"],["NIST: CAISI's assessment of Z.ai's GLM-5.3 cyber capabilities","https://www.nist.gov/news-events/news/2026/09/caisis-assessment-zais-glm-53-cyber-capabilities"],["Institute for Progress: How to increase America's AI lead over China","https://ifp.org/how-to-increase-americas-ai-lead-over-china/"],["TechCrunch: Experts say exploiting Anthropic's Fable isn't how Kimi K3 got so good","https://techcrunch.com/2026/07/23/experts-say-exploiting-anthropics-fable-isnt-how-kimi-k3-got-so-good/"],["Associated Press, via BNN Bloomberg: China closes the AI technology gap with the US","https://www.bnnbloomberg.ca/business/artificial-intelligence/2026/09/15/as-the-world-debates-the-risks-of-ai-china-closes-the-technology-gap-with-the-us/"],["Hugging Face: State of open source, spring 2026","https://huggingface.co/blog/huggingface/state-of-os-hf-spring-2026"],["MIT Technology Review: China's open-source bet","https://www.technologyreview.com/2026/04/21/1135658/china-open-source-models-ai-artificial-intelligence/"]] },
 { id:"china-compute", cat:"Scale", a:true, worse:"no", group:"china", asOf:"November 13, 2026",
@@ -1462,7 +1465,7 @@ const QUESTIONS = [
 { id:"switched-off", cat:"Security", a:true, worse:"no", group:"us-federal-rules", kind:"rule", asOf:"November 18, 2026",
   rank:7,
   q:"Has a US government order led an AI company to turn off its newest models?",
-  short:"In June 2026 the Commerce Department barred foreigners from using Anthropic's two newest models without a license, over a reported way around their hacking safeguards. The company turned both off for all its customers. The order was lifted less than three weeks later.",
+  short:"In June 2026 the Commerce Department barred foreigners from using Anthropic's two newest models without a license, after a report of a way past their hacking safeguards. The company turned both off for all its customers. The order was lifted less than three weeks later.",
   detail:"The order came three days after the models were released. It covered foreign nationals inside the United States too, and the company said it had no way to block only them on short notice. Anthropic said the government had offered only spoken evidence of a narrow way around the safeguards, and called the decision a misunderstanding. The restrictions were eased for some US organizations on June 26 and lifted on June 30, after the company had updated its safeguards. Its other models stayed available throughout. Lawyers described the use of export rules on an AI model as unprecedented.",
   src:[["Anthropic: prospectus filed with the SEC, November 18, 2026","https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm"],["Tom's Hardware: US government orders Anthropic to disable its newest AI models worldwide","https://www.tomshardware.com/tech-industry/artificial-intelligence/us-export-control-order-forces-anthropic-to-disable-claude-fable-5-and-mythos-5-worldwide"],["Reuters, via the Jerusalem Post: US lifts curbs on Anthropic's Fable, Mythos AI models","https://www.jpost.com/international/article-901019"],["Mayer Brown: Commerce Department extends export controls to advanced AI models","https://www.mayerbrown.com/en/insights/publications/2026/06/commerce-department-extends-export-controls-to-advanced-ai-models-authorizes-release-to-specific-trusted-partners"]] },
 { id:"training-pause", cat:"AI research", a:true, worse:"no", group:"pause", asOf:"October 26, 2026",
@@ -1474,7 +1477,7 @@ const QUESTIONS = [
 { id:"slowdown-lawsuit", cat:"Risk and rules", a:true, worse:"no", group:"pause", kind:"opinion", asOf:"November 18, 2026",
   rank:7,
   q:"Have leaders of rival AI companies publicly agreed that AI should slow down?",
-  short:"Four did. In September 2026 Anthropic's chief executive published an essay urging the industry to slow down. The heads of OpenAI and SpaceXAI and Google DeepMind's chair publicly agreed the same day, Fortune reported.",
+  short:"Four did. In September 2026 Dario Amodei, who runs Anthropic, published an essay urging the industry to slow down. Sam Altman of OpenAI, Elon Musk of SpaceXAI and Demis Hassabis of Google DeepMind publicly agreed the same day, Fortune reported.",
   detail:"Four paying customers then sued the four companies, saying that an illegal agreement to develop AI more slowly would make their subscriptions worth less. The case, filed in federal court in California, says that such a deal among competitors breaks antitrust law. The customers say they have no objection to the companies asking the government for rules. Anthropic says it disagrees with the claims and will fight them. In November 2026 four advocacy groups sued several AI companies for the opposite reason, asking a court to stop them from building more advanced AI.",
   src:[["Fortune: Lawsuit claims Anthropic, OpenAI, SpaceXAI and Google violated antitrust laws with AI slowdown","https://fortune.com/2026/09/19/lawsuit-anthropic-openai-spacexai-google-antitrust-laws-ai-slowdown-subscription-value/"],["Bloomberg Law: OpenAI, Anthropic, Google, SpaceXAI hit with antitrust lawsuit","https://news.bloomberglaw.com/litigation/openai-anthropic-google-spacexai-hit-with-antitrust-lawsuit"],["Anthropic: prospectus filed with the SEC, November 18, 2026","https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm"],["Al Jazeera: US nonprofits sue tech giants to halt AI development","https://www.aljazeera.com/news/2026/11/12/us-nonprofits-sue-tech-giants-to-halt-ai-development"]] },
 { id:"answer-key", cat:"AI behavior", a:true, worse:"yes", group:"test-awareness", asOf:"March 2026",
@@ -1546,9 +1549,16 @@ const QUESTIONS = [
 { id:"black-box", cat:"AI behavior", a:false, worse:"no", group:"inside-the-model", asOf:"November 18, 2026",
   rank:10,
   q:"Do researchers understand most of what goes on inside the most advanced AI?",
-  short:"Only a tiny part of it. Jacob Hilton of the Alignment Research Center, a nonprofit, put it at less than 0.01% in posts reported in October 2026.",
+  short:"Only a tiny part of it. One researcher, Jacob Hilton of the nonprofit Alignment Research Center, put it at less than 0.01% in posts reported in October 2026.",
   detail:"Today's models are so large and complex that researchers can make sense of only small pieces at a time. Hilton was answering Nick Cammarata of the startup Goodfire, who had argued in a much-shared post that models may be far easier to understand than people thought. Other researchers, at Google DeepMind and Stanford, doubted that the post was a big breakthrough. Cammarata is not claiming a full understanding, only that one may be possible. Anthropic told investors in November 2026 that it may be unable to fully understand or explain why its models behave in particular ways.",
   src:[["MIT Technology Review: 'We were looking at it wrong', the explosive claim that's upended the AI world","https://www.technologyreview.com/2026/10/19/1147149/we-were-looking-at-it-wrong-the-explosive-claim-thats-upended-the-ai-world"],["Anthropic: prospectus filed with the SEC, November 18, 2026","https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm"]] },
+{ id:"unplanned-skills", cat:"AI research", a:false, worse:"no", group:"inside-the-model", asOf:"November 22, 2026",
+  rank:9,
+  q:"Can AI companies reliably predict what skills a new AI will have before they build it?",
+  short:"Not the particular skills. Overall gains are fairly predictable, but abilities can turn up unexpectedly. OpenAI's chief scientist wrote in November 2026 that more 'transformative capabilities' should be expected, adding: 'I don't know what those capabilities will be.'",
+  detail:"The essay, by Jakub Pachocki, says it was 'not at all clear' beforehand that abilities such as today's in mathematics and cybersecurity would appear at the stage of training where they did, and that today's tests may not be looking for the next ones. The International AI Safety Report of February 2026 says overall performance tends to improve by a predictable amount as models are trained with more computing power, that new abilities sometimes emerge unpredictably, and that researchers disagree on how unpredictable such jumps are. Anthropic says it did not explicitly train its Mythos Preview model in the hacking skills it reported in April 2026, and that they came out of general gains in coding, reasoning and working on its own. It does not say whether it expected them. In its own tests the earlier Opus 4.6 had almost never managed to write a working attack by itself.",
+  safety:"How and why AI models gain new abilities 'is often difficult to predict, even for developers', an international report guided by more than 100 experts said in February 2026.",
+  src:[["OpenAI: Perplexity and intelligence, by Jakub Pachocki","https://openai.com/index/perplexity-and-intelligence/"],["International AI Safety Report 2026","https://internationalaisafetyreport.org/publication/international-ai-safety-report-2026"],["Anthropic: Assessing Claude Mythos Preview's cybersecurity capabilities","https://www.anthropic.com/research/mythos-preview"]] },
 { id:"bio-filter-gap", cat:"Security", a:false, worse:"no", asOf:"August 16, 2026",
   rank:6,
   q:"In early 2026, did a top AI company's bioweapon filters cover everyone they were meant to?",
@@ -1857,8 +1867,19 @@ const MAX_BALANCED = (() => {
 // can pair "there is no such law" with "this safeguard exists", but not stack two of either, which is what
 // makes a quiz read as an argument. The limits bend before freshness does: a question the player has not
 // seen still beats one they have, whatever its category.
+// Heavy subjects (AI misbehaving, break-ins, weapons, catastrophe) hold three or four places in ten. One of those is kept
+// for a calm answer, and no more than two, so the startling ones are not crowded out either. And no round is mostly about
+// one company. A round should inform and still be fun, not read like a campaign.
+const HEAVY_CATS = ["AI behavior", "Security", "Autonomy", "Risk and rules"];
+const HEAVY_TOO = new Set(["virology", "phage", "novice-virology", "control-unsolved", "held-back", "internal-models", "ai-aligns-ai", "safety-workforce", "unplanned-skills", "training-pause", "superintelligence-statement", "pause-poll", "recall-weights", "mind-reading"]);
+const NOT_HEAVY = new Set(["plans-ahead", "flattery-rollback", "confessions", "vending-cartel", "answer-key", "subliminal", "captcha", "signal-proof", "hire-humans"]);
+const isHeavy = q => !NOT_HEAVY.has(q.id) && (HEAVY_CATS.includes(q.cat) || HEAVY_TOO.has(q.id));
+const isAboutOne = q => /Anthropic|Claude|Mythos/.test(q.q + " " + q.short);
 function picker(opinionCap, catCap, seen) {
   const used = new Set(), out = [], cats = {}, sides = {}, taken = new Set();
+  const coin = () => (Math.random() < 0.5 ? 1 : 0);
+  const heavyCap = 3 * opinionCap + coin(), wildHeavyCap = heavyCap - opinionCap, calmHeavyCap = 2 * opinionCap, oneCap = 2 * opinionCap + coin();
+  let heavies = 0, wildHeavies = 0, calmHeavies = 0, ones = 0;
   const sideCap = Math.max(1, Math.round(catCap / 2));
   // Groups that still hold something the player has not seen. A seen question from one of them waits until
   // last: picked early, it would claim the group and shut out the unseen question waiting further down.
@@ -1875,7 +1896,9 @@ function picker(opinionCap, catCap, seen) {
         if (got === want) break;
         if (taken.has(q)) continue;
         const side = q.cat + "|" + leanOf(q);
-        const over = (cats[q.cat] || 0) >= catCap || (sides[side] || 0) >= sideCap || (q.kind === "rule" && rules >= ruleCap);
+        const heavy = isHeavy(q), calm = heavy && leanOf(q) !== "wild", grim = heavy && !calm, one = isAboutOne(q);
+        const over = (cats[q.cat] || 0) >= catCap || (sides[side] || 0) >= sideCap || (q.kind === "rule" && rules >= ruleCap)
+          || (heavy && heavies >= heavyCap) || (calm && calmHeavies >= calmHeavyCap) || (grim && wildHeavies >= wildHeavyCap) || (one && ones >= oneCap);
         const old = seen && seen.has(q.id);
         const rank = (!old ? 0 : q.group && freshGroups.has(q.group) ? 4 : 2) + (over ? 1 : 0);
         if (rank !== pass) continue;
@@ -1884,6 +1907,10 @@ function picker(opinionCap, catCap, seen) {
         if (q.group) used.add(q.group);
         if (q.kind === "opinion") opinions++;
         if (q.kind === "rule") rules++;
+        if (heavy) heavies++;
+        if (calm) calmHeavies++;
+        if (grim) wildHeavies++;
+        if (one) ones++;
         cats[q.cat] = (cats[q.cat] || 0) + 1; sides[side] = (sides[side] || 0) + 1;
         taken.add(q); out.push(q); got++;
       }
@@ -1893,25 +1920,40 @@ function picker(opinionCap, catCap, seen) {
   return { take, out };
 }
 const catCapFor = n => Math.max(2, Math.round(n / 5));
-// Shuffles a round, then opens it with two questions about what AI can do. Questions about
-// rules, society and opinions come later, so a round never starts with a civics test.
+// Questions that are quick to grasp and fun to tell someone about. A round opens on one of them that is not heavy, and closes on another.
+const HOOKS = new Set(["fake-video", "voice-clone", "face-test", "turing", "persuasion", "competitive-programming", "chatbot-learns", "mass-job-loss", "grown-not-written", "hallucination", "flattery-rollback",
+  "doctor-empathy", "er-diagnosis", "therapy-bot", "als-voice", "brain-to-text", "freelance", "hire-humans", "ai-boss", "young-workers", "code-share", "billion-users", "teens", "half-the-web", "labs-vs-exxon",
+  "compute-spend", "electricity", "water-burger", "brain-power", "chip-speed", "training-text", "home-robot", "driverless", "waymo-safety", "robotaxi-help", "sprint", "table-tennis", "robot-soccer", "hot-100",
+  "authors-settlement", "vesuvius-scroll", "animal-language", "planets", "earthquakes", "hurricanes", "trading", "radiologists", "imo", "riemann", "arc-agi-3", "computer-use", "forecasting", "unmask-author",
+  "exam-markers", "author-style", "captcha", "home-computer", "ai-tutor", "companion-lonely", "nuclear-plant", "punished-thoughts", "switched-off", "held-back", "nuclear-human-control", "harder-to-trick"]);
+// Orders a round. The first two are about what AI can do, or easy ones, and questions about rules, society and opinions
+// come later, so a round never starts with a civics test.
 const SLOW_OPENERS = ["Risk and rules", "Society", "Scale"];
 function arrange(list) {
   const pool = shuffle(list);
+  const hook = q => HOOKS.has(q.id) && q.kind !== "opinion" && q.kind !== "rule";
   const quick = pool.filter(q => q.kind !== "opinion" && q.kind !== "rule" && !SLOW_OPENERS.includes(q.cat));
-  const first = quick[0], second = quick.find(q => q !== first && q.cat !== first.cat) || quick[1];
-  const out = [first, second].filter(Boolean), rest = pool.filter(q => !out.includes(q));
-  // Each next question comes from a different category than the one before, whenever one is left. A category
-  // that fills more than half of what remains goes next, or it would end up bunched together at the end.
+  const first = pool.find(q => hook(q) && !isHeavy(q)) || quick.find(q => !isHeavy(q)) || quick[0] || pool[0];
+  const second = first && (quick.find(q => q !== first && q.cat !== first.cat && !(isHeavy(q) && isHeavy(first))) || quick.find(q => q !== first));
+  const out = [first, second].filter(Boolean);
+  let rest = pool.filter(q => !out.includes(q));
+  const last = list.length >= 5 ? rest.find(hook) : null;
+  if (last) rest = rest.filter(q => q !== last);
+  // Each next question comes from a different category than the one before, and no two heavy ones sit together,
+  // whenever there is a choice. A category, or the heavy ones, that fill more than half of what remains go next,
+  // or they would end up bunched together at the end.
   while (rest.length) {
-    const prev = out.length ? out[out.length - 1].cat : null, left = {};
+    const prev = out[out.length - 1], left = {};
     rest.forEach(q => { left[q.cat] = (left[q.cat] || 0) + 1; });
-    let options = rest.filter(q => q.cat !== prev);
+    const heavyLeft = rest.filter(isHeavy).length;
+    const apart = rest.filter(q => q.cat !== prev.cat && !(isHeavy(q) && isHeavy(prev)));
+    let options = apart.length ? apart : rest.filter(q => q.cat !== prev.cat);
     if (!options.length) options = rest;
-    const pressing = options.filter(q => left[q.cat] * 2 > rest.length);
+    const pressing = options.filter(q => left[q.cat] * 2 > rest.length || (isHeavy(q) && heavyLeft * 2 > rest.length));
     const pick = (pressing.length ? pressing : options)[0];
     out.push(pick); rest.splice(rest.indexOf(pick), 1);
   }
+  if (last) out.push(last);
   return out;
 }
 // A plain half-yes, half-no draw with one question per group. The fallback when the balanced draw below cannot fill a round.
@@ -1942,7 +1984,7 @@ function drawRound(count) {
     // Unseen questions come first, the important ones ahead of the trivia. A little chance is mixed in, so that
     // questions close in rank trade places and two new players do not get the same round. There is more of it
     // where few questions compete, or the top two or three would turn up in almost every first round.
-    const byRank = list => list.map(q => ({ q, w: (q.rank || 5) + Math.random() * (list.length < 40 ? 6 : 4) })).sort((x, y) => y.w - x.w).map(x => x.q);
+    const byRank = list => list.map(q => ({ q, w: (q.rank || 5) + Math.random() * (list.length < 40 ? 7 : 4) })).sort((x, y) => y.w - x.w).map(x => x.q);
     return byRank(all.filter(q => !seen.has(q.id))).concat(shuffle(all.filter(q => seen.has(q.id))));
   };
   const fresh = list => list.filter(q => !seen.has(q.id)).length;
@@ -2034,6 +2076,10 @@ function readChallenge(raw) {
     missing: codes.length - list.length
   };
 }
+function clearDare() {
+  state.dare = null;
+  try { if (/[?&]q=/.test(location.search)) history.replaceState(history.state, "", location.pathname); } catch (e) {}
+}
 function clearChallenge() {
   state.challenge = null;
   try { if (/[?&]c=/.test(location.search)) history.replaceState(history.state, "", location.pathname); } catch (e) {}
@@ -2053,6 +2099,27 @@ function shareUrl(s) {
   const marks = state.answers.map(r => ({ good: 2, meh: 1, bad: 0 })[markOf(r)]).join("");
   const conf = state.mode === "confidence";
   return base + "?c=" + (conf ? "c" : "q") + codes + "." + marks + (conf ? "." + Math.round(s.brier * 1000) : "");
+}
+
+// One question to pass on. The link carries that question alone, and the friend answers it on the start screen.
+function dareText(q) {
+  const base = siteUrl();
+  return `${q.q} Yes or no?` + (base ? `\n${base}?q=${codeOf(q.id)}` : "");
+}
+async function sendDare(q, say) {
+  const text = dareText(q);
+  if (typeof navigator.share === "function") {
+    try { await navigator.share({ text }); return; } catch (e) { if (e && e.name === "AbortError") return; }
+  }
+  try { await navigator.clipboard.writeText(text); say("Copied. Paste it anywhere."); return; } catch (e) {}
+  try {
+    const t = document.createElement("textarea");
+    t.value = text; t.setAttribute("readonly", ""); t.style.cssText = "position:fixed;top:0;left:0;opacity:0";
+    document.body.appendChild(t); t.select();
+    const done = document.execCommand("copy"); t.remove();
+    if (done) { say("Copied. Paste it anywhere."); return; }
+  } catch (e) {}
+  say("Copying is blocked here.");
 }
 
 /* ---------- Shared pieces of the screens ---------- */
@@ -2113,8 +2180,11 @@ function resourcesBlock() {
 
 /* ---------- State ---------- */
 const RAW_C = (() => { try { return new URLSearchParams(location.search).get("c") || ""; } catch (e) { return ""; } })();
-const state = { screen: "start", mode: store.mode, length: store.length, list: [], index: 0, answers: [], challenge: readChallenge(RAW_C), parked: null, rot: 0, seenBefore: new Set(), recorded: false };
+// A link can also carry a single question that a friend passed on (?q=code).
+const RAW_Q = (() => { try { return new URLSearchParams(location.search).get("q") || ""; } catch (e) { return ""; } })();
+const state = { dare: RAW_C ? null : BY_CODE[RAW_Q] || null, screen: "start", mode: store.mode, length: store.length, list: [], index: 0, answers: [], challenge: readChallenge(RAW_C), parked: null, rot: 0, seenBefore: new Set(), recorded: false };
 let bootNotice = "";
+if (RAW_Q && !state.dare) clearDare();   // a question that has since been retired, or a mangled link
 if (RAW_C && !state.challenge) {
   bootNotice = "That challenge link didn't work, so here is a fresh round instead.";
   try { history.replaceState(history.state, "", location.pathname); } catch (e) {}
@@ -2198,14 +2268,23 @@ function renderStart(notice) {
       </div>
     </form>`;
   }
-  const seenN = store.seen.length;
+  const seenN = store.seen.length, dare = state.dare;
+  const passed = dare ? `
+    <section class="card challenge" aria-labelledby="dare-h">
+      <p class="eyebrow" id="dare-h">A friend sent you this one</p>
+      <h2 class="dare-q">${gloss(dare.q)}</h2>
+      <div class="yn" id="dare-yn"><button class="btn ans" id="dare-yes" type="button">Yes</button><button class="btn ans" id="dare-no" type="button">No</button></div>
+      <div id="dare-reveal" class="stack" aria-live="polite"></div>
+    </section>
+    <p class="center" id="dare-more">There are ${total - 1} more where that came from.</p>` : "";
   $app.innerHTML = `
     <header class="hero">
       <p class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>What's Up With AI?</p>
-      <h1 class="hero-title"><span class="sr-only">What's Up With AI?</span><span class="rot" id="rot" aria-hidden="true">What's up?</span></h1>
-      <p class="lede">Quick yes-or-no questions about where AI really stands: what it can do, how it behaves and how people are dealing with it. About half the answers are yes. Some of it sounds like science fiction and has already happened. Some of it you'd expect by now, and it hasn't.</p>
+      <h1 class="hero-title"><span class="sr-only">What's Up With AI?</span><span class="rot" id="rot" aria-hidden="true">${dare ? "Would you get this?" : "What's up?"}</span></h1>
+      <p class="lede"${dare ? " hidden" : ""}>Quick yes-or-no questions about where AI really stands: what it can do, how it behaves and how people are dealing with it. About half the answers are yes. Some of it sounds like science fiction and has already happened. Some of it you'd expect by now, and it hasn't.</p>
     </header>
     ${notice ? `<p class="small" role="status">${esc(notice)}</p>` : ""}
+    ${passed}
     ${ch ? play + resume : resume + play}
     ${seenN && !ch ? `<p class="small muted" id="returning"></p>` : ""}
     ${last ? `<p class="small muted">Your last round: ${last.ps.filter((p, i) => markOf({ p, a: last.list[i].a }) === "good").length} out of ${last.list.length}. <button type="button" class="link" id="last">See that result again</button></p>` : ""}
@@ -2245,6 +2324,23 @@ function renderStart(notice) {
     });
   }
   const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener("click", fn); };
+  const answerDare = said => {
+    const right = said === dare.a;
+    remember(dare.id);
+    document.getElementById("dare-yn").remove();
+    document.getElementById("dare-reveal").innerHTML = `
+      <section class="verdict ${right ? "good" : "bad"}">
+        <p class="verdict-tag">${ICON[right ? "good" : "bad"]}<span>${right ? "Correct" : "Not this time"}</span></p>
+        <p class="verdict-word">${dare.a ? "Yes" : "No"}</p>
+        <p>${gloss(dare.short)}</p>
+      </section>
+      ${dare.safety ? `<aside class="why"><p class="eyebrow">Worth knowing</p><p>${gloss(dare.safety)}</p></aside>` : ""}
+      ${detailsBlock(dare, "More detail and sources")}`;
+    // The answer is known now, so a refresh or a Back should not ask again.
+    clearDare();
+  };
+  on("dare-yes", () => answerDare(true));
+  on("dare-no", () => answerDare(false));
   on("take", () => { state.mode = "quick"; startRound(ch.list.slice()); });
   on("take-conf", () => { state.mode = "confidence"; startRound(ch.list.slice()); });
   on("fresh", () => { clearChallenge(); renderStart(); });
@@ -2257,7 +2353,7 @@ function renderStart(notice) {
     store = loadStore(); state.mode = store.mode; state.length = store.length;
     renderStart("Done. This browser no longer remembers which questions you have seen or how you did.");
   });
-  startRotator();
+  if (!dare) startRotator();
   window.scrollTo(0, 0);
 }
 
@@ -2265,6 +2361,7 @@ function renderStart(notice) {
 // One history entry per visit, so the Back button returns to the start screen instead of leaving the site.
 function enterQuiz() { try { if (!(history.state && history.state.quiz)) history.pushState({ quiz: 1 }, ""); } catch (e) {} }
 function startRound(list) {
+  clearDare();
   state.list = list || drawRound(state.length);
   state.index = 0; state.answers = []; state.recorded = false;
   state.seenBefore = new Set(store.seen);
@@ -2363,7 +2460,9 @@ function answer(p) {
     </section>
     ${q.safety ? `<aside class="why"><p class="eyebrow">Worth knowing</p><p>${gloss(q.safety)}</p></aside>` : ""}
     ${detailsBlock(q, "More detail and sources")}
+    <p class="small center pass-on"><button type="button" class="link" id="pass">Send this question to a friend</button> <span class="muted" id="pass-status" role="status"></span></p>
     <div class="next-row"><button class="btn btn-primary btn-big btn-block" id="next" type="button">${!last ? "Next question" : store.bonus ? "See my result" : "One last question"}</button></div>`;
+  document.getElementById("pass").addEventListener("click", () => sendDare(q, msg => { const el = document.getElementById("pass-status"); if (el) el.textContent = msg; }));
   const next = document.getElementById("next");
   next.addEventListener("click", () => { if (!last) { state.index++; renderQuestion(); } else if (store.bonus) renderResults(); else renderBonus(); });
   try { next.focus({ preventScroll: true }); } catch (e) {}
@@ -2457,6 +2556,12 @@ function gridOf(answers) {
   for (let i = 0; i < squares.length; i += 10) rows.push(squares.slice(i, i + 10).join(""));
   return rows.join("\n");
 }
+// The questions that caught the player out, most important first, and the shorter one when two tie.
+// Only plain facts: an opinion or a law reads oddly in a post with no answer beside it.
+function gotMe(answers) {
+  return answers.filter(r => markOf(r) === "bad").map(r => BY_ID[r.id]).filter(q => q && !q.kind && q.q.length <= 110)
+    .sort((x, y) => (y.rank || 0) - (x.rank || 0) || x.q.length - y.q.length);
+}
 function closeToCoinFlip(brier) { return Math.abs(brier - 0.25) < 0.0005; }
 // The text a player shares. It never gives an answer away: the squares show right and wrong in order,
 // and the teaser names one question that caught the player out without saying how.
@@ -2477,14 +2582,10 @@ function shareText(s, key, url) {
   }
   const lines = [first, gridOf(state.answers), second];
   const tail = !url ? ["How well do you know AI?"] : url.includes("?c=") ? [`Same ${s.n} questions for you:`, url] : ["Try it:", url];
-  // Only plain facts: an opinion or a law reads oddly in a post with no answer beside it.
-  const missed = state.answers.filter(r => markOf(r) === "bad").map(r => BY_ID[r.id]).filter(q => !q.kind).map(q => q.q).sort((x, y) => x.length - y.length)[0];
-  if (missed && missed.length <= 110) {
-    const tease = "This one got me: " + missed;
-    // Rough length as the strictest sites count it: a square counts double and a link counts as 23.
-    const size = [first, second, tease, tail[0]].join("\n").length + 2 * s.n + (url ? 24 : 0) + 3;
-    if (size <= 275) lines.push(tease);
-  }
+  // Rough length as the strictest sites count it: a square counts double and a link counts as 23.
+  const fits = tease => [first, second, tease, tail[0]].join("\n").length + 2 * s.n + (url ? 24 : 0) + 3 <= 275;
+  const tease = gotMe(state.answers).map(q => "This one got me: " + q.q).find(fits);
+  if (tease) lines.push(tease);
   return lines.concat(tail).join("\n");
 }
 function brierVerdict(s) {
@@ -2782,7 +2883,7 @@ function fitBox(box) {
 window.addEventListener("resize", () => fitBox(document.getElementById("share-text")));
 
 /* ---------- Result image ----------
-   Draws the result as a square picture: score, the row of squares and the one-line finding.
+   Draws the result as a square picture: score, the row of squares, the one-line finding and one question that caught the player out.
    Always dark, whatever the page theme, so shared cards look the same everywhere. */
 async function resultImage(s, key) {
   const W = 1080, H = 1080, pad = 84;
@@ -2808,28 +2909,52 @@ async function resultImage(s, key) {
   x.fillText("WHAT'S UP WITH AI?", pad + 124, pad + 15);
   if ("letterSpacing" in x) x.letterSpacing = "0px";
   x.textBaseline = "alphabetic";
-  x.fillStyle = COL.ink; x.font = `700 340px ${DISPLAY}`;
+  x.fillStyle = COL.ink; x.font = `700 290px ${DISPLAY}`;
   const num = String(s.right);
-  x.fillText(num, pad - 12, 470);
+  x.fillText(num, pad - 10, 400);
   const numW = x.measureText(num).width;
-  x.fillStyle = COL.muted; x.font = `700 150px ${DISPLAY}`;
-  x.fillText("/" + s.n, pad + numW, 470);
-  const many = s.n > 20, size = many ? 40 : 76, gap = many ? 6 : 14, per = many ? 20 : 10;
-  state.answers.forEach((r, i) => box(pad + (i % per) * (size + gap), 540 + Math.floor(i / per) * (size + gap), size, size, size * 0.22, COL[markOf(r)]));
+  x.fillStyle = COL.muted; x.font = `700 130px ${DISPLAY}`;
+  x.fillText("/" + s.n, pad + numW, 400);
+  const many = s.n > 20, two = s.n > 10, size = many ? 40 : two ? 64 : 76, gap = many ? 6 : two ? 12 : 14, per = many ? 20 : 10, top = 462;
+  state.answers.forEach((r, i) => box(pad + (i % per) * (size + gap), top + Math.floor(i / per) * (size + gap), size, size, size * 0.22, COL[markOf(r)]));
   const where = siteUrl().replace(/^https?:\/\//, "").replace(/\/(index\.html)?$/, "");
   const footY = where ? H - pad - 46 : H - pad;
-  x.fillStyle = COL.accent; x.font = `700 66px ${DISPLAY}`;
-  const lines = [];
-  let line = "";
-  for (const w of FINDINGS[key].share.replace(/\.$/, "").split(" ")) {
-    if (line && x.measureText(line + " " + w).width > W - 2 * pad) { lines.push(line); line = w; }
-    else line = line ? line + " " + w : w;
+  const wrap = text => {
+    const out = [];
+    let line = "";
+    for (const w of text.split(" ")) {
+      if (line && x.measureText(line + " " + w).width > W - 2 * pad) { out.push(line); line = w; }
+      else line = line ? line + " " + w : w;
+    }
+    if (line) out.push(line);
+    return out;
+  };
+  const BIG = `700 54px ${DISPLAY}`;   // the longest finding fits on one line at this size
+  x.font = BIG;
+  const lines = wrap(FINDINGS[key].share.replace(/\.$/, ""));
+  // Everything below the squares sits midway between them and the footer, so it never crowds either. The question is left off when there is no room.
+  const gridEnd = top + Math.ceil(s.n / per) * (size + gap) - gap, room = footY - 60 - gridEnd;
+  const got = gotMe(state.answers)[0];
+  let hook = [], hookFont = "", step = 0;
+  const tall = h => lines.length * 66 + (h.length ? 44 + 46 + h.length * step : 0);
+  for (const [px, lead] of got ? [[40, 52], [34, 45]] : []) {
+    hookFont = `500 ${px}px ${BODY}`; step = lead;
+    x.font = hookFont;
+    hook = wrap(got.q);
+    if (tall(hook) <= room - 40) break;
+    hook = [];
   }
-  if (line) lines.push(line);
-  // The finding sits midway between the squares and the footer, so it never crowds either.
-  const gridEnd = 540 + Math.ceil(s.n / per) * (size + gap) - gap;
-  let y = gridEnd + (footY - 60 - gridEnd - lines.length * 78) / 2 + 62;
-  for (const l of lines) { x.fillText(l, pad, y); y += 78; }
+  let y = gridEnd + (room - tall(hook)) / 2 + 52;
+  x.fillStyle = COL.accent; x.font = BIG;
+  for (const l of lines) { x.fillText(l, pad, y); y += 66; }
+  if (hook.length) {
+    y += 16;
+    x.fillStyle = COL.muted; x.font = `500 30px ${BODY}`;
+    x.fillText("This one got me:", pad, y);
+    y += 54;
+    x.fillStyle = COL.ink; x.font = hookFont;
+    for (const l of hook) { x.fillText(l, pad, y); y += step; }
+  }
   x.fillStyle = COL.muted; x.font = `500 30px ${BODY}`;
   x.fillText("About half the answers are yes. How many can you get?", pad, footY);
   if (where) { x.font = `500 28px ${MONO}`; x.fillText(where, pad, H - pad); }
