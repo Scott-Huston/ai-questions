@@ -285,6 +285,7 @@ details > .body { padding: 0 14px 14px; display: flex; flex-direction: column; g
   margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-family: var(--font-body); font-size: 0.95rem; line-height: 1.5;
   color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
 }
+.unscored .legend { display: none; }
 .ico { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 .share-acts { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 8px; }
 .share-acts button {
@@ -3563,28 +3564,39 @@ function paintAnswer(k, fresh) {
 
 /* ---------- One last question ----------
    A question about the quiz itself, asked once per browser between the last answer and the first result.
-   It is never scored, shared or drawn, so it is not part of QUESTIONS. */
-const BONUS = { q: "Did humans write any of the code underlying this quiz?", a: false, short: "AI wrote all of it, but we did carefully review the questions and sources." };
+   It is never scored, shared or drawn, so it is not part of QUESTIONS. Guess mode asks it as a slider. */
+const BONUS = {
+  q: "Did AI write all of the code behind this quiz?", a: true,
+  it: { kind: "pct", id: "bonus", f: { type: "pct", q: "How much of the code behind this quiz did AI write?", truth: 100, truthText: "All of it", full: [97, 100], half: [85, 100] } },
+  short: "AI wrote all of the code powering this app. That took quite a bit of iteration, with prompts like 'Make it so people can share their results easily'. The content isn't slop, though: we carefully reviewed the questions and sources."
+};
 function renderBonus() {
   setScreen("bonus");
+  const guess = state.mode === "guess";
   $app.innerHTML = `
     <p class="eyebrow">One last question, just for fun</p>
-    <div class="q-body"><h1 id="question" class="q-h" tabindex="-1">${esc(BONUS.q)}</h1></div>
-    <div id="control"><div class="yn"><button class="btn ans" id="say-yes" type="button">Yes<kbd aria-hidden="true">Y</kbd></button><button class="btn ans" id="say-no" type="button">No<kbd aria-hidden="true">N</kbd></button></div></div>
+    <div class="q-body"><h1 id="question" class="q-h" tabindex="-1">${esc(guess ? BONUS.it.f.q : BONUS.q)}</h1></div>
+    <div id="control" class="stack unscored">${guess ? Guess.controlHtml(BONUS.it, true, null) : `<div class="yn"><button class="btn ans" id="say-yes" type="button">Yes<kbd aria-hidden="true">Y</kbd></button><button class="btn ans" id="say-no" type="button">No<kbd aria-hidden="true">N</kbd></button></div>`}</div>
     <div id="reveal" class="stack" aria-live="polite"></div>`;
-  document.getElementById("say-yes").addEventListener("click", () => answerBonus(true));
-  document.getElementById("say-no").addEventListener("click", () => answerBonus(false));
+  if (guess) wireGuess(BONUS.it, answerBonus, null);
+  else {
+    document.getElementById("say-yes").addEventListener("click", () => answerBonus(true));
+    document.getElementById("say-no").addEventListener("click", () => answerBonus(false));
+  }
   toTop("question");
 }
-function answerBonus(yes) {
+// Gets true or false, or a number from the slider.
+function answerBonus(g) {
   if (state.screen !== "bonus" || store.bonus) return;
   store.bonus = true; saveStore();
-  const kind = yes === BONUS.a ? "good" : "bad";
-  document.getElementById("control").innerHTML = "";
+  const guess = typeof g === "number", control = document.getElementById("control");
+  const grade = guess ? Guess.grade(BONUS.it, g) : g === BONUS.a ? 1 : 0, kind = grade === 1 ? "good" : grade ? "meh" : "bad";
+  if (guess) Guess.mark({ it: BONUS.it, g, grade }, control); else control.innerHTML = "";
   document.getElementById("reveal").innerHTML = `
     <section class="verdict ${kind}">
-      <p class="verdict-tag">${ICON[kind]}<span>${kind === "good" ? "Correct" : "Not this time"}</span></p>
-      <p class="verdict-word">${BONUS.a ? "Yes" : "No"}</p>
+      <p class="verdict-tag">${ICON[kind]}<span>${kind === "bad" ? "Not this time" : kind === "meh" ? "Close" : guess ? "Right on" : "Correct"}</span></p>
+      <p class="verdict-word${guess ? " long" : ""}">${guess ? esc(BONUS.it.f.truthText) : BONUS.a ? "Yes" : "No"}</p>
+      ${guess ? `<p>${esc(Guess.compare(BONUS.it.f, g))}</p>` : ""}
       <p>${esc(BONUS.short)}</p>
       <p class="small their">This one doesn't count toward your score.</p>
     </section>
@@ -3838,6 +3850,10 @@ function renderResults() {
   const unseen = QUESTIONS.length - seenCount();
   const url = shareUrl(s), text = shareText(s, key, url);
   const canNative = typeof navigator.share === "function";
+  // The button promises new questions only when that is so: a round is dealt as a test, and every question in it must be unseen.
+  const seen = new Set(store.seen), nextGuess = store.mode === "guess", nextLength = nextGuess && !Guess.LENGTHS.includes(state.length) ? 20 : state.length;
+  const allNew = (nextGuess ? Guess.draw(nextLength).flatMap(Guess.idsOf) : drawRound(nextLength).map(q => q.id)).every(id => !seen.has(id));
+  const againLabel = allNew ? `Play ${nextLength} new questions` : "Play again";
 
   const head = `
     <section class="card result">
@@ -3852,7 +3868,7 @@ function renderResults() {
       ${compare}
       <div class="result-actions">
         <button class="btn btn-primary btn-big" id="share-main" type="button">${icon("share")}<span class="lab">Share my result</span></button>
-        <button class="btn btn-big" id="again" type="button">Play again</button>
+        <button class="btn btn-big" id="again" type="button">${againLabel}</button>
       </div>
       ${HAS_YESNO && HAS_GUESS ? `<p class="small center"><button class="link" id="switch-mode" type="button">${state.mode === "guess" ? "Try a yes-or-no round" : "Try a best-guess round"}</button></p>` : ""}
       <p class="small muted" id="share-status" role="status"></p>
@@ -3938,7 +3954,7 @@ function renderResults() {
       <summary>All ${n} answers, with sources</summary>
       <div class="body"><div>${state.answers.map((r, i) => reviewItem(r, i)).join("")}</div></div>
     </details>
-    <div class="row"><button class="btn btn-primary" id="again-2" type="button">Play again</button><button class="btn" id="home" type="button">Back to the start</button></div>
+    <div class="row"><button class="btn btn-primary" id="again-2" type="button">${againLabel}</button><button class="btn" id="home" type="button">Back to the start</button></div>
     <footer>Facts last checked ${esc(CONFIG.checked)}. Each answer lists how recent its sources are.</footer>`;
 
   let picture = null;
@@ -4123,16 +4139,16 @@ async function resultImage(s, key) {
 }
 
 /* ---------- Keyboard and history ---------- */
-// Y and N answer a yes-or-no question and 1 to 4 pick from a list, while the question or its choices have the focus, so that
+// Y and N answer a yes-or-no question and the number keys pick from a list, while the question or its choices have the focus, so that
 // stray keys elsewhere (from speech input, say) never answer. Enter works on the focused button, and on the verdict it goes on.
 document.addEventListener("keydown", e => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   const k = (e.key || "").toLowerCase(), on = document.activeElement, open = asking();
   if (k === "enter" && on && on.id === "verdict") { const next = document.getElementById("next"); if (next) { e.preventDefault(); next.click(); } return; }
   if (!on || !on.closest(".q-body, #control")) return;
-  if (open && state.mode === "guess" && /^[1-4]$/.test(k)) { const b = $app.querySelector(`.pick[data-i="${Number(k) - 1}"], .photo[data-i="${Number(k) - 1}"]`); if (b) { e.preventDefault(); b.click(); } return; }
+  if (open && state.mode === "guess" && /^[1-9]$/.test(k)) { const b = $app.querySelector(`.pick[data-i="${Number(k) - 1}"], .photo[data-i="${Number(k) - 1}"]`); if (b) { e.preventDefault(); b.click(); } return; }
   const yn = open && (state.mode === "quick" || (state.mode === "guess" && state.list[state.index].kind === "yn"));
-  if ((!yn && state.screen !== "bonus") || (k !== "y" && k !== "n")) return;
+  if ((!yn && (state.screen !== "bonus" || state.mode === "guess")) || (k !== "y" && k !== "n")) return;
   e.preventDefault();
   if (!yn) answerBonus(k === "y"); else if (state.mode === "guess") answerGuess(k === "y"); else answer(k === "y" ? 1 : 0);
 });
