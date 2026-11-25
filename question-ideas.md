@@ -1165,3 +1165,8 @@ All were checked the same night. Fourteen are in the quiz: `weight-theft`, `chos
 - Worth knowing: In the same December 2024 survey, AI researchers gave an average 18% chance of AI causing human extinction or a similarly permanent and severe loss of power, and 72% said society should give AI safety research more priority.
 - Why retired: Seen in a round: old information, and the wrong conclusion to take away. The December 2024 survey is the newest published one; `researcher-odds` uses it.
 - Sources: AI Impacts: Advanced AI according to 1,580 researchers (PDF, September 2026): https://aiimpacts.org/wp-content/uploads/2026/09/ESPAI2024.pdf ; Katja Grace: What did AI researchers think at the end of 2024?: https://blog.aiimpacts.org/p/what-did-ai-researchers-think-at ; MIT Sloan: International AI experts warn of potentially catastrophic risks from AI: https://mitsloan.mit.edu/press/international-ai-experts-warn-potentially-catastrophic-risks-ai
+
+**Who said it: Andrew Ng.** "Who compared worrying about killer robots to worrying about 'overpopulation on the planet Mars'?" (id `quote-ng`)
+- Answer: Andrew Ng, AI researcher, in 2015. The other names were Neil deGrasse Tyson, Mark Zuckerberg and Steven Pinker.
+- Why retired: Seen in a round and not wanted. It was one of the calm voices among the quotes.
+- Source: The Register: Fearing a rise of killer robots is like worrying about overpopulation on Mars: https://www.theregister.com/2015/03/19/andrew_ng_baidu_ai/
