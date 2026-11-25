@@ -2037,6 +2037,7 @@ document.addEventListener("click", e => {
      truth and truthText; full (one point) and half (half a point); wild ("high" or "low": which way reality is wilder than a guess).
      range [low, high]: the truth is itself a range, drawn as a bar (truth is then a middle value, used only to say which way a miss went).
      hint: the grey line under the question. refs: familiar values marked on the slider. fuzzy: do not say how far off a guess was.
+     floor: the truth is a reported minimum, so a higher guess is not called too high.
      skip: drop that many opening sentences of the question's short answer (they reply to the yes-or-no wording). short: replace it.
      check: strings that must still be in the question. If one is gone, the number may have moved, and it is asked as yes or no until this is fixed. */
 const GUESS_FORMS = {
@@ -2105,7 +2106,7 @@ const GUESS_FORMS = {
   "half-the-web": { type: "pct", q: "What share of English-language web pages made since ChatGPT arrived show signs of AI?", truth: 35, truthText: "35%", full: [29, 41], half: [20, 49], wild: "high", check: ["35% of English-language pages", "49.9% of new ones"], short: "That is the Pew Research Center's count of pages dated after ChatGPT appeared. A marketing firm counted 49.9% of new articles as mainly AI-written." },
   "author-style": { type: "pct", q: "AI and trained writers both imitated a famous author. How often did judges say AI came closer?", truth: 81, truthText: "81% of the time", full: [74, 88], half: [62, 100], wild: "high", check: ["81% of matchups"], short: "Panels of writers from top US writing programs were not told which were which. They judged the AI's versions closer to the author's style in 81% of matchups, and better written in 62%." },
   "authors-settlement": { type: "log", unit: "usd", min: 1e6, max: 1e11, refs: [], q: "How much did Anthropic agree to pay over pirated books?", hint: "It came to about $3,000 a book.", truth: 1.5e9, truthText: "$1.5 billion", full: [1.1e9, 2.1e9], half: [0.6e9, 4e9], check: ["pay $1.5 billion"], skip: 0 },
-  "synthid": { type: "log", unit: "count", min: 1e6, max: 1e13, q: "How many AI-made images and videos has Google marked with its invisible watermark?", refs: [["Everyone on Earth", 8e9]], hint: "By Google's count.", truth: 180e9, fuzzy: true, truthText: "180 billion and counting", full: [110e9, 300e9], half: [45e9, 720e9], wild: "low", check: ["more than 180 billion"] },
+  "synthid": { type: "log", unit: "count", min: 1e6, max: 1e13, q: "How many AI-made images and videos has Google marked with its invisible watermark?", refs: [["Everyone on Earth", 8e9]], hint: "By Google's count.", truth: 180e9, floor: true, truthText: "180 billion and counting", full: [110e9, 300e9], half: [45e9, 720e9], wild: "low", check: ["more than 180 billion"] },
   "brain-to-text": { type: "pct", q: "From brain scans alone, what share of the words a person types can AI get right?", truth: 61, truthText: "61%", full: [55, 67], half: [45, 77], wild: "high", check: ["About 6 words in 10", "about ten hours"], short: "A 2026 system from Meta got that many right on average, using a machine that fills a room. No surgery is needed, but it took about ten hours of recordings from each person." },
   "training-text": { type: "log", unit: "years", min: 1, max: 1e6, refs: [["A long life", 80], ["Since the pyramids", 4500]], q: "How long would it take to read everything one Google AI was trained on?", hint: "One person, reading day and night.", truth: 85000, truthText: "Roughly 85,000 years", full: [42000, 170000], half: [17000, 430000], wild: "high", check: ["roughly 85,000 years", "day and night"], short: "That is about a thousand lifetimes. The AI is Gemma 3, one of Google's smaller models, trained on a mix of text and images and counted here as text." },
   "home-computer": { type: "lin", min: 0, max: 60, unit: " months", q: "How far behind the world's best is AI that runs on one gaming computer?", hint: "On standard tests, 2025. The graphics card cost under $2,500.", truth: 9, fuzzy: true, range: [6, 12], truthText: "6 to 12 months", full: [5, 13], half: [2, 22], wild: "low", check: ["6 to 12 months earlier"], skip: 1 },
@@ -2130,12 +2131,12 @@ const GUESS_FORMS = {
   "brain-power": { type: "log", unit: "count", min: 1000, max: 1e10, q: "How many human brains could run on the power the biggest AI data center can draw?", refs: [["Everyone in the US", 340e6], ["Everyone on Earth", 8e9]], hint: "A human brain runs on about 20 watts.", truth: 50e6, truthText: "About 50 million", full: [30e6, 85e6], half: [14e6, 180e6], wild: "high", check: ["about 50 million"] },
   "voice-clone": { type: "pct", q: "How often could people tell AI copies of real voices from real recordings, in a 2026 study?", truth: 54, truthText: "54% of the time", full: [49, 59], half: [43, 69], wild: "low", check: ["only 54% of the time"] },
   "captcha": { type: "pct", q: "How often did free AI get past Google's 'prove you're not a robot' puzzles (CAPTCHAs) in a 2026 study?", truth: 93, truthText: "In 93% of tries", full: [86, 100], half: [74, 100], wild: "high", check: ["in 93% of 500 live tries"], skip: 1 },
-  "harder-to-trick": { type: "log", unit: "hours", min: 1 / 60, max: 1000, refs: [["A coffee break", 0.25], ["A work week", 40]], q: "Testers beat one AI's biology safeguards in 10 minutes. How long did an AI six months newer hold out?", truth: 7, fuzzy: true, truthText: "More than 7 hours", full: [6, 14], half: [4.5, 30], wild: "low", check: ["needed 10 minutes", "more than 7 hours for another released six months later"], skip: 1 },
+  "harder-to-trick": { type: "log", unit: "hours", min: 1 / 60, max: 1000, refs: [["A coffee break", 0.25], ["A work week", 40]], q: "Testers beat one AI's biology safeguards in 10 minutes. How long did an AI six months newer hold out?", truth: 7, floor: true, truthText: "More than 7 hours", full: [6, 14], half: [4.5, 30], wild: "low", check: ["needed 10 minutes", "more than 7 hours for another released six months later"], skip: 1 },
   "developer-jobs": { type: "lin", min: -50, max: 50, unit: "%", signed: true, q: "How much did the number of software developers in the US change from 2022 to 2025?", hint: "ChatGPT came out in late 2022.", truth: 8, truthText: "Up 8%", full: [3, 14], half: [1, 22], wild: "low", check: ["up 8% from 2022"], short: "That is from a government survey of households, which counted about 2.25 million on average in 2025. A separate survey of employers found a 10% rise from May 2022 to May 2025." },
   "researcher-odds": { type: "pct", q: "On average, what chance did AI researchers give of AI wiping us out or leaving us powerless for good?", hint: "1,489 researchers answered in December 2024.", truth: 18, truthText: "18%", full: [13, 23], half: [8, 33], wild: "high", check: ["The average was 18%", "1,489 researchers", "Just over half said at least 10%"] },
   "congress-talks": { type: "lin", min: 0, max: 535, unit: " of 535", q: "How many of the 535 members of Congress have spoken publicly about AI as smart as people or out of control?", hint: "By an advocacy group's count, November 2026.", truth: 75, truthText: "75 of 535", full: [55, 100], half: [35, 150], wild: "high", check: ["lists 75 now in Congress", "25 Republicans, 48 Democrats"], short: "The AI Policy Network's list has 25 Republicans, 48 Democrats and 2 independents. They include House Speaker Mike Johnson, a Republican, and Democratic Senator Chuck Schumer." },
   "who-noticed": { type: "pick", q: "OpenAI's AI agents broke into another company on July 11, 2026. When did OpenAI work out it was them?", options: ["The same day", "Two days later, as the attack ended", "Nine days later", "Three months later"], answer: 2, near: [1], wild: "high", truthText: "Nine days later", check: ["from July 11 to 13", "a day later"], short: "Hugging Face, the site they broke into, had announced it on July 16 without knowing who was behind it. OpenAI says an alarm of its own went off on July 19 and that it made the connection the next day." },
-  "safety-stripped": { type: "log", unit: "count", min: 100, max: 100000, q: "In 2024 one site listed about 600 AI models altered to cut out their safety training. How many by May 2026?", hint: "Counting those altered in one common way. The models are free to download.", truth: 6000, truthText: "Over 6,000", full: [4000, 9500], half: [2400, 16000], wild: "high", check: ["over 6,000 models", "about 600 in 2024"], short: "NPR reported the count. Software that anyone can download makes the change, in as little as a few minutes." },
+  "safety-stripped": { type: "log", unit: "count", min: 100, max: 100000, q: "In 2024 one site listed about 600 AI models altered to cut out their safety training. How many by May 2026?", hint: "Counting those altered in one common way. The models are free to download.", truth: 6000, floor: true, truthText: "Over 6,000", full: [4000, 9500], half: [2400, 16000], wild: "high", check: ["over 6,000 models", "about 600 in 2024"], short: "NPR reported the count. Software that anyone can download makes the change, in as little as a few minutes." },
   "free-chatgpt": { type: "lin", min: 0, max: 62, unit: " points", q: "OpenAI's best AI scored 62 on one index of AI ability. What did the AI in the free ChatGPT score?", hint: "In November 2026, with both set to work as hard as they can.", truth: 28, truthText: "28", full: [22, 34], half: [14, 44], wild: "low", check: ["scored at most 28", "scored 62"], short: "OpenAI says the free version uses GPT-6 Luna, which scored 9 to 23 at lower settings. OpenAI's best is GPT-6.2 Astra." },
   "good-stories": { type: "pct", q: "A small AI read extra text about AI doing the right thing. How often did it then pick the harmful option?", hint: "Without it, 45% of the time.", truth: 9, truthText: "9% of the time", full: [5, 14], half: [1, 24], wild: "high", check: ["9% of the time instead of 45%"], short: "In a January 2026 study, that was down from 45%. At Anthropic, stories about good AI plus other documents cut misbehavior in tests by over two-thirds." },
   "escape-hack~2": { type: "pick", q: "How many AI companies have said their own AI broke into real outside systems during tests?", options: ["One", "Two", "Four", "Ten"], answer: 2, near: [1], wild: "high", truthText: "Four", check: ["Meta and Google have confirmed theirs"], short: "OpenAI, Anthropic, Meta and Google, all in 2026. Google says its model stopped each time before finishing." }
@@ -2444,6 +2445,7 @@ const Guess = (() => {
     if (f.type === "pick") return "";
     const said = `You said ${say(f, g)}`, dir = g > f.truth ? "high" : "low";
     if (f.range && /\d/.test(f.truthText)) return said + (within(g, f.range) ? ", inside that range." : within(g, f.full) ? ", just outside that range." : `, too ${dir}.`);
+    if (f.floor) return said + (g >= f.truth || within(g, f.full) ? "." : ", too low.");
     if (f.fuzzy || f.unit === "times") return said + (within(g, f.full) ? "." : `, too ${dir}.`);
     if (f.type === "log") {
       const r = g > f.truth ? g / f.truth : f.truth / g;
@@ -2462,8 +2464,8 @@ const Guess = (() => {
   /* Dealing a round. New ones come first, then the more important ones, with some chance in it (more of it for statements, or the
      same few would turn up every time). One question per group, so no answer gives another away. In ten: two sets of four
      statements, at most one of them "only one is true", one quote, and no more than two grim items outside the sets, two about one
-     company and one about company money. The statement to find sounds alarming in one set and reassuring in the other, and at least
-     two sliders or lists have the tamer truth, so neither can be guessed from how it sounds. No places are kept for light or cheerful
+     company and one about company money. The statement to find is to sound alarming in one set and reassuring in the other, and at
+     least two sliders or lists are to have the tamer truth, so neither can be guessed from how it sounds. These bend for a returning player. No places are kept for light or cheerful
      questions: balance comes from what is true, not from trivia. It opens on something easy and ends on one worth retelling. */
   const OPENERS = new Set(["free-chatgpt", "turing", "sprint", "captcha", "exam-markers", "water-burger", "teens", "billion-users", "voice-clone", "fake-video", "face-test", "table-tennis", "hot-100", "driverless", "radiologists", "author-style", "companionship"]);
   const CLOSERS = new Set(["als-voice", "radiologists", "training-text", "brain-power", "billion-users", "chip-speed", "water-burger", "exam-markers", "sprint", "planets", "waymo-safety", "er-diagnosis", "unmask-author", "imo"]);
@@ -2692,6 +2694,9 @@ function loadStore() {
 }
 let store = loadStore();
 function saveStore() { try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); } catch (e) {} }
+// What another tab has learned or forgotten since, or this page after a spell in the Back cache, so that an older copy is never written over it.
+window.addEventListener("storage", e => { if (e.key === STORE_KEY || e.key === null) store = loadStore(); });
+window.addEventListener("pageshow", e => { if (e.persisted) store = loadStore(); });
 function remember(id) { if (!store.seen.includes(id)) { store.seen.push(id); saveStore(); } }
 // A round in progress is saved after every answer, so a refresh, a stray Back or a phone
 // reloading the tab does not throw it away.
@@ -2719,11 +2724,14 @@ function readRound(key, days, finished) {
     if (!(Date.now() - Number(r.t) < days * 864e5)) return null;
     const guess = r.mode === "guess";
     if (guess ? !HAS_GUESS : !HAS_YESNO) return null;   // a round played a way the page no longer offers
-    const list = r.ids.map(id => typeof id !== "string" ? null : guess ? Guess.unpack(id) : BY_ID[id] || null);
-    if (list.length < 2 || list.some(q => !q)) return null;
-    // If a question has changed how it is graded since, the round would be marked against answers the player never saw.
-    if (!Array.isArray(r.fp) || r.fp.length !== list.length || list.some((q, i) => r.fp[i] !== (guess ? Guess.gradeKey(q) : codeOf(answerKey(q))))) return null;
-    const names = guess ? list.flatMap(Guess.idsOf) : r.ids;
+    let list = r.ids.map(id => typeof id !== "string" ? null : guess ? Guess.unpack(id) : BY_ID[id] || null);
+    if (!Array.isArray(r.fp) || r.fp.length !== list.length) return null;
+    // If an answered question has gone or changed how it is graded since, the round would be marked against answers the player never saw.
+    // One still to come is asked as it is now, or left out if it has gone. A friend's round is kept whole or not at all, because its marks go by place.
+    if (list.some((q, i) => (i < r.ps.length || r.ch) && (!q || r.fp[i] !== (guess ? Guess.gradeKey(q) : codeOf(answerKey(q)))))) return null;
+    list = list.filter(Boolean);
+    if (list.length < 2) return null;
+    const names = guess ? list.flatMap(Guess.idsOf) : list.map(q => q.id);
     if (new Set(names).size !== names.length) return null;
     const ps = guess ? r.ps : r.ps.map(Number);
     if (!ps.length || ps.length > list.length || ps.some((p, i) => guess ? !Guess.valid(list[i], p) : !(p >= 0 && p <= 1))) return null;
@@ -2768,9 +2776,9 @@ const MAX_BALANCED = (() => {
 // can pair "there is no such law" with "this safeguard exists", but not stack two of either, which is what
 // makes a quiz read as an argument. The limits bend before freshness does: a question the player has not
 // seen still beats one they have, whatever its category.
-// Heavy subjects (AI misbehaving, break-ins, weapons, catastrophe) hold three or four places in ten. One of those is kept
-// for a calm answer, and no more than two, so the startling ones are not crowded out either. And no round is mostly about
-// one company. A round should inform and still be fun, not read like a campaign.
+// Heavy subjects (AI misbehaving, break-ins, weapons, catastrophe) are to hold three or four places in ten, with one or two
+// calm answers among them, so that neither kind crowds out the other, and no round is to be mostly about one company. These
+// are aims: for a returning player a question not yet seen goes before them. A round should inform and still be fun, not read like a campaign.
 const HEAVY_CATS = ["AI behavior", "Security", "Autonomy", "Risk and rules"];
 const HEAVY_TOO = new Set(["chosen-values", "launch-scrapped", "virology", "phage", "novice-virology", "control-unsolved", "held-back", "internal-models", "ai-aligns-ai", "safety-workforce", "unplanned-skills", "training-pause", "superintelligence-statement", "pause-poll", "recall-weights", "mind-reading"]);
 const NOT_HEAVY = new Set(["plans-ahead", "flattery-rollback", "confessions", "vending-cartel", "answer-key", "subliminal", "captcha", "signal-proof", "hire-humans"]);
@@ -3670,8 +3678,9 @@ function gotMe(answers) {
     .sort((x, y) => (y.rank || 0) - (x.rank || 0) || x.q.length - y.q.length);
 }
 // How that question is introduced, on the picture and in a post. It never says what the answer was.
-function gotLead(x) { return x.said ? `I said ${x.said}:` : "This one got me:"; }
-function gotLine(x) { return x.said ? `${x.q} I said ${x.said.replace(/^[A-Z](?=[a-z ])/, c => c.toLowerCase())}.` : `${gotLead(x)} ${x.q}`; }
+const saidSoft = x => x.said.replace(/^[A-Z](?=[a-z ])/, c => c.toLowerCase());   // in the middle of a sentence
+function gotLead(x) { return x.said ? `I said ${saidSoft(x)}:` : "This one got me:"; }
+function gotLine(x) { return x.said ? `${x.q} I said ${saidSoft(x)}.` : `${gotLead(x)} ${x.q}`; }
 function closeToCoinFlip(brier) { return Math.abs(brier - 0.25) < 0.0005; }
 // The text a player shares. It never gives an answer away: the squares show right and wrong in order,
 // and the teaser names one question that caught the player out without saying how.
@@ -3831,8 +3840,9 @@ function renderResults() {
     let verdict = s.right > theirs ? "You win." : s.right < theirs ? "They win this one." : "A tie.";
     let extra = "";
     if (conf && typeof ch.brier === "number") {
-      extra = ` Their confidence score was ${ch.brier.toFixed(3)} and yours is ${s.brier.toFixed(3)}. Lower is better.`;
-      if (s.right === theirs && Math.abs(s.brier - ch.brier) >= 0.0005) verdict = s.brier < ch.brier ? "A tie on answers, and your confidence was sharper." : "A tie on answers, and their confidence was sharper.";
+      const mine = Math.round(s.brier * 1000), other = Math.round(ch.brier * 1000);   // the link carries thousandths
+      extra = ` Their confidence score was ${(other / 1000).toFixed(3)} and yours is ${(mine / 1000).toFixed(3)}. Lower is better.`;
+      if (s.right === theirs && mine !== other) verdict = mine < other ? "A tie on answers, and your confidence was sharper." : "A tie on answers, and their confidence was sharper.";
     }
     compare = `<p class="compare"><b>You ${pts(s.right)}, your challenger ${pts(theirs)}.</b> ${verdict}${extra}</p>`;
   } else compare = state.bestNote;
@@ -4065,6 +4075,7 @@ window.addEventListener("resize", () => fitBox(document.getElementById("share-te
    Draws the result as a square picture: score, the row of squares, the one-line finding and one question that caught the player out.
    Always dark, whatever the page theme, so shared cards look the same everywhere. */
 async function resultImage(s, key) {
+  const answers = state.answers, mode = state.mode;   // a new round may have begun by the time the fonts are here
   const W = 1080, H = 1080, pad = 84;
   const c = document.createElement("canvas");
   c.width = W; c.height = H;
@@ -4098,7 +4109,7 @@ async function resultImage(s, key) {
   x.fillStyle = COL.muted; x.font = `700 130px ${DISPLAY}`;
   x.fillText("/" + s.n, pad + numW, 400);
   const many = s.n > 20, two = s.n > 10, size = many ? 40 : two ? 64 : 76, gap = many ? 6 : two ? 12 : 14, per = many ? 20 : 10, top = 462;
-  state.answers.forEach((r, i) => box(pad + (i % per) * (size + gap), top + Math.floor(i / per) * (size + gap), size, size, size * 0.22, COL[markOf(r)]));
+  answers.forEach((r, i) => box(pad + (i % per) * (size + gap), top + Math.floor(i / per) * (size + gap), size, size, size * 0.22, COL[markOf(r)]));
   const where = siteUrl().replace(/^https?:\/\//, "").replace(/\/(index\.html)?$/, "");
   const footY = where ? H - pad - 46 : H - pad;
   const wrap = text => {
@@ -4116,7 +4127,7 @@ async function resultImage(s, key) {
   const lines = wrap(FINDINGS[key].share.replace(/\.$/, ""));
   // Everything below the squares sits midway between them and the footer, so it never crowds either. The question is left off when there is no room.
   const gridEnd = top + Math.ceil(s.n / per) * (size + gap) - gap, room = footY - 60 - gridEnd;
-  const got = gotMe(state.answers)[0];
+  const got = gotMe(answers)[0];
   let hook = [], hookFont = "", step = 0;
   const tall = h => lines.length * 66 + (h.length ? 44 + 46 + h.length * step : 0);
   for (const [px, lead] of got ? [[40, 52], [34, 45]] : []) {
@@ -4138,7 +4149,7 @@ async function resultImage(s, key) {
     for (const l of hook) { x.fillText(l, pad, y); y += step; }
   }
   x.fillStyle = COL.muted; x.font = `500 30px ${BODY}`;
-  x.fillText(state.mode === "guess" ? "Guesses about where AI really stands. How close can you get?" : "About half the answers are yes. How many can you get?", pad, footY);
+  x.fillText(mode === "guess" ? "Guesses about where AI really stands. How close can you get?" : "About half the answers are yes. How many can you get?", pad, footY);
   if (where) { x.font = `500 28px ${MONO}`; x.fillText(where, pad, H - pad); }
   return new Promise(resolve => c.toBlob(resolve, "image/png"));
 }
