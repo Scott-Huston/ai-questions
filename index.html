@@ -2274,20 +2274,18 @@ const Guess = (() => {
   /* Dealing a round. New ones come first, then the more important ones, with some chance in it (more of it for statements, or the
      same few would turn up every time). One question per group, so no answer gives another away. In ten: two sets of four
      statements, at most one of them "only one is true", one quote, and no more than two grim items outside the sets, two about one
-     company and one about company money. At least one brings good news and two touch daily life, and
-     those are chosen by importance too, so that they never crowd out what matters more. It opens on something easy and fun and ends on one worth retelling. */
+     company and one about company money. The statement to find sounds alarming in one set and reassuring in the other, and at least
+     two sliders or lists have the tamer truth, so neither can be guessed from how it sounds. No places are kept for light or cheerful
+     questions: balance comes from what is true, not from trivia. It opens on something easy and ends on one worth retelling. */
   const OPENERS = new Set(["turing", "sprint", "captcha", "exam-markers", "water-burger", "teens", "billion-users", "voice-clone", "fake-video", "face-test", "table-tennis", "hot-100", "driverless", "radiologists", "author-style", "companionship"]);
   const CLOSERS = new Set(["als-voice", "radiologists", "training-text", "brain-power", "billion-users", "chip-speed", "water-burger", "exam-markers", "sprint", "planets", "waymo-safety", "er-diagnosis", "unmask-author", "imo", "life-expectancy"]);
-  const GOOD_NEWS = new Set(["als-voice", "er-diagnosis", "brain-to-text", "waymo-safety", "planets", "protein-design", "signal-proof", "antibiotics", "therapy-bot", "breast-screening", "ai-tutor", "doctor-empathy", "hurricanes", "vesuvius-scroll", "old-codes",
-    "radiologists", "layoffs-ai", "electricity", "water-burger", "life-expectancy", "election-lies", "persuasion-fades"]);
+  const GOOD_NEWS = new Set(["als-voice", "er-diagnosis", "brain-to-text", "waymo-safety", "planets", "protein-design", "signal-proof", "antibiotics", "therapy-bot", "breast-screening", "ai-tutor", "doctor-empathy", "hurricanes", "vesuvius-scroll", "old-codes"]);
   const MONEY = new Set(["revenue-growth", "labs-vs-exxon", "compute-spend", "token-spend", "authors-settlement", "power-bills"]);
-  const DAILY = new Set(["turing", "fake-video", "voice-clone", "face-test", "author-style", "half-the-web", "hot-100", "midterm-ads", "election-lies", "synthid", "er-diagnosis", "als-voice", "waymo-safety", "driverless",
-    "sprint", "table-tennis", "water-burger", "electricity", "power-bills", "home-computer", "captcha", "billion-users", "exam-markers", "teens", "companionship", "public-excited", "unmask-author", "face-arrests",
-    "radiologists", "daily-work-use", "layoffs-ai", "service-staff", "young-workers", "agent-orders", "trading"]);
   // Not in one group, but one answers the other, or both are the same trick (can people tell AI from the real thing?).
   const APART = [["chats-train", "chatbot-learns"], ["turing", "fake-video"], ["turing", "voice-clone"], ["turing", "face-test"]];
-  // Odds of a catastrophe read as grim even where they are the tamer answer. A set counts the tamer truths as good news too.
-  const grim = q => isHeavy(q) && (leanOf(q) === "wild" || q.id === "catastrophe-odds"), good = q => GOOD_NEWS.has(q.id) || leanOf(q) === "tame", daily = q => DAILY.has(q.id);
+  // Odds of a catastrophe read as grim even where they are the tamer answer. Good is for a true statement that is not alarming, and
+  // loud for a statement, true or not, that says the wilder thing.
+  const grim = q => isHeavy(q) && (leanOf(q) === "wild" || q.id === "catastrophe-odds"), good = q => GOOD_NEWS.has(q.id) || leanOf(q) === "tame", loud = q => q.worse === "yes";
   const theme = x => x.kind === "quad" || x.quote ? "" : ["AI behavior", "Security", "Reliability"].includes(x.q.cat) ? "lab" : x.q.cat;
   function draw(n) {
     const seen = new Set(store.seen), tens = n / 10, per = x => Math.round(x * tens);
@@ -2297,8 +2295,9 @@ const Guess = (() => {
       && !APART.some(p => p.includes(x.q.id) && p.some(id => id !== x.q.id && ids.has(id)));
     const take = x => { if (x.q.group) groups.add(x.q.group); if (x.q.kind) kinds[x.q.kind] = (kinds[x.q.kind] || 0) + 1; cats[x.q.cat] = (cats[x.q.cat] || 0) + 1; ids.add(x.q.id); return x; };
     const quads = [], pool = { t: order(CLAIM.filter(c => c.q.a), 12), f: order(CLAIM.filter(c => !c.q.a), 12) };
+    const turn = Math.random() < 0.5 ? 1 : 0;
     for (let k = 0; k < per(2); k++) {
-      const got = [];
+      const got = [], alarming = k % 2 === turn, is = v => q => loud(q) === v && !seen.has(q.id);
       // Four statements on four subjects, at most one of them grim.
       const add = (side, m, ok) => {
         for (let i = 0; i < pool[side].length && m > 0;) {
@@ -2307,8 +2306,8 @@ const Guess = (() => {
         }
         return m;
       };
-      if (quads.some(x => !x.oddFalse) || Math.random() < 0.8) { add("f", 1); if (add("t", 1, good)) add("t", 1); add("t", 2); }   // one true statement in three is good news
-      else { if (Math.random() < 0.4 || add("t", 1, q => !grim(q))) add("t", 1); add("f", 3); }      // the one that is true is not always the scary one
+      if (quads.some(x => !x.oddFalse) || Math.random() < 0.8) { if (add("f", 1, is(alarming))) add("f", 1); if (add("t", 1, good)) add("t", 1); add("t", 2); }   // one true statement in three is not alarming
+      else { if (add("t", 1, is(alarming))) add("t", 1); add("f", 1, is(true)); add("f", 1, is(false)); add("f", 4 - got.length); }      // the false ones sound both ways
       const quad = makeQuad(shuffle(got));
       if (quad) quads.push(quad);
     }
@@ -2316,7 +2315,7 @@ const Guess = (() => {
     for (const o of order(QUOTE, 4)) if (rest.length < Math.max(1, per(1)) && fits(o)) rest.push(makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
     let photo = null;
     for (const o of order(FACE, 4)) if (!photo && fits(o)) rest.push(photo = makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
-    const items = order(NUM.concat(YN), 5), ends = order(NUM, 12), mix = order(NUM, 8), plain = () => rest.filter(x => !x.quote);
+    const items = order(NUM.concat(YN), 5), ends = order(NUM, 10), plain = () => rest.filter(x => !x.quote);
     const room = x => !(grim(x.q) && plain().filter(y => grim(y.q)).length >= per(2)) && !(isAboutOne(x.q) && plain().filter(y => isAboutOne(y.q)).length >= per(2)) && !(MONEY.has(x.q.id) && plain().some(y => MONEY.has(y.q.id)));
     const fill = (m, ok, capCat, loose, from) => { for (const x of from || items) { if (m <= 0 || rest.length >= need) return; if (!rest.includes(x) && ok(x) && (loose || room(x)) && fits(x, capCat)) { rest.push(take(x)); m--; } } };
     // The first and the last are chosen before the rest, a new one if there is any, and with more chance in it: rounds should not all begin alike.
@@ -2324,9 +2323,8 @@ const Guess = (() => {
     const fresh = x => !seen.has(x.id), easy = x => HOOKS.has(x.q.id) && !isHeavy(x.q) && !MONEY.has(x.q.id);
     const first = photo && Math.random() < 0.4 ? photo : one([x => OPENERS.has(x.q.id) && fresh(x), x => easy(x) && fresh(x), x => OPENERS.has(x.q.id), x => !isHeavy(x.q)]);
     const last = one([x => CLOSERS.has(x.q.id) && fresh(x), x => HOOKS.has(x.q.id) && fresh(x), x => CLOSERS.has(x.q.id), x => !isHeavy(x.q)]);
-    const due = x => fresh(x) || !NUM.some(fresh);    // a question seen before is not brought back for these while there are new ones
-    fill(per(1) - plain().filter(x => GOOD_NEWS.has(x.q.id)).length, x => GOOD_NEWS.has(x.q.id) && due(x), per(2), false, mix);
-    fill(per(2) - plain().filter(x => daily(x.q)).length, x => daily(x.q) && due(x), per(3), false, mix);
+    const calm = x => leanOf(x.q) === "tame";
+    fill(per(2) - plain().filter(calm).length, x => calm(x) && (fresh(x) || !NUM.some(fresh)), per(2));   // none seen before is brought back for this while there are new ones
     for (const [cap, loose] of [[per(2), false], [per(3), false], [99, false], [99, true]]) fill(99, () => true, cap, loose);
     const middle = quads.concat(rest).filter(x => x !== first && x !== last);
     let best = null;
