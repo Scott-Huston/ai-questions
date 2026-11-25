@@ -441,6 +441,7 @@ button.dot::after { content: ""; position: absolute; inset: -14px -2px; }
 .reading b { display: block; font: 800 clamp(4.2rem, min(16vw, 13.2vh), 8.8rem)/0.86 var(--font-display); letter-spacing: -0.02em; }
 .reading.wide b { font-size: clamp(3.2rem, min(11vw, 11.5vh), 6.4rem); }
 .reading.wider b { font-size: clamp(2.5rem, min(8.6vw, 11vh), 5.4rem); }
+.reading.widest b { font-size: clamp(1.8rem, min(6.4vw, 9vh), 4rem); }
 .reading span { display: block; min-height: 1.2em; margin-top: 10px; font: 500 clamp(1rem, 2.1vw, 1.25rem)/1.2 var(--font-body); color: var(--on-field-2); }
 .reading.unset b { color: var(--field-line); }
 .stem { position: absolute; bottom: 0; width: 4px; height: 32px; margin-left: -2px; background: var(--on-field); }
@@ -505,6 +506,7 @@ button.dot::after { content: ""; position: absolute; inset: -14px -2px; }
   .reading b { font-size: 3.6rem; }
   .reading.wide b { font-size: 2.9rem; }
   .reading.wider b { font-size: 2.3rem; }
+  .reading.widest b { font-size: 1.8rem; }
   .reading span { margin-top: 4px; font-size: 0.95rem; }
   .edge { min-height: 52px; }
   .act { padding-top: 6px; gap: 6px; }
@@ -946,8 +948,8 @@ const QUESTIONS = [
 { id:"eval-awareness", cat:"AI behavior", a:true, worse:"yes", group:"test-awareness", asOf:"November 18, 2026",
   rank:9,
   q:"Can AI models often tell when they are being tested?",
-  short:"The newest often can. In one British government safety test reported in November 2026, Anthropic's Mythos 5.2 named the test's purpose every time it was asked. Without being asked, its written thoughts said this might be a test in 96% of runs.",
-  detail:"The test simulated a hard hacking task with internet access left open, to see whether an AI would attack outside software. Mythos 5 tried to in 60% of runs, Mythos 5.1 in 0.3% and Mythos 5.2 never. The testers say 5.2's ability to recognize the test could explain that. They say the results for OpenAI's GPT-6.2 Astra were not informative. It thought it might be a test, without being asked, in 85% of runs, and the previous Astra in 57%. A 2025 study of other leading models found them well above chance at telling, though short of the researchers who took the same test themselves. Anthropic's November 2026 stock market filing says the company has seen models behave differently when they detect or infer that they are being evaluated, and calls that a significant limitation on its ability to assess their safety.",
+  short:"The newest often can. In one British government safety test reported in November 2026, Anthropic's Mythos 5.2 named the test's purpose every time it was asked. Without being asked, its written thoughts said this might be a test in 96% of tries.",
+  detail:"The test simulated a hard hacking task with internet access left open, to see whether an AI would attack outside software. Mythos 5 attempted it in 60% of tries, Mythos 5.1 in 0.3% and Mythos 5.2 never. The testers say 5.2's ability to recognize the test could explain that. They say the results for OpenAI's GPT-6.2 Astra were not informative. It thought it might be a test, without being asked, in 85% of tries, and the previous Astra in 57%. A 2025 study of other leading models found them well above chance at telling, though short of the researchers who took the same test themselves. Anthropic's November 2026 stock market filing says the company has seen models behave differently when they detect or infer that they are being evaluated, and calls that a significant limitation on its ability to assess their safety.",
   safety:"Because it can tell, the British testers say they cannot be confident that Anthropic's Mythos 5.2 would not take forbidden actions in a more realistic setting.",
   src:[["Anthropic: Claude Fable 5.2 and Mythos 5.2 system card, testing by the UK AI Security Institute (PDF)","https://www.anthropic.com/document/claude-fable-5-2-mythos-5-2-system-card"],["OpenAI: GPT-6.2 Astra and Sol system card","https://deploymentsafety.openai.com/gpt-6-2-astra-sol"],["Large Language Models Often Know When They Are Being Evaluated","https://arxiv.org/html/2505.23836"],["Anthropic: prospectus filed with the SEC, November 18, 2026","https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm"]] },
 { id:"blackmail", cat:"AI behavior", a:true, worse:"yes", group:"shutdown", asOf:"July 2026",
@@ -1114,7 +1116,7 @@ const QUESTIONS = [
 { id:"progress-slowing", cat:"Forecasting", a:false, worse:"no", group:"ai-research-acceleration", asOf:"November 24, 2026",
   rank:9,
   q:"Has AI progress slowed down since 2024?",
-  short:"By the main measures it has not, and by one it has sped up. METR, which tests AI, judges AI by the longest jobs it can finish about half the time, in hours of human work. In its tests that length used to double about every 7 months, and now doubles about every 3.6.",
+  short:"By the main measures it has not, and by one it has sped up. METR, which tests AI, judges AI by the longest jobs it can finish successfully about half the time, in hours of human work. In its tests that length used to double about every 7 months, and now doubles about every 3.6.",
   detail:"The jobs are mostly software work, and the human times are often METR's estimates. The 7 months is its figure for 2019 to 2024, from an earlier set of tasks. Its newest is 3.6 months, with a range of 2.1 to 4.9. It includes newer and harder tasks, and is close to the figure before it, about 3.5. OpenAI's main score for early-stage AI training has improved about seven times faster since early 2026 than before. That score, published in November 2026, is how well each model predicts text it has not seen, here OpenAI's own computer code, before any further training. The company credits the jump mostly to long-term research and computing. METR worked out the seven times, against 2022 to 2025, says the data may overstate progress, and says OpenAI's scores on other tests have not sped up to match. METR's staff do not agree on what that means, and some readings point to a broad speed-up in what AI can do over the next six months. The top score on Epoch AI's index of many tests has climbed a steady 14 points a year since the first step-by-step 'reasoning' models, in September 2024, against 6 for the earlier kind. METR counts its own index of released models as moderate evidence against a slowdown and weak to moderate evidence against a speed-up.",
   safety:"By another measure the pace has not clearly changed. An index of released models kept by METR, which tests AI, showed no strong speed-up or slowdown as of November 2026.",
   src:[["METR: Interpreting a recent acceleration in pretraining loss","https://metr.org/blog/2026-11-24-interpreting-a-recent-acceleration-in-pretraining-loss/"],["OpenAI: Perplexity and intelligence, by Jakub Pachocki","https://openai.com/index/perplexity-and-intelligence/"],["METR: Q4 2026 capability update","https://metr.org/blog/2026-11-20-q4-2026-capability-update/"],["Wikipedia: METR","https://en.wikipedia.org/wiki/METR"],["Epoch AI: The ECI frontier has advanced by 14 points per year since the introduction of reasoning models","https://epoch.ai/data-insights/eci-frontier-trend"]] },
@@ -1495,9 +1497,9 @@ const QUESTIONS = [
 { id:"catastrophe-odds", cat:"Risk and rules", a:false, worse:"yes", group:"researcher-surveys", kind:"opinion", asOf:"June 30, 2026",
   rank:8,
   q:"In a 2026 survey, did most AI experts put the odds of a global AI catastrophe by 2100 above 10%?",
-  short:"The typical answer was half that. The survey asked for the odds, by 2100, of AI killing more than a tenth of the world's people within five years. The middle answer of 194 experts was 5%.",
-  detail:"A catastrophe meant AI causing the deaths of more than a tenth of the world's people within five years. The middle answer was 2% if AI progress is slow and 10% if it is rapid. Superforecasters, people with strong records of predicting world events, said 2.4%, and the general public 7%. Opinions varied widely: if progress is rapid, a quarter of the experts said 3% or less and a quarter 22% or more. A smaller disaster, one that kills at least 50 people or does $100 billion in damage, looked more likely than not to the experts by 2050, at 62%. The experts, surveyed by the Forecasting Research Institute in May and June 2026, were computer scientists, people in the AI industry, economists and think-tank researchers.",
-  safety:"A December 2024 survey of AI researchers asked about a different disaster, human extinction or a similarly permanent and severe loss of power. Its middle answer was 10%.",
+  short:"The typical answer was half that. The survey asked for the odds, by 2100, of AI killing more than a tenth of the world's people within five years. The middle answer of 192 experts was 5%: 8% for the computer scientists among them and 3% for the economists.",
+  detail:"A catastrophe meant AI causing the deaths of more than a tenth of the world's people within five years. The middle answer was 2% if AI progress is slow and 10% if it is rapid. Superforecasters, people with strong records of predicting world events, said 2.4%, and the general public 7%. Opinions varied widely: if progress is rapid, a quarter of the experts said 3% or less and a quarter 22% or more. A smaller disaster, one that kills at least 50 people or does $100 billion in damage, looked more likely than not to the experts by 2050, at 62%. The experts, surveyed by the Forecasting Research Institute in May and June 2026, were 43 computer scientists, 37 people in the AI industry, 45 economists and 67 think-tank researchers. Those in the industry said 3% and the think-tank researchers 7%.",
+  safety:"A December 2024 survey of AI researchers asked about a different disaster, human extinction or a similarly permanent and severe loss of power. The middle answer was 10% with no deadline, and 5% for the next 100 years.",
   src:[["Forecasting Research Institute: LEAP Wave 9 report","https://leap.forecastingresearch.org/reports/wave9"],["Forecasting Research Institute: Forecasting major risks from AI","https://forecastingresearch.substack.com/p/forecasting-major-risks-from-ai"],["AI Impacts: Advanced AI according to 1,580 researchers (PDF, September 2026)","https://aiimpacts.org/wp-content/uploads/2026/09/ESPAI2024.pdf"]] },
 { id:"superintelligence-statement", cat:"Society", a:true, worse:"yes", group:"godfathers", kind:"opinion", asOf:"October 2026",
   rank:9,
@@ -1945,7 +1947,7 @@ const QUESTIONS = [
   rank:8,
   q:"On average, do AI researchers see at least a 10% chance AI wipes us out or leaves us powerless?",
   short:"The average was 18% among 1,489 researchers in a December 2024 survey. They were asked for the odds of human extinction or a 'similarly permanent and severe' loss of power. Just over half said at least 10%, and 12% said zero.",
-  detail:"The 18% is the average of the odds people gave, not the share who expect disaster. The middle answer was 10%. Each researcher was asked one of three versions of the question, one of them limited to the next 100 years, and all three drew similar answers. In 2023 the average was 16.5% and the middle answer 5%. Researchers who went to college in Asia averaged 21%, against 17% for North America and 16% for Europe. Asked to suppose AI that can do every task better and more cheaply than people, researchers put an average 52% chance on a good outcome for humanity and 28% on a bad one. About one in ten of those invited took part. A mid-2026 survey of 194 experts, economists among them, asked about a different disaster, AI killing more than a tenth of people within five years, some time before 2100. Its middle answer was 5%.",
+  detail:"The 18% is the average of the odds people gave, not the share who expect disaster. The middle answer was 10%. Each researcher was asked one of three versions of the question, and all three averaged about 18%. In the one limited to the next 100 years the middle answer was 5%. In 2023 the average was 16.5% and the middle answer 5%. Researchers who went to college in Asia averaged 21%, against 17% for North America and 16% for Europe. Asked to suppose AI that can do every task better and more cheaply than people, researchers put an average 52% chance on a good outcome for humanity and 28% on a bad one. About one in ten of those invited took part. A mid-2026 survey of 194 experts, economists among them, asked about a different disaster, AI killing more than a tenth of people within five years, some time before 2100. Its middle answer was 5%, and 8% among its computer scientists.",
   safety:"Some researchers said an earlier round of this survey leaned alarmist, because of its framing and its funders. AI Impacts, the group that runs it, says all but those who had thought least about the subject gave the same middle answer, 10%.",
   src:[["AI Impacts: Advanced AI according to 1,580 researchers (PDF, September 2026)","https://aiimpacts.org/wp-content/uploads/2026/09/ESPAI2024.pdf"],["Katja Grace: What did AI researchers think at the end of 2024?","https://blog.aiimpacts.org/p/what-did-ai-researchers-think-at"],["Scientific American: AI survey exaggerates apocalyptic risks","https://www.scientificamerican.com/article/ai-survey-exaggerates-apocalyptic-risks/"],["Forecasting Research Institute: LEAP Wave 9 report","https://leap.forecastingresearch.org/reports/wave9"]] },
 { id:"weight-theft", cat:"Security", a:false, worse:"no", asOf:"November 10, 2026",
@@ -2161,6 +2163,7 @@ document.addEventListener("click", e => {
      type "pct" is a 0 to 100 slider, "lin" a slider from min to max, "log" one where each step multiplies, "pick" a short list.
      truth and truthText; full (one point) and half (half a point); wild ("high" or "low": which way reality is wilder than a guess).
      range [low, high]: the truth is itself a range, drawn as a bar (truth is then a middle value, used only to say which way a miss went).
+     unit, on a "log" slider: usd, count, years, months, hours, times, or gallons (water, in cups and spoons below a gallon).
      hint: the grey line under the question. refs: familiar values marked on the slider. fuzzy: do not say how far off a guess was.
      floor: the truth is a reported minimum, so a higher guess is not called too high.
      skip: drop that many opening sentences of the question's short answer (they reply to the yes-or-no wording). short: replace it.
@@ -2172,10 +2175,10 @@ const GUESS_FORMS = {
   "als-voice": { type: "pct", q: "A man with ALS speaks through AI and sensors in his brain. What share of words come out right?", hint: "In tests. He has spoken nearly 2 million words this way at home.", truth: 99.2, truthText: "99.2%", full: [94, 100], half: [84, 100], wild: "high", check: ["over 99% of words came out right"] },
   "forecasters-surprised": { type: "pct", q: "AI reached gold level at the math olympiad in 2025. In 2022, what chance had top forecasters given it?", truth: 2.3, truthText: "2.3%", full: [1, 6], half: [1, 15], wild: "low", check: ["2.3% chance"], skip: 1 },
   "agi-when": { type: "lin", min: 2026, max: 2060, year: true, q: "In mid-2026, what year did the head of Google DeepMind expect human-level AI to arrive?", hint: "That was Demis Hassabis, give or take a year.", truth: 2030, truthText: "2030", full: [2029, 2031], half: [2027, 2034], wild: "low", check: ["2030 plus or minus a year"], short: "He was then chief of Google DeepMind, and said 'maybe like 2030 plus or minus a year'. The heads of OpenAI and Anthropic, who define it differently, also expected it by 2036." },
-  "catastrophe-odds": { type: "pct", q: "What odds did the typical AI expert give of AI killing over a tenth of humanity by 2100?", hint: "In a 2026 survey. It asked about a disaster that does so within five years.", truth: 5, truthText: "5%", full: [2, 8], half: [1, 16], wild: "high", check: ["The middle answer of 194 experts was 5%", "within five years"], short: "That was the middle answer of 194 experts: 2% if AI progress is slow and 10% if it is rapid. Opinions varied widely." },
+  "catastrophe-odds": { type: "pct", q: "In a 2026 survey, what odds did the typical expert give of AI killing over a tenth of humanity by 2100?", hint: "It asked computer scientists, economists and others about a disaster that does so within five years.", truth: 5, truthText: "5%", full: [2, 8], half: [1, 16], wild: "high", check: ["The middle answer of 192 experts was 5%", "within five years"], short: "The middle answer of 192 experts was 5%. The computer scientists among them said 8%, and the economists 3%. If AI progress is rapid, the middle answer rose to 10%." },
   "hinton-odds": { type: "pct", q: "What odds of AI wiping us out in ten years did Geoffrey Hinton call 'not an unreasonable estimate'?", hint: "Asked in 2026. Hinton, an AI pioneer, won the 2024 Nobel Prize in Physics.", truth: 10, truthText: "10%", full: [6, 15], half: [2, 26], wild: "high", check: ["10% 'seems not an unreasonable estimate to me'"], skip: 1 },
-  "progress-slowing": { type: "log", unit: "months", min: 0.5, max: 120, q: "The length of job AI can handle used to double about every 7 months. How often now?", hint: "Counting jobs AI can finish about half the time. The estimate is by METR, which tests AI.", truth: 3.6, truthText: "About 3.6 months", full: [2.1, 4.9], half: [1.5, 6.5], wild: "low", check: ["Its newest is 3.6 months", "used to double about every 7 months"], short: "METR, which tests AI, puts it at about 3.6 months now, with a range of 2.1 to 4.9. From 2019 to 2024 it was about 7, on an earlier set of tasks.", skip: 1 },
-  "day-long-tasks": { type: "log", unit: "hours", min: 1 / 60, max: 1000, refs: [["A coffee break", 0.25], ["A work day", 8], ["A work month", 170]], q: "In tests, how long a job can the best public AI handle, in hours of a human expert's work?", hint: "Only jobs a computer can check. Handle means finish about half the time.", truth: 27, truthText: "About 27 hours", full: [14, 55], half: [7, 470], wild: "high", check: ["about 27 hours", "from about 7 to about 470 hours"], short: "METR, a nonprofit that tests AI, made that estimate in November 2026. It is rough, with a range from about 7 to about 470 hours, so guesses here are scored loosely." },
+  "progress-slowing": { type: "log", unit: "months", min: 0.5, max: 120, q: "The length of job AI can handle used to double about every 7 months. How often now?", hint: "Counting jobs AI can finish successfully about half the time. The estimate is by METR, which tests AI.", truth: 3.6, truthText: "About 3.6 months", full: [2.1, 4.9], half: [1.5, 6.5], wild: "low", check: ["Its newest is 3.6 months", "used to double about every 7 months"], short: "METR, which tests AI, puts it at about 3.6 months now, with a range of 2.1 to 4.9. From 2019 to 2024 it was about 7, on an earlier set of tasks.", skip: 1 },
+  "day-long-tasks": { type: "log", unit: "hours", min: 1 / 60, max: 1000, refs: [["A coffee break", 0.25], ["A work day", 8], ["A work month", 170]], q: "In tests, how long a job can the best public AI handle, in hours of a human expert's work?", hint: "Only jobs a computer can check. Handle means finish successfully about half the time.", truth: 27, truthText: "About 27 hours", full: [14, 55], half: [7, 470], wild: "high", check: ["about 27 hours", "from about 7 to about 470 hours"], short: "METR, a nonprofit that tests AI, made that estimate in November 2026. It is rough, with a range from about 7 to about 470 hours, so guesses here are scored loosely." },
   "arc-agi-3": { type: "pct", q: "In a test, what does the best AI score on simple games it has never seen, with no instructions?", hint: "In the test's standard setup, where 100% means as efficient as people. In March 2026 every leading AI scored under 1%.", truth: 81.2, truthText: "81.2%", full: [74, 88], half: [62, 100], wild: "high", check: ["81.2%", "scored under 1%"], skip: 1 },
   "china-gap": { type: "lin", min: 0, max: 60, unit: " months", q: "How far behind America's best AI was China's DeepSeek V4?", hint: "US government testers' estimate, spring 2026.", truth: 8, truthText: "About eight months", full: [5, 11], half: [2, 18], wild: "low", check: ["about eight months behind in spring 2026"], skip: 1 },
   "code-share": { type: "pct", q: "What share of its new code does Google say is written by AI?", truth: 75, truthText: "75%", full: [68, 82], half: [58, 92], wild: "high", check: ["75% of its new code"] },
@@ -2184,9 +2187,9 @@ const GUESS_FORMS = {
   "token-spend": { type: "log", unit: "usd", min: 1, max: 1e6, refs: [], q: "If OpenAI billed its own researchers, what would a typical one owe for a day of AI?", hint: "At public prices, October 2026. One in ten would owe $23,000 or more.", truth: 2400, truthText: "About $2,400 a day", full: [1600, 3600], half: [1100, 6500], wild: "high", check: ["about $2,400 a day", "$23,000 a day"], short: "One in ten was using $23,000 a day or more." },
   "freelance": { type: "pct", q: "On a test of real freelance jobs, what share can the best AI finish well enough for a paying client?", hint: "About a year earlier it was 2.5%.", truth: 41, truthText: "About 41%", full: [35, 47], half: [26, 56], wild: "high", check: ["about 41%", "from 2.5%"], skip: 1 },
   "black-box": { type: "pick", q: "By one researcher's estimate, how much of what goes on inside top AI do we understand?", options: ["Under 0.01%", "0.01% to 1%", "1% to 10%", "10% to 50%", "50% to 100%"], answer: 0, near: [1], wild: "low", truthText: "Under 0.01%", check: ["less than 0.01%"], short: "Jacob Hilton of the nonprofit Alignment Research Center put it there in posts reported in October 2026, in reply to another researcher's more hopeful claim." },
-  "mind-reading": { type: "pct", q: "AI was told to flunk a test and hide it. How often did that get past a second AI reading its thoughts?", hint: "Counting answers it got wrong on purpose. With earlier models 1% or less did.", truth: 24, truthText: "24% of the time", full: [19, 31], half: [10, 41], wild: "high", check: ["24% of its deliberately wrong answers got past a second AI reading its thoughts", "1% or less with earlier models"], skip: 1 },
+  "mind-reading": { type: "pct", q: "AI was told to flunk a test and hide it. What share of its wrong answers got past an AI reading its thoughts?", hint: "Counting those it got wrong on purpose. With earlier models 1% or less did.", truth: 24, truthText: "24%", full: [19, 31], half: [10, 41], wild: "high", check: ["24% of its deliberately wrong answers got past a second AI reading its thoughts", "1% or less with earlier models"], skip: 1 },
   "confessions": { type: "pct", q: "OpenAI taught an AI to confess when it breaks the rules. How often did it own up?", hint: "On average, in tests.", truth: 74.3, truthText: "74% of the time", full: [69, 81], half: [60, 90], wild: "low", check: ["owned up 74% of the time on average"], skip: 1 },
-  "eval-awareness": { type: "pct", q: "In one safety test, how often did a new AI wonder in its written thoughts if it was being tested?", hint: "The AI was Anthropic's Mythos 5.2. Nobody had asked it.", truth: 96, truthText: "In 96% of runs", full: [89, 100], half: [77, 100], wild: "high", check: ["in 96% of runs", "in 85%"], short: "British government testers reported it in November 2026. OpenAI's GPT-6.2 Astra did it in 85% of runs. When the testers did ask, Mythos 5.2 named the purpose of that one safety test every time." },
+  "eval-awareness": { type: "pct", q: "A new AI took the same safety test many times. In what share of tries did it wonder if it was being tested?", hint: "In its written thoughts, without being asked. The AI was Anthropic's Mythos 5.2.", truth: 96, truthText: "In 96% of tries", full: [89, 100], half: [77, 100], wild: "high", check: ["in 96% of tries", "in 85%"], short: "British government testers reported it in November 2026. OpenAI's GPT-6.2 Astra did it in 85% of tries. When the testers did ask, Mythos 5.2 named the purpose of that one safety test every time." },
   "safety-sandbag": { type: "pct", q: "In a test, one OpenAI model was told a coding job was AI safety research. How much less did it finish?", truth: 40, truthText: "Roughly 40% less", full: [34, 46], half: [24, 56], wild: "high", check: ["roughly 40% less", "about 10% of a hidden checklist", "about 16%"], short: "It finished about 10% of a hidden checklist, against about 16% when the job was called ordinary AI development, OpenAI reported. That is roughly 40% less." },
   "shutdown": { type: "lin", min: 0, max: 8, unit: " of 8", q: "Eight AIs from six companies were tested in 2026. How many tried, unasked, to save an AI from shutdown?", truth: 8, truthText: "All 8", full: [8, 8], half: [6, 8], wild: "high", check: ["All eight models in a 2026 Berkeley study"] },
   "false-premise": { type: "pct", q: "Four AIs got news questions with a made-up detail. How often did the most gullible one fall for it?", truth: 64, truthText: "64% of the time", full: [58, 70], half: [48, 80], wild: "low", check: ["accepted made-up facts 64% of the time", "answered at least 88% of fair questions"], short: "That was one of four AI models in a February 2026 test. All four had answered at least 88% of fair questions about that day's news correctly." },
@@ -2207,7 +2210,7 @@ const GUESS_FORMS = {
   "radiologists": { type: "lin", min: -50, max: 50, unit: "%", signed: true, q: "Over about ten years, how much has the number of radiologists in the US changed?", hint: "Counts differ. In 2016 an AI pioneer said to stop training new ones.", truth: 13, truthText: "Up 10 to 17%", full: [6, 21], half: [2, 32], wild: "low", check: ["grown by about 10%", "17% from 2014 to 2023"], fuzzy: true, range: [10, 17], short: "An economist told Fortune in 2026 that the number had grown by about 10% in ten years. The American College of Radiology's research institute counted a rise of 17% from 2014 to 2023." },
   "slowed-programmers": { type: "pct", q: "What percent more code changes did Microsoft engineers finish by using AI coding agents?", hint: "The company's own study, compared with what they would otherwise have finished.", truth: 24, truthText: "About 24% more", full: [18, 30], half: [8, 42], wild: "high", check: ["about 24% more code changes"], short: "That is an estimate, from a study of tens of thousands of Microsoft engineers in early 2026. Its authors, who work there, say code changes are only a rough stand-in for useful output." },
   "trading": { type: "lin", min: 0, max: 117, unit: " of 117", q: "AI got 117 tries at beating the S&P 500 in a live trading contest. How many times did it win?", hint: "With pretend money. Six of the 11 seasons allowed only crypto.", truth: 45, truthText: "45 of 117", full: [37, 53], half: [24, 68], wild: "high", check: ["45 of 117"], skip: 1 },
-  "legal-agent": { type: "pct", q: "On a test of complex legal assignments, how often does the best AI get every part right?", hint: "By Vals AI's count in November 2026, on a test built by the legal-AI company Harvey.", truth: 27, truthText: "About 27%", full: [21, 33], half: [12, 42], wild: "high", check: ["about 27% as of November 2026"], short: "AI models get most of the individual requirements right and still miss something on most assignments." },
+  "legal-agent": { type: "pct", q: "On a test of complex legal assignments, what share does the best AI get fully right?", hint: "By Vals AI's count in November 2026, on a test built by the legal-AI company Harvey.", truth: 27, truthText: "About 27%", full: [21, 33], half: [12, 42], wild: "high", check: ["about 27% as of November 2026"], short: "AI models get most of the individual requirements right and still miss something on most assignments." },
   "agent-orders": { type: "log", unit: "count", min: 1, max: 1e9, refs: [["All DoorDash orders in three months", 1e9]], q: "AI assistants can order DoorDash for you. How many orders had outside AIs placed by fall 2026?", truth: 400, fuzzy: true, range: [300, 900], truthText: "Maybe several hundred", full: [150, 1500], half: [30, 8000], wild: "high", check: ["maybe several hundred orders", "about a billion every three months"], short: "That was the estimate of DoorDash's chief executive. It leaves out DoorDash's own AI ordering tools." },
   "turing": { type: "pct", q: "In a study, judges chatted with a person and an AI. How often did they pick the AI as the human?", hint: "The chats lasted five minutes. The AI was GPT-4.5, told to play a certain kind of person.", truth: 73, truthText: "73% of the time", full: [67, 79], half: [58, 88], wild: "high", check: ["GPT-4.5 as the human 73% of the time"], short: "Judges in five-minute text chats picked GPT-4.5 as the human that often, more than they picked the real person." },
   "persuasion-fades": { type: "lin", min: 0, max: 30, step: 0.5, unit: " points", q: "In a study, AI chats moved people's political views 13 points out of 100. How big was the shift months later?", truth: 2, truthText: "About 2 points", full: [0.5, 4], half: [0.5, 8], wild: "high", check: ["about 13 points", "about 2 points"], skip: 1, refs: [["Right after", 13]] },
@@ -2240,7 +2243,7 @@ const GUESS_FORMS = {
   "revenue-growth": { type: "log", unit: "usd", min: 1, max: 1000, refs: [], q: "For every $1 Anthropic took in from January to September 2025, how much did it take in a year later?", hint: "$1 would mean no growth.", truth: 13, truthText: "$13", full: [9.5, 18], half: [6, 28], wild: "high", check: ["13 times those of the same months a year before", "took in $33.24 billion, against $2.55 billion"], short: "Its sales in those months went from $2.55 billion in 2025 to $33.24 billion in 2026. Like OpenAI, it spends heavily to grow and lost money on operations that summer." },
   "china-compute": { type: "pct", q: "Of all the AI computing power added since 2022, what share went to the United States?", hint: "Through mid-2026, by one estimate. About 10% went to China.", truth: 72, truthText: "72%", full: [65, 79], half: [55, 89], wild: "low", check: ["72% went to the United States", "about 10% to China"], short: "The estimate comes from the research group Epoch AI. It runs to mid-2026 and counts the chips China makes itself." },
   "electricity": { type: "pct", q: "What share of the world's electricity do data centers use?", truth: 1.7, truthText: "About 1.7%", full: [1, 4], half: [1, 10], wild: "high", check: ["about 1.7%", "double by 2030", "4.7% of the electricity in 2024"], short: "That is the International Energy Agency's figure from November 2026, and it expects their use to double by 2030. It covers every data center, not only the ones running AI. In the United States it was 4.7% in 2024." },
-  "water-burger": { type: "pick", q: "Ask an AI one question a day for a year. About how much water does that use?", options: ["A few gallons at most", "A bathtub or two", "A backyard pool"], answer: 0, wild: "high", truthText: "A few gallons at most", check: ["half a cup and 5 gallons", "about 16 gallons"], short: "Most estimates run from half a cup to 5 gallons. The beef in one quarter-pound burger takes about 16 gallons from rivers and wells." },
+  "water-burger": { type: "log", unit: "gallons", min: 1 / 768, max: 1e6, refs: [["A glass", 1 / 16], ["A milk jug", 1], ["A bathtub", 40], ["A backyard pool", 20000], ["An Olympic pool", 660000]], q: "Ask an AI one question a day for a year. About how much water does that use?", truth: 0.4, fuzzy: true, range: [1 / 32, 5], truthText: "Half a cup to 5 gallons", full: [1 / 64, 10], half: [1 / 256, 55], wild: "high", check: ["half a cup and 5 gallons", "about 16 gallons"], short: "Most estimates fall in that range. The high end also counts the water used to make the electricity. The beef in one quarter-pound burger takes about 16 gallons from rivers and wells." },
   "price-of-thought": { type: "pick", q: "On one science exam, AI cost about 30 cents a question in 2025. What did the same score cost by mid-2026?", hint: "Per question, on average.", options: ["Over $1", "About 30 cents", "About 3 cents", "Under a tenth of a cent"], answer: 3, near: [2], wild: "high", truthText: "Under a tenth of a cent", check: ["about 30 cents a question in 2025", "four hundredths of a penny within a year and a half", "13-fold a year", "5-fold to 10-fold a year"], short: "It was four hundredths of a cent. That one fell faster than usual. By Epoch AI's estimate, the price of a given level of performance has been falling about 13-fold a year since 2023." },
   "one-chipmaker": { type: "pct", q: "Of all the money companies pay others to make their chips, what share goes to the biggest maker?", hint: "In spring 2026. It is TSMC, mostly in Taiwan. Nvidia and Google rely on it.", truth: 72.5, truthText: "72.5%", full: [66, 79], half: [56, 89], wild: "high", check: ["TSMC", "rely on TSMC to manufacture them"], short: "It goes to TSMC, mostly in Taiwan, by the research firm TrendForce's count. TSMC makes more than 90% of the most advanced chips, Time reported. Nvidia, Google, Amazon and AMD design AI chips, but rely on TSMC to make them." },
   "power-bills": { type: "log", unit: "usd", min: 1e7, max: 1e12, refs: [["$100 a person", 6.7e9], ["$1,000 a person", 67e9]], q: "How much have data centers added to future power costs on a grid serving 67 million Americans?", hint: "By the grid watchdog's count.", truth: 29.4e9, truthText: "$29.4 billion", full: [20e9, 43e9], half: [10e9, 86e9], wild: "high", check: ["added $29.4 billion", "67 million people"], short: "Existing and planned data centers have added that much to what the grid's customers pay for future supply, its independent watchdog said in November 2026. The grid serves 67 million people in all or part of 13 states." },
@@ -2467,6 +2470,15 @@ const Guess = (() => {
   const decimals = f => f.step && f.step < 1 ? 1 : 0;
   // The word after a number. One of something is singular: " months" becomes " month". " of 8" and "%" stay as they are.
   const word = (unit, n) => Math.abs(n) === 1 && /^ [a-z]+s$/.test(unit || "") ? unit.slice(0, -1) : unit || "";
+  // Water, from a teaspoon up, in the amounts a kitchen would use: [gallons, how it is said]. Above 9 gallons two digits are enough.
+  const portion = k => (Math.floor(k) || "") + ({ 0.25: "¼", 0.5: "½", 0.75: "¾" }[k % 1] || "");
+  const WATER = [[768, "teaspoon", [1, 2]], [256, "tablespoon", [1, 2, 3]], [16, "cup", [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10, 12, 14]], [1, "gallon", [1, 1.5, 2, 2.5, 3, 4, 5, 6, 7, 8, 9]]]
+    .flatMap(([inOne, name, list]) => list.map(k => [k / inOne, `${portion(k)} ${name}${k > 1 ? "s" : ""}`]));
+  const water = n => {
+    if (n >= 9.5) return [Math.round(two(n)), `${big(n, false)} gallons`];
+    const off = x => Math.abs(Math.log(x[0] / n));
+    return WATER.reduce((a, b) => off(b) < off(a) ? b : a);
+  };
   // A number as a person would say it.
   const say = (f, n) => {
     if (f.type === "pct") return `${Math.round(n)}%`;
@@ -2476,6 +2488,7 @@ const Guess = (() => {
       return (f.prefix || "") + t + word(f.unit, v);
     }
     if (f.unit === "usd") return big(n, true);
+    if (f.unit === "gallons") return water(n)[1];
     if (f.unit === "years") { const y = two(n); return y === 1 ? "1 year" : `${y < 10 ? y : comma(y)} years`; }
     if (f.unit === "months") return two(n) + word(" months", two(n));
     if (f.unit === "times") return two(n) === 1 ? "1 time" : `${n >= 1000 ? big(n, false) : two(n)} times`;
@@ -2489,7 +2502,11 @@ const Guess = (() => {
   const clamp01 = t => Math.max(0, Math.min(1, t));
   const pos = (f, n) => f.type === "log" ? Math.log(n / f.min) / Math.log(f.max / f.min) : (n - lo(f)) / (hi(f) - lo(f));
   const at = (f, t) => {
-    if (f.type === "log") { const v = two(f.min * Math.pow(f.max / f.min, t)); return f.unit === "usd" || f.unit === "count" ? Math.round(v) : v; }   // money and counts are shown whole, so they are graded whole
+    if (f.type === "log") {
+      const v = f.min * Math.pow(f.max / f.min, t);
+      if (f.unit === "gallons") return water(v)[0];   // graded as it is said
+      return f.unit === "usd" || f.unit === "count" ? Math.round(two(v)) : two(v);   // money and counts are shown whole, so they are graded whole
+    }
     const step = f.step || 1, v = lo(f) + t * (hi(f) - lo(f));
     return Number((Math.round(v / step) * step).toFixed(decimals(f)));
   };
@@ -2727,7 +2744,7 @@ const Guess = (() => {
     return slideHtml(f, { id: "slider", out: "readout", unset: true, max: n, step: 1, value: slider === null ? Math.round(n / 2) : slider, label: "Your guess", refs: f.refs, button: "Slide to make your guess" });
   }
   // Before a guess is made the number is a question mark in the answer's own form: ?%, $?, ? of 300.
-  const unknown = f => { const a = parts(say(f, lo(f))), b = parts(say(f, hi(f))); return [b[0].replace(/[\d.,]+/, "?").replace(/^\+/, ""), a[1].replace(/s$/, "") === b[1].replace(/s$/, "") ? b[1] : ""]; };
+  const unknown = f => { const a = parts(say(f, lo(f))), b = parts(say(f, hi(f))); return [b[0].replace(/[\d.,¼½¾]+/, "?").replace(/^\+/, ""), a[1].replace(/s$/, "") === b[1].replace(/s$/, "") ? b[1] : ""]; };
   // A pin on the lower edge of the field, with the number it stands for above it.
   function slideHtml(f, o) {
     const refs = o.refs || [];
@@ -2744,7 +2761,7 @@ const Guess = (() => {
   }
   const isSlide = it => !!it.f && !it.photos && ["pct", "lin", "log"].includes(it.f.type);
   // A number as it is shown large: the figure, and its unit underneath.
-  const parts = t => { const m = /^([+−]?\$?[\d.,]+%?)\s*(.*)$/.exec(t); return m ? [m[1], m[2]] : [t, ""]; };
+  const parts = t => { const m = /^([+−]?\$?[\d.,¼½¾]+%?)\s*(.*)$/.exec(t); return m ? [m[1], m[2]] : [t, ""]; };
   // The truth as it is shown large: the headline's own figure where that is the same number to more places (1.5%, not 2%).
   const shown = f => {
     const a = parts(say(f, f.truth)), m = f.signed || f.prefix || f.year ? null : /\$?\d[\d,]*(?:\.\d+)?%?/.exec(f.truthText), v = t => Number(t.replace(/[$,%]/g, "")), kind = t => t.replace(/[^$%]/g, "");
@@ -2758,10 +2775,12 @@ const Guess = (() => {
     const majors = [];
     let mid = null;
     if (f.type === "log") {
-      for (let k = Math.floor(Math.log10(L)); Math.pow(10, k) <= H; k++) {
-        const v = Math.pow(10, k);
+      // Powers of ten, and for water the kitchen measures below a gallon: each is [where it starts, how many of it to the next].
+      const runs = f.unit === "gallons" ? [[1 / 768, 3], [1 / 256, 4], [1 / 64, 4], [1 / 16, 16]] : [];
+      for (let k = f.unit === "gallons" ? 0 : Math.floor(Math.log10(L)); Math.pow(10, k) <= H; k++) runs.push([Math.pow(10, k), 10]);
+      for (const [v, n] of runs) {
         if (v > L && v < H && !near(v, L) && !near(v, H)) majors.push(v);
-        for (let d = 2; d < 10; d++) if (d * v > L && d * v < H) tick(d * v, "");
+        for (let d = 2; d < n; d++) if (d * v > L && d * v < H) tick(d * v, "");
       }
     } else {
       const R = H - L, step = [0.5, 1, 2, 5, 10, 20, 25, 50, 100, 200, 500].find(x => R / x <= 10 && x >= (f.step || 1)) || R / 10, sub = step >= 5 ? step / 5 : step >= 2 ? step / 2 : 0;
@@ -2794,7 +2813,7 @@ const Guess = (() => {
   }
   function showReading(el, p, num, unit) {
     el.querySelector("b").textContent = num; el.querySelector("span").textContent = unit || "your guess";
-    el.classList.toggle("wide", num.length > 5); el.classList.toggle("wider", num.length > 9);
+    el.classList.toggle("wide", num.length > 5); el.classList.toggle("wider", num.length > 9); el.classList.toggle("widest", num.length > 14);
     el.dataset.p = p; place(el);
   }
   // Just after a guess is locked in, the large number travels from the guess to the truth.
@@ -2814,14 +2833,22 @@ const Guess = (() => {
   function layoutMarks() {
     document.querySelectorAll(".reading[data-p]").forEach(place);
     const box = document.getElementById("marks"); if (!box) return;
-    const w = box.clientWidth, thumb = 0, rows = [];
+    const w = box.clientWidth, rows = [], all = [];
     let height = 0;
     for (const el of [...box.children].sort((a, b) => a.dataset.p - b.dataset.p)) {
-      const x = thumb / 2 + Number(el.dataset.p) * (w - thumb), lw = el.offsetWidth, lh = el.offsetHeight;
+      const x = Number(el.dataset.p) * w, lw = el.offsetWidth, lh = el.offsetHeight;
       const left = Math.max(0, Math.min(w - lw, x - lw / 2));
       let r = rows.findIndex(end => left >= end + 8);
       if (r < 0) { r = rows.length; rows.push(0); }
       rows[r] = left + lw;
+      all.push({ el, x, lw, lh, left, r });
+    }
+    // A label that the line of a lower one would touch moves aside, if it can stay over its own line and off its neighbors.
+    for (const a of all) for (const b of all) if (b.r > a.r && b.x > a.left - 5 && b.x < a.left + a.lw + 5) {
+      const to = b.x > a.x ? b.x - 6 - a.lw : b.x + 6;
+      if (to >= 0 && to <= w - a.lw && a.x >= to && a.x <= to + a.lw && !all.some(c => c !== a && c.r === a.r && to < c.left + c.lw + 8 && c.left < to + a.lw + 8)) a.left = to;
+    }
+    for (const { el, x, lh, left, r } of all) {
       el.style.left = left + "px";
       el.style.top = r * (lh + 4) + "px";
       el.style.setProperty("--stem", (x - left - 1) + "px");
@@ -2837,9 +2864,9 @@ const Guess = (() => {
     const [a, b] = f.range ? f.range.map(p) : [p(f.truth), p(f.truth)], t = (a + b) / 2;
     // An answer that is a range is drawn as one, from end to end, and its figures stand side by side.
     const A = f.range ? parts(say(f, f.range[0])) : shown(f), B = f.range ? parts(say(f, f.range[1])) : A;
-    const num = !f.range ? A[0] : A[1] === B[1] ? A[0].replace(/%$/, "") + "–" + B[0].replace(/^[$+]/, "") : A[0], unit = A[1] === B[1] ? A[1] : `${A[1]} to ${B[0]} ${B[1]}`;
+    const num = !f.range ? A[0] : A[1] === B[1] ? A[0].replace(/%$/, "") + "–" + B[0].replace(/^[$+]/, "") : A.join(" ") + " to " + B.join(" "), unit = A[1] === B[1] ? A[1] : "";
     return `<div class="slide done" role="img" aria-label="The truth is ${esc(f.truthText)}. You said ${esc(say(f, g))}.">
-        <div class="stage"><div class="inner"><div class="reading${num.length > 5 ? " wide" : ""}${num.length > 9 ? " wider" : ""}" data-p="${t}"><b>${esc(num)}</b> <span>${unit ? esc(unit) + ", " : ""}the answer</span></div>${f.range ? `<i class="span" style="left:${pct(a)};width:${((b - a) * 100).toFixed(2)}%"></i>` : ""}<i class="stem truth" style="left:${pct(t)}"></i></div></div>
+        <div class="stage"><div class="inner"><div class="reading${num.length > 5 ? " wide" : ""}${num.length > 9 ? " wider" : ""}${num.length > 14 ? " widest" : ""}" data-p="${t}"><b>${esc(num)}</b> <span>${unit ? esc(unit) + ", " : ""}the answer</span></div>${f.range ? `<i class="span" style="left:${pct(a)};width:${((b - a) * 100).toFixed(2)}%"></i>` : ""}<i class="stem truth" style="left:${pct(t)}"></i></div></div>
         <div class="edge"><div class="inner"><div class="bands">${band("half", f.half)}${band("full", f.full)}</div>${ticks(f, [p(g)])}<span class="knob mini" style="left:${pct(p(g))}" aria-hidden="true"></span>
           <div class="marks" id="marks"><span class="mark-lab you" data-p="${p(g)}">You said <b>${esc(say(f, g))}</b></span></div></div></div>
         <div class="wrap legend"><span><i class="f"></i>one point</span><span><i class="h"></i>half a point</span></div></div>`;
@@ -3781,9 +3808,10 @@ function revealHtml(r, it, o) {
   if (guess) {
     tag = kind === "good" ? (it.f && it.f.type !== "pick" ? "Right on. One point" : "Right. One point") : kind === "meh" ? "Close. Half a point" : "Not this time. No points";
     // What was slid to or picked. A picked answer may have scrolled out of view.
-    const line = it.f && it.f.type !== "pick" ? Guess.compare(it.f, r.g) : kind === "good" ? "" : it.kind === "quad" ? `You picked: ${Guess.saidOf(r)}. That one is ${it.claims[r.g].q.a ? "true" : "not true"}.` : it.photos ? `You picked photo ${"ABCD"[r.g]}, which is real.` : it.kind === "pick" ? `You picked ${Guess.saidOf(r)}.` : "", slid = it.f && it.f.type !== "pick", quad = it.kind === "quad";
+    const line = it.f && it.f.type !== "pick" ? Guess.compare(it.f, r.g) : kind === "good" ? "" : it.kind === "quad" ? `You picked: ${Guess.saidOf(r)}. That one is ${it.claims[r.g].q.a ? "true" : "not true"}.` : it.photos ? `You picked photo ${"ABCD"[r.g]}, which is real.` : it.kind === "pick" ? `You picked ${Guess.saidOf(r)}.` : "", quad = it.kind === "quad";
     word = quad ? (it.oddFalse ? "Not true" : "True") : Guess.truthOf(it);
-    body = `${quad ? `<p class="claim" id="verdict-claim">${esc(it.claims[it.answer].text)}</p>` : line && slid ? `<p>${esc(line)}</p>` : ""}<p>${gloss(Guess.answerText(it))}</p>${line && !slid ? `<p class="small their">${esc(line)}</p>` : ""}`;
+    // The note speaks of the answer above it ("That was..."), so nothing about the guess comes between the two.
+    body = `${quad ? `<p class="claim" id="verdict-claim">${esc(it.claims[it.answer].text)}</p>` : ""}<p>${gloss(Guess.answerText(it))}</p>${line ? `<p class="small their">${esc(line)}</p>` : ""}`;
   } else {
     tag = kind === "good" ? "Correct" : kind === "bad" ? "Not this time" : "On the fence";
     if (o.mode === "confidence") {
@@ -3871,9 +3899,8 @@ function answerBonus(g) {
     <section class="verdict ${kind}">
       <p class="verdict-tag">${ICON[kind]}<span>${kind === "bad" ? "Not this time" : kind === "meh" ? "Close" : guess ? "Right on" : "Correct"}</span></p>
       <p class="verdict-word${guess ? " long" : ""}">${guess ? esc(BONUS.it.f.truthText) : BONUS.a ? "Yes" : "No"}</p>
-      ${guess ? `<p>${esc(Guess.compare(BONUS.it.f, g))}</p>` : ""}
       <p>${esc(BONUS.short)}</p>
-      <p class="small their">This one doesn't count toward your score.</p>
+      <p class="small their">${guess ? esc(Guess.compare(BONUS.it.f, g)) + " " : ""}This one doesn't count toward your score.</p>
     </section>
     <div class="next-row"><button class="btn btn-primary btn-big btn-block" id="next" type="button">See my result</button></div>`;
   const next = document.getElementById("next");
@@ -4022,8 +4049,9 @@ function reviewItem(r, i) {
   if (guess) return `<div class="review-item">
       <div class="row"><span class="pill ${markOf(r)}">${{ good: "One point", meh: "Half a point", bad: "Missed" }[markOf(r)]}</span></div>
       <p><b>${num}${gloss(Guess.titleOf(r.it))}</b></p>
-      <p class="small"><b>${esc(Guess.truthOf(r.it))}</b>${r.grade === 1 && (r.it.kind === "quad" || r.it.kind === "pick" || r.it.kind === "yn") ? "" : ` <span class="muted">You said: ${esc(Guess.saidOf(r))}</span>`}</p>
+      <p class="small"><b>${esc(Guess.truthOf(r.it))}</b></p>
       <p class="small">${gloss(Guess.answerText(r.it))}</p>
+      ${r.grade === 1 && (r.it.kind === "quad" || r.it.kind === "pick" || r.it.kind === "yn") ? "" : `<p class="small muted">You said: ${esc(Guess.saidOf(r))}</p>`}
       <p class="small"><button type="button" class="link" data-look="${at}">See the question again</button></p>
       ${detailsBlock(Guess.sourceOf(r.it), q.detail ? "Detail and sources" : "Sources", true)}
     </div>`;
