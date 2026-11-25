@@ -1940,7 +1940,8 @@ function summarize(answers) {
   }
   // sure and hit cover only the answers that leaned one way.
   const leaned = right + wrong;
-  return { n, brier: n ? brier / 1e4 / n : 0, right, wrong, unsure, leaned, sure: leaned ? sureSum / leaned : 0, hit: leaned ? right / leaned : 0, buckets };
+  // milli: the score in whole thousandths, the one figure that the link carries and every screen shows.
+  return { n, brier: n ? brier / 1e4 / n : 0, milli: n ? Math.round(brier / (10 * n)) : 0, right, wrong, unsure, leaned, sure: leaned ? sureSum / leaned : 0, hit: leaned ? right / leaned : 0, buckets };
 }
 
 /* ---------- Helpers ---------- */
@@ -3046,7 +3047,7 @@ function shareUrl(s) {
   if (state.mode === "guess") return base + "?c=g" + state.list.map(Guess.encode).join("-") + "." + marks;
   const codes = state.list.map(q => codeOf(answerKey(q))).join("");
   const conf = state.mode === "confidence";
-  return base + "?c=" + (conf ? "c" : "q") + codes + "." + marks + (conf ? "." + Math.round(s.brier * 1000) : "");
+  return base + "?c=" + (conf ? "c" : "q") + codes + "." + marks + (conf ? "." + s.milli : "");
 }
 
 // One question to pass on. The link carries that question alone, and the friend answers it on the start screen.
@@ -3702,7 +3703,7 @@ function shareText(s, key, url) {
   }
   let second = FINDINGS[key].share;
   if (conf) {
-    const b = s.brier.toFixed(3);
+    const b = (s.milli / 1000).toFixed(3);
     second += closeToCoinFlip(s.brier) ? ` My confidence matched a coin flip (Brier ${b}).`
       : s.brier < 0.25 ? ` My confidence beat a coin flip (Brier ${b}).` : ` My confidence did worse than a coin flip (Brier ${b}).`;
   }
@@ -3847,7 +3848,7 @@ function renderResults() {
     let verdict = s.right > theirs ? "You win." : s.right < theirs ? "They win this one." : "A tie.";
     let extra = "";
     if (conf && typeof ch.brier === "number") {
-      const mine = Math.round(s.brier * 1000), other = Math.round(ch.brier * 1000);   // the link carries thousandths
+      const mine = s.milli, other = Math.round(ch.brier * 1000);   // the link carries thousandths
       extra = ` Their confidence score was ${(other / 1000).toFixed(3)} and yours is ${(mine / 1000).toFixed(3)}. Lower is better.`;
       if (s.right === theirs && mine !== other) verdict = mine < other ? "A tie on answers, and your confidence was sharper." : "A tie on answers, and their confidence was sharper.";
     }
@@ -3913,8 +3914,8 @@ function renderResults() {
         <p class="small muted">Your confidence score, which statisticians call a ${gloss("Brier score")}. Lower is better.</p>
       </div>
       <div>
-        <div class="big-num">${s.brier.toFixed(3)}</div>
-        <div class="scale" role="img" aria-label="Your score ${s.brier.toFixed(3)} on a scale where 0 is perfect and 0.25 is a coin flip"><div class="mark" style="left:${pos}%"></div></div>
+        <div class="big-num">${(s.milli / 1000).toFixed(3)}</div>
+        <div class="scale" role="img" aria-label="Your score ${(s.milli / 1000).toFixed(3)} on a scale where 0 is perfect and 0.25 is a coin flip"><div class="mark" style="left:${pos}%"></div></div>
         <div class="scale-labels"><span>0 perfect</span><span>0.25 coin flip</span><span>0.5+</span></div>
       </div>
       <p>${brierVerdict(s)}</p>
