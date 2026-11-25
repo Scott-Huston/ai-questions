@@ -2635,7 +2635,24 @@ const HOOKS = new Set(["fake-video", "voice-clone", "face-test", "turing", "pers
 // Orders a round. The first two are about what AI can do, or easy ones, and questions about rules, society and opinions
 // come later, so a round never starts with a civics test.
 const SLOW_OPENERS = ["Risk and rules", "Society", "Scale"];
+// Of up to 40 orders, the first in which no answer comes up five times running (or, a third of the time, four), no two neighbors
+// share a category and no two heavy ones touch. The limit is not always three, or the answer after three alike could be told in advance.
 function arrange(list) {
+  const limit = Math.random() < 0.35 ? 3 : 4;
+  let best = null;
+  for (let k = 0; k < 40; k++) {
+    const out = arrangeOnce(list);
+    let bad = 0, run = 1;
+    for (let i = 1; i < out.length; i++) {
+      run = out[i].a === out[i - 1].a ? run + 1 : 1;
+      bad += (run > limit ? 3 : 0) + (out[i].cat === out[i - 1].cat ? 1 : 0) + (isHeavy(out[i]) && isHeavy(out[i - 1]) ? 1 : 0);
+    }
+    if (!best || bad < best.bad) best = { out, bad };
+    if (!bad) break;
+  }
+  return best.out;
+}
+function arrangeOnce(list) {
   const pool = shuffle(list);
   const hook = q => HOOKS.has(q.id) && q.kind !== "opinion" && q.kind !== "rule";
   const quick = pool.filter(q => q.kind !== "opinion" && q.kind !== "rule" && !SLOW_OPENERS.includes(q.cat));
