@@ -2274,7 +2274,8 @@ const Guess = (() => {
   /* Dealing a round. New ones come first, then the more important ones, with some chance in it (more of it for statements, or the
      same few would turn up every time). One question per group, so no answer gives another away. In ten: two sets of four
      statements, at most one of them "only one is true", one quote, and no more than two grim items outside the sets, two about one
-     company and one about company money. At least two bring good news and four touch daily life. It opens on something easy and fun and ends on one worth retelling. */
+     company and one about company money. At least one brings good news and two touch daily life, and
+     those are chosen by importance too, so that they never crowd out what matters more. It opens on something easy and fun and ends on one worth retelling. */
   const OPENERS = new Set(["turing", "sprint", "captcha", "exam-markers", "water-burger", "teens", "billion-users", "voice-clone", "fake-video", "face-test", "table-tennis", "hot-100", "driverless", "radiologists", "author-style", "companionship"]);
   const CLOSERS = new Set(["als-voice", "radiologists", "training-text", "brain-power", "billion-users", "chip-speed", "water-burger", "exam-markers", "sprint", "planets", "waymo-safety", "er-diagnosis", "unmask-author", "imo", "life-expectancy"]);
   const GOOD_NEWS = new Set(["als-voice", "er-diagnosis", "brain-to-text", "waymo-safety", "planets", "protein-design", "signal-proof", "antibiotics", "therapy-bot", "breast-screening", "ai-tutor", "doctor-empathy", "hurricanes", "vesuvius-scroll", "old-codes",
@@ -2290,7 +2291,7 @@ const Guess = (() => {
   const theme = x => x.kind === "quad" || x.quote ? "" : ["AI behavior", "Security", "Reliability"].includes(x.q.cat) ? "lab" : x.q.cat;
   function draw(n) {
     const seen = new Set(store.seen), tens = n / 10, per = x => Math.round(x * tens);
-    const order = (list, luck, weight = 1) => list.map(x => ({ x, s: (seen.has(x.id) ? 0 : 100) + (x.q.rank || 5) * weight + Math.random() * luck })).sort((a, b) => b.s - a.s).map(o => o.x);
+    const order = (list, luck) => list.map(x => ({ x, s: (seen.has(x.id) ? 0 : 100) + (x.q.rank || 5) + Math.random() * luck })).sort((a, b) => b.s - a.s).map(o => o.x);
     const groups = new Set(), cats = {}, kinds = {}, ids = new Set();
     const fits = (x, capCat) => !(x.q.group && groups.has(x.q.group)) && !(x.q.kind && (kinds[x.q.kind] || 0) >= per(2)) && !(capCat && (cats[x.q.cat] || 0) >= capCat)
       && !APART.some(p => p.includes(x.q.id) && p.some(id => id !== x.q.id && ids.has(id)));
@@ -2315,7 +2316,7 @@ const Guess = (() => {
     for (const o of order(QUOTE, 4)) if (rest.length < Math.max(1, per(1)) && fits(o)) rest.push(makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
     let photo = null;
     for (const o of order(FACE, 4)) if (!photo && fits(o)) rest.push(photo = makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
-    const items = order(NUM.concat(YN), 5), ends = order(NUM, 16, 0.3), mix = order(NUM, 10, 0.6), plain = () => rest.filter(x => !x.quote);
+    const items = order(NUM.concat(YN), 5), ends = order(NUM, 12), mix = order(NUM, 8), plain = () => rest.filter(x => !x.quote);
     const room = x => !(grim(x.q) && plain().filter(y => grim(y.q)).length >= per(2)) && !(isAboutOne(x.q) && plain().filter(y => isAboutOne(y.q)).length >= per(2)) && !(MONEY.has(x.q.id) && plain().some(y => MONEY.has(y.q.id)));
     const fill = (m, ok, capCat, loose, from) => { for (const x of from || items) { if (m <= 0 || rest.length >= need) return; if (!rest.includes(x) && ok(x) && (loose || room(x)) && fits(x, capCat)) { rest.push(take(x)); m--; } } };
     // The first and the last are chosen before the rest, a new one if there is any, and with more chance in it: rounds should not all begin alike.
@@ -2324,8 +2325,8 @@ const Guess = (() => {
     const first = photo && Math.random() < 0.4 ? photo : one([x => OPENERS.has(x.q.id) && fresh(x), x => easy(x) && fresh(x), x => OPENERS.has(x.q.id), x => !isHeavy(x.q)]);
     const last = one([x => CLOSERS.has(x.q.id) && fresh(x), x => HOOKS.has(x.q.id) && fresh(x), x => CLOSERS.has(x.q.id), x => !isHeavy(x.q)]);
     const due = x => fresh(x) || !NUM.some(fresh);    // a question seen before is not brought back for these while there are new ones
-    fill(per(2) - plain().filter(x => GOOD_NEWS.has(x.q.id)).length, x => GOOD_NEWS.has(x.q.id) && due(x), per(2), false, mix);
-    fill(per(4) - plain().filter(x => daily(x.q)).length, x => daily(x.q) && due(x), per(3), false, mix);
+    fill(per(1) - plain().filter(x => GOOD_NEWS.has(x.q.id)).length, x => GOOD_NEWS.has(x.q.id) && due(x), per(2), false, mix);
+    fill(per(2) - plain().filter(x => daily(x.q)).length, x => daily(x.q) && due(x), per(3), false, mix);
     for (const [cap, loose] of [[per(2), false], [per(3), false], [99, false], [99, true]]) fill(99, () => true, cap, loose);
     const middle = quads.concat(rest).filter(x => x !== first && x !== last);
     let best = null;
