@@ -3835,6 +3835,7 @@ function renderResults() {
         <button class="btn btn-primary btn-big" id="share-main" type="button">Share my result</button>
         <button class="btn btn-big" id="again" type="button">Play again</button>
       </div>
+      ${HAS_YESNO && HAS_GUESS ? `<p class="small center"><button class="link" id="switch-mode" type="button">${state.mode === "guess" ? "Try a yes-or-no round" : "Try a best-guess round"}</button></p>` : ""}
       <p class="small muted" id="share-status" role="status"></p>
       ${unseen > 0 ? `<p class="small muted">${unseen} of the ${QUESTIONS.length} questions are still new to you.</p>` : ""}
     </section>`;
@@ -3981,6 +3982,16 @@ function renderResults() {
   });
   const again = () => { clearChallenge(); state.mode = store.mode; startRound(); };
   document.getElementById("again").addEventListener("click", again);
+  // The other way of playing, where the page offers both. It becomes the one chosen on the start screen too.
+  const swap = document.getElementById("switch-mode");
+  if (swap) swap.addEventListener("click", () => {
+    clearChallenge();
+    state.mode = store.mode = state.mode === "guess" ? "quick" : "guess";
+    const offered = state.mode === "guess" ? Guess.LENGTHS : LENGTHS;
+    if (!offered.includes(state.length)) state.length = offered[offered.length - 1];
+    store.length = state.length; saveStore();
+    startRound();
+  });
   document.getElementById("again-2").addEventListener("click", again);
   document.getElementById("home").addEventListener("click", goHome);
   wireTopBar();
