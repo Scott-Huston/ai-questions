@@ -1950,7 +1950,6 @@ const GLOSSARY = [
   ["Turing test", /Turing test/i, "A test proposed by Alan Turing in 1950. A person chats by text with a human and a machine without knowing which is which, then guesses. The machine passes if people can't reliably pick out the human."],
   ["Riemann Hypothesis", /Riemann (Hypothesis|proof)/i, "A claim about a hidden pattern in the prime numbers, made in 1859 and never proven until now. Often called the most famous unsolved problem in mathematics."],
   ["Navier–Stokes", /Navier[–-]Stokes/, "One of the Millennium Prize problems. It asks whether the equations describing how water and air flow always behave sensibly."],
-  ["Poincaré conjecture", /Poincaré conjecture/, "A Millennium Prize problem about the shape of three-dimensional spaces. A human mathematician solved it in 2003."],
   ["Lean", /\bLean\b/, "A programming language for writing math proofs so a computer can check every single step."],
   ["conjecture", /\bconjecture\b/i, "A mathematical statement that experts believe is true but that nobody has proven."],
   ["International Mathematical Olympiad", /International Mathematical Olympiad|\bOlympiad\b/, "The world's top math contest for high-school students. Six very hard problems over two days."],
@@ -1966,7 +1965,6 @@ const GLOSSARY = [
   ["ransomware", /\bransomware\b/i, "Malicious software that locks up a victim's files and demands payment to release them."],
   ["open-source AI", /open-source AI/i, "AI models whose inner workings are published, so that anyone can download, use and change them."],
   ["AI takeover", /AI takeover/i, "A scenario in which AI systems gain control and people can no longer stop them."],
-  ["safety refusals", /safety refusals/i, "An AI's built-in habit of declining requests that could cause harm."],
   ["AI agent", /AI agents?\b/, "An AI system that takes actions by itself to finish a task, such as browsing the web, writing code or sending messages."],
   ["METR", /\bMETR\b/, "A nonprofit AI-safety research group that measures what AI systems can do without human help."],
   ["Metaculus", /\bMetaculus\b/, "A website where people compete to predict real-world events and are scored on how accurate they are."],
@@ -1975,9 +1973,6 @@ const GLOSSARY = [
   ["deepfakes", /\bdeepfakes?\b/i, "Fake video, images or audio made with AI to look or sound real."],
   ["humanoid", /\bhumanoids?\b/i, "A robot built with a roughly human body: arms, hands and usually legs."],
   ["competitive programmers", /competitive programmers/i, "People who race to solve hard programming puzzles in timed contests."],
-  ["humanizer", /\bhumanizers?\b/i, "A tool that rewrites AI-written text so that detection software mistakes it for human writing."],
-  ["P versus NP", /P versus NP/, "A question about whether every problem whose answer is quick to check is also quick to solve. Most experts think not, but nobody has proven it."],
-  ["Exponential Time Hypothesis", /Exponential Time Hypothesis/, "A 1999 conjecture that certain puzzle-like problems can only be solved by methods whose running time roughly doubles with each added piece."],
   ["superforecasters", /\bsuperforecasters?\b/i, "People with a proven record of predicting world events more accurately than almost everyone else."],
   ["MRSA", /\bMRSA\b/, "A type of staph bacteria that resists many common antibiotics and causes hard-to-treat infections."],
   ["tokens", /\btokens?\b/i, "The pieces of text an AI model reads and writes, each usually a word or part of a word. In English a token is about three-quarters of a word."],
@@ -2019,7 +2014,7 @@ function gloss(text) {
 document.addEventListener("keydown", e => {
   if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("term")) { e.preventDefault(); e.target.click(); }
 });
-// One definition open at a time, shown right under the paragraph or heading that contains the term.
+// One definition open at a time, shown right under the paragraph, heading or list entry that contains the term.
 document.addEventListener("click", e => {
   const btn = e.target.closest ? e.target.closest(".term") : null;
   if (!btn) return;
@@ -2032,7 +2027,7 @@ document.addEventListener("click", e => {
   box.className = "defbox";
   box.setAttribute("role", "note");
   box.innerHTML = `<b>${esc(g[0])}:</b> ${esc(g[2])}`;
-  (btn.closest("p, h2") || btn).insertAdjacentElement("afterend", box);
+  (btn.closest("p, h1, h2, .others li > span") || btn).insertAdjacentElement("afterend", box);
   btn.setAttribute("aria-expanded", "true");
 });
 /* How guess mode asks each question. Answers, notes and sources come from QUESTIONS; only the way of asking is here.
@@ -2343,17 +2338,19 @@ const Guess = (() => {
     return d + comma(two(n));
   };
   const decimals = f => f.step && f.step < 1 ? 1 : 0;
+  // The word after a number. One of something is singular: " months" becomes " month". " of 8" and "%" stay as they are.
+  const word = (unit, n) => Math.abs(n) === 1 && /^ [a-z]+s$/.test(unit || "") ? unit.slice(0, -1) : unit || "";
   // A number as a person would say it.
   const say = (f, n) => {
     if (f.type === "pct") return `${Math.round(n)}%`;
     if (f.type === "lin") {
       if (f.year) return String(Math.round(n));
       const v = Number(n.toFixed(decimals(f))), t = (f.signed ? (v > 0 ? "+" : v < 0 ? "−" : "") : "") + (f.signed ? Math.abs(v) : v);
-      return (f.prefix || "") + t + (v === 1 && f.unit === " points" ? " point" : f.unit || "");
+      return (f.prefix || "") + t + word(f.unit, v);
     }
     if (f.unit === "usd") return big(n, true);
     if (f.unit === "years") { const y = two(n); return y === 1 ? "1 year" : `${y < 10 ? y : comma(y)} years`; }
-    if (f.unit === "months") return `${two(n)} months`;
+    if (f.unit === "months") return two(n) + word(" months", two(n));
     if (f.unit === "times") return two(n) === 1 ? "1 time" : `${n >= 1000 ? big(n, false) : two(n)} times`;
     if (f.unit === "hours") {
       if (n < 1) { const m = Math.max(1, Math.round(two(n * 60))); return m === 1 ? "1 minute" : `${m} minutes`; }
@@ -2452,10 +2449,13 @@ const Guess = (() => {
       if (r < 1.15) return `${said}, almost exactly right.`;
       return `${said}, about ${r < 10 ? Number(r.toFixed(1)) : comma(two(r))} times too ${dir}.`;
     }
-    const d = Number(Math.abs(g - f.truth).toFixed(f.type === "lin" ? decimals(f) : 0));
-    if (d === 0) return "You said exactly that.";
-    if (f.year) return `${said}, ${d} ${d === 1 ? "year" : "years"} too ${g > f.truth ? "late" : "early"}.`;
-    return `${said}, ${d}${f.type === "pct" || f.unit === "%" ? (d === 1 ? " point" : " points") : ""} too ${dir}.`;
+    // "Exactly" is kept for an exact answer, or one that is the headline's own figure. A slider stop next to 99.2% is only almost right.
+    const off = Math.abs(g - f.truth), d = Number(off.toFixed(f.type === "lin" ? decimals(f) : 0));
+    if (off === 0 || f.type === "pct" && f.truthText.startsWith(say(f, g))) return "You said exactly that.";
+    if (off < (f.type === "pct" ? 1 : 0.05)) return `${said}, almost exactly right.`;
+    if (f.year) return `${said}, ${d}${word(" years", d)} too ${g > f.truth ? "late" : "early"}.`;
+    if (f.prefix) return `${said}, ${d}${word(" places", d)} off.`;   // on a chart, a lower number is a higher place
+    return `${said}, ${d}${word(f.type === "pct" || f.unit === "%" ? " points" : /^ [a-z]+s$/.test(f.unit || "") ? f.unit : "", d)} too ${dir}.`;
   }
 
   /* Dealing a round. New ones come first, then the more important ones, with some chance in it (more of it for statements, or the
@@ -2474,7 +2474,9 @@ const Guess = (() => {
   // loud for a statement, true or not, that says the wilder thing.
   const grim = q => isHeavy(q) && (leanOf(q) === "wild" || q.id === "catastrophe-odds"), good = q => GOOD_NEWS.has(q.id) || leanOf(q) === "tame", loud = q => q.worse === "yes";
   const theme = x => x.kind === "quad" || x.quote ? "" : ["AI behavior", "Security", "Reliability"].includes(x.q.cat) ? "lab" : x.q.cat;
-  function draw(n) {
+  // A round dealt ahead of time, which may never be played, does not fetch its photos yet.
+  const preload = list => list.forEach(it => (it.photos || []).forEach(p => { new Image().src = p; }));
+  function draw(n, ahead) {
     const seen = new Set(store.seen), tens = n / 10, per = x => Math.round(x * tens);
     const order = (list, luck) => list.map(x => ({ x, s: (seen.has(x.id) ? 0 : 100) + (x.q.rank || 5) + Math.random() * luck })).sort((a, b) => b.s - a.s).map(o => o.x);
     const groups = new Set(), cats = {}, kinds = {}, ids = new Set();
@@ -2503,7 +2505,7 @@ const Guess = (() => {
     let photo = null;
     // A photo question comes up in about six rounds of ten, and each only until the player has seen it.
     if (PHOTOS.here && Math.random() < 0.6) for (const o of order(FACE, 4)) if (!photo && !seen.has(o.id) && fits(o)) rest.push(photo = makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
-    if (photo) photo.photos.forEach(p => { new Image().src = p; });
+    if (photo && !ahead) preload([photo]);
     const items = order(NUM.concat(YN), 5), ends = order(NUM, 10), plain = () => rest.filter(x => !x.quote);
     const room = x => !(grim(x.q) && plain().filter(y => grim(y.q)).length >= per(2)) && !(isAboutOne(x.q) && plain().filter(y => isAboutOne(y.q)).length >= per(2)) && !(MONEY.has(x.q.id) && plain().some(y => MONEY.has(y.q.id)));
     const fill = (m, ok, capCat, loose, from) => { for (const x of from || items) { if (m <= 0 || rest.length >= need) return; if (!rest.includes(x) && ok(x) && (loose || room(x)) && fits(x, capCat)) { rest.push(take(x)); m--; } } };
@@ -2653,7 +2655,7 @@ const Guess = (() => {
   // The sources of every statement in a set of four are listed together.
   const sourceOf = it => it.kind !== "quad" ? bankOf(it) : Object.assign({}, bankOf(it), { src: it.claims.flatMap(c => c.q.src) });
 
-  return { LENGTHS, NUM, CLAIM, YN, QUOTE, FACE, extra, say, at, pos, stops, idsOf, titleOf, truthOf, saidOf, optionsOf, bankOf, sourceOf, answerText, grade, lean, valid, result, compare, draw, pack, unpack, encode, decode, gradeKey,
+  return { LENGTHS, NUM, CLAIM, YN, QUOTE, FACE, extra, say, at, pos, stops, idsOf, titleOf, truthOf, saidOf, optionsOf, bankOf, sourceOf, answerText, grade, lean, valid, result, compare, draw, preload, pack, unpack, encode, decode, gradeKey,
     summarize, analyze, findingOf, controlHtml, layoutMarks, resultRuler, mark, othersHtml };
 })();
 window.addEventListener("resize", Guess.layoutMarks);
@@ -3473,7 +3475,7 @@ function wireGuess(it, say, at, keep) {
   };
   slider.addEventListener("input", read);
   slider.addEventListener("pointerup", read);   // a tap that leaves the handle where it is still counts as a guess
-  slider.addEventListener("keydown", e => { if (e.key === "Enter" && !btn.disabled) { e.preventDefault(); say(guess); } });
+  slider.addEventListener("keydown", e => { if (e.key === "Enter" && !btn.disabled) { e.preventDefault(); e.stopPropagation(); say(guess); } });   // or the same press would go on to the next question
   btn.addEventListener("click", () => { if (guess !== null) say(guess); });
   if (typeof at === "number") read();           // back from looking at an earlier question: the handle is where it was left
   Guess.layoutMarks();
@@ -3843,10 +3845,12 @@ function renderResults() {
   const unseen = QUESTIONS.length - seenCount();
   const url = shareUrl(s), text = shareText(s, key, url);
   const canNative = typeof navigator.share === "function";
-  // The button promises new questions only when that is so: a round is dealt as a test, and every question in it must be unseen.
-  const seen = new Set(store.seen), nextGuess = store.mode === "guess", nextLength = nextGuess && !Guess.LENGTHS.includes(state.length) ? 20 : state.length;
-  const allNew = (nextGuess ? Guess.draw(nextLength).flatMap(Guess.idsOf) : drawRound(nextLength).map(q => q.id)).every(id => !seen.has(id));
-  const againLabel = allNew ? `Play ${nextLength} new questions` : "Play again";
+  // Playing again goes on in the way just played. After a friend's challenge that may not be the saved one.
+  // (Saying how sure you are is a setting of yes or no, so there the saved choice counts.)
+  const nextMode = (store.mode === "guess") === guess ? store.mode : state.mode, nextGuess = nextMode === "guess";
+  // The round to come is dealt now, so that the button can promise new questions only when every one of them is.
+  const next = nextGuess ? Guess.draw(Guess.LENGTHS.includes(state.length) ? state.length : 20, true) : drawRound(state.length), seen = new Set(store.seen);
+  const againLabel = next.every(it => (nextGuess ? Guess.idsOf(it) : [it.id]).every(id => !seen.has(id))) ? `Play ${next.length} new questions` : "Play again";
 
   const head = `
     <section class="card result">
@@ -4009,7 +4013,7 @@ function renderResults() {
       document.body.appendChild(link); link.click(); link.remove();
     } catch (e) { status.textContent = "Couldn't make the picture here. The text version still works."; }
   });
-  const again = () => { clearChallenge(); state.mode = store.mode; startRound(); };
+  const again = () => { clearChallenge(); state.mode = nextMode; if (nextGuess) Guess.preload(next); startRound(next); };
   document.getElementById("again").addEventListener("click", again);
   // The other way of playing, where the page offers both. It becomes the one chosen on the start screen too.
   const swap = document.getElementById("switch-mode");
