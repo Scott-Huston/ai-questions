@@ -1920,14 +1920,15 @@ const QUESTIONS = [
 
 /* ---------- Scoring (pure functions) ---------- */
 // p is the stated probability that the answer is yes, 0 to 1. outcome is 1 for yes, 0 for no.
-function brierOne(p, outcome) { return (p - outcome) * (p - outcome); }
+function brierPoints(p, outcome) { const off = Math.round((p - outcome) * 100); return off * off; }   // whole points squared, so that equally good answers always add up to the same sum
+function brierOne(p, outcome) { return brierPoints(p, outcome) / 1e4; }
 function summarize(answers) {
   const n = answers.length;
   let brier = 0, right = 0, wrong = 0, unsure = 0, sureSum = 0;
   const buckets = {};
   for (const r of answers) {
     const o = r.a ? 1 : 0;
-    brier += brierOne(r.p, o);
+    brier += brierPoints(r.p, o);
     const conf = Math.max(r.p, 1 - r.p);
     if (r.p !== 0.5) sureSum += conf;
     const key = Math.round(conf * 100);
@@ -1939,7 +1940,7 @@ function summarize(answers) {
   }
   // sure and hit cover only the answers that leaned one way.
   const leaned = right + wrong;
-  return { n, brier: n ? brier / n : 0, right, wrong, unsure, leaned, sure: leaned ? sureSum / leaned : 0, hit: leaned ? right / leaned : 0, buckets };
+  return { n, brier: n ? brier / 1e4 / n : 0, right, wrong, unsure, leaned, sure: leaned ? sureSum / leaned : 0, hit: leaned ? right / leaned : 0, buckets };
 }
 
 /* ---------- Helpers ---------- */
@@ -2435,7 +2436,7 @@ const Guess = (() => {
       return (q.worse === "yes") === !!q.a ? "wilder" : "tamer";
     }
     const f = it.f;
-    if (!f.wild) return null;
+    if (!f.wild || f.floor && g >= f.truth) return null;   // above a reported minimum, nobody knows which way the guess went
     const low = g < (f.type === "pick" ? f.answer : f.truth);
     return (f.wild === "high") === low ? "wilder" : "tamer";
   }
@@ -2714,6 +2715,12 @@ function keepRound(key) {
 }
 function saveRound() { keepRound(ROUND_KEY); }
 function clearRound() { try { localStorage.removeItem(ROUND_KEY); } catch (e) {} }
+// Clears the saved round only if it is the one just finished, not one begun since in another tab.
+function clearOwnRound() {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(ROUND_KEY) || "null"); } catch (e) {}
+  if (!saved || !Array.isArray(saved.ids) || state.list.every(q => saved.ids.includes(state.mode === "guess" ? Guess.pack(q) : q.id))) clearRound();
+}
 function clearLast() { try { localStorage.removeItem(LAST_KEY); } catch (e) {} }
 function loadRound() { return readRound(ROUND_KEY, 7, false); }
 function loadLast() { return readRound(LAST_KEY, 30, true); }
@@ -3819,7 +3826,7 @@ function renderResults() {
   const returning = state.finished, guess = state.mode === "guess";   // back from looking at a question again, or from Learn more
   setScreen("results");
   state.finished = true; state.view = state.list.length - 1;
-  if (!state.recorded) { keepRound(LAST_KEY); clearRound(); }   // a result opened again says nothing about a round begun since
+  if (!state.recorded) { keepRound(LAST_KEY); clearOwnRound(); }   // a result opened again says nothing about a round begun since
   try { if (/[?&]c=/.test(location.search)) history.replaceState(history.state, "", location.pathname); } catch (e) {}
   const conf = state.mode === "confidence";
   const s = guess ? Guess.summarize(state.answers) : summarize(state.answers), an = guess ? Guess.analyze(state.answers) : analyze(state.answers);
@@ -3848,7 +3855,7 @@ function renderResults() {
   } else compare = state.bestNote;
   // In a yes-or-no round each row shows misses out of the questions on that side, because a round rarely holds the same number of each.
   const other = an.other ? `
-      <p class="small muted">Not counted here: ${an.other === 1 ? "1 miss on a question that leans" : an.other + " misses on questions that lean"} neither way.</p>` : "";
+      <p class="small muted">Not counted here: ${an.other === 1 ? "1 miss that points" : an.other + " misses that point"} neither way.</p>` : "";
   const split = !(an.under + an.over) ? "" : guess ? `
       <div>${missRow("Reality was wilder", "under", an.under, an.under + an.over, an.under)}${missRow("Reality was tamer", "over", an.over, an.under + an.over, an.over)}</div>
       <p class="small muted">Counting guesses that missed a full point. Wilder means AI does more, spreads faster or has fewer limits than you guessed. Tamer is the opposite. Tap a row to see which.</p>${other}` : `
