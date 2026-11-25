@@ -6,7 +6,7 @@
 <!-- Feedback test: shared by link only. Take this line out to let search engines list the page. -->
 <meta name="robots" content="noindex">
 <title>What's Up With AI? A quick quiz on where AI really stands</title>
-<meta name="description" content="Quick questions about where AI really stands: what it can do, how it behaves and how people are dealing with it. Some of it sounds like science fiction and has already happened.">
+<meta name="description" content="Quick guesses about where AI really stands: what it can do, how it behaves and how people are dealing with it. Some of it sounds like science fiction and has already happened.">
 <!-- Link previews need an absolute address for the picture. These two assume the page is served from
      https://www.scotthuston.com/ai-questions/ ; change them if it lives somewhere else.
      There is deliberately no og:url: it would mark every challenge link as the same page, and some sites then drop the challenge. -->
@@ -14,11 +14,11 @@
 <meta name="twitter:image" content="https://www.scotthuston.com/ai-questions/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="What's Up With AI? Quick questions about where AI really stands.">
+<meta property="og:image:alt" content="What's Up With AI? Ten quick guesses about where AI really stands.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="What's Up With AI?">
 <meta property="og:title" content="What's Up With AI?">
-<meta property="og:description" content="Ten quick questions about where AI really stands. Some of it sounds like science fiction and has already happened. Some of it you'd expect by now, and it hasn't.">
+<meta property="og:description" content="Ten quick guesses about where AI really stands. Some of it sounds like science fiction and has already happened. Some of it you'd expect by now, and it hasn't.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#2742d6">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#2339c4">
@@ -31,7 +31,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* Layout idea: a question sits on a blue field, and the lower edge of the field is the ruler a guess is placed on. Answers and results are
-   a quiet reading column below, with big tap targets and a result card built to be shared. Green, red and amber always mean right, wrong and unsure. */
+   a quiet reading column below, with big tap targets and a result card built to be shared. Green, red and amber always mean right, wrong and close. */
 :root {
   --bg: #f3f4f8;
   --surface: #ffffff;
@@ -172,7 +172,6 @@ main.fielded { max-width: none; padding: 0; gap: 0; min-height: 100vh; min-heigh
 #reveal { padding-bottom: 72px; }
 main.fielded > * { flex: none; }
 main.fielded > .fill { flex: 1 0 auto; display: flex; flex-direction: column; }
-.fill > .yn { flex: 1; max-height: 46rem; }
 .wrap { width: min(100% - 40px, 62rem); margin-inline: auto; }
 .field, .on-field { background: var(--field); color: var(--on-field); }
 .field { padding: 16px 0 28px; }
@@ -231,25 +230,14 @@ main.fielded:empty { background: var(--field); }
 .field .dot.bad { background: var(--f-bad); box-shadow: none; }
 .field .dot.meh { background: var(--f-meh); box-shadow: none; }
 .field .count { color: var(--on-field-2); }
-.field .progress { background: var(--field-deep); }
-.field .progress > div { background: var(--on-field); }
 .field .arrow { background: transparent; border-color: var(--field-line); color: inherit; }
 .field .arrow:hover:not(:disabled) { background: var(--on-field); border-color: var(--on-field); color: var(--field); }
 .dot.pop { animation: pop .3s ease; }
 @keyframes pop { 0% { transform: scale(0.6); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
 .count { font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
-.progress { flex: 1; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
-.progress > div { height: 100%; background: var(--accent); transition: width .25s ease; }
 .q-body { display: flex; flex-direction: column; gap: 10px; padding-top: 16px; }
 .q-body > p { max-width: 48ch; }
 .control:empty { display: none; }
-.yn { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
-.ans { position: relative; min-width: 0; padding-inline: 8px; min-height: clamp(140px, 23vh, 240px); font: 800 clamp(2rem, 12vw, 6rem)/1 var(--font-display); letter-spacing: -0.015em; border: 0; border-radius: 0; background: var(--field-deep); color: var(--on-field); }
-.ans kbd { display: none; position: absolute; top: 14px; right: 16px; font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0; font-weight: 500; color: inherit; border: 1px solid var(--field-line); border-radius: 4px; padding: 0 6px; line-height: 1.6; }
-@media (hover: hover) and (pointer: fine) {
-  .ans kbd { display: block; }
-  .ans:hover:not(:disabled) { background: var(--on-field); color: var(--field); }
-}
 input[type="range"] { width: 100%; accent-color: var(--accent); height: 44px; margin: 0; }
 
 /* Answer reveal */
@@ -274,7 +262,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 44px; ma
 .verdict.bad .verdict-tag { color: var(--bad); }
 .verdict.meh .verdict-tag { color: var(--meh); }
 .verdict-tag svg { width: 20px; height: 20px; flex: none; }
-.verdict-word { font-family: var(--font-display); font-size: 2.3rem; font-weight: 700; line-height: 1.05; }
+.verdict-word { font-family: var(--font-display); font-size: clamp(1.5rem, 6vw, 2.1rem); font-weight: 700; line-height: 1.1; text-wrap: balance; }
 .their { color: var(--muted); padding-top: 4px; }
 /* 100 people lined up by the number each one gave, beside an answer that is an average */
 .lineup { margin: 10px 0 4px; max-width: 30rem; }
@@ -332,7 +320,6 @@ details > .body { padding: 0 14px 14px; display: flex; flex-direction: column; g
 /* Results */
 .result { display: flex; flex-direction: column; gap: 14px; padding: 24px 22px; }
 .score { font-family: var(--font-display); font-weight: 700; font-size: clamp(4.4rem, 23vw, 6.6rem); line-height: 0.92; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
-.score-of { color: var(--muted); font-size: 0.48em; letter-spacing: 0; margin-left: 4px; }
 .after { width: min(100% - 40px, 62rem); margin-inline: auto; padding: 4px 0 72px; display: grid; gap: 22px; }
 .after > div { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
 @media (min-width: 900px) {
@@ -355,15 +342,11 @@ details > .body { padding: 0 14px 14px; display: flex; flex-direction: column; g
 .mark-lab.friend { font-size: 0.92rem; }
 .grid { display: grid; grid-template-columns: repeat(10, minmax(0, 28px)); gap: 6px; }
 .grid i { display: block; aspect-ratio: 1; border-radius: 22%; background: var(--line); animation: pop .3s ease both; animation-delay: calc(var(--i, 0) * 45ms); }
-.grid.many { grid-template-columns: repeat(auto-fill, 14px); gap: 4px; }
-.grid.many i { animation: none; }
 .grid i.good { background: var(--good); }
 .grid i.bad { background: var(--bad); }
 .grid i.meh { background: var(--meh); }
 .finding { font-size: clamp(1.45rem, 5.2vw, 1.85rem); padding-top: 4px; }
-.split { display: grid; grid-template-columns: auto 1fr auto; gap: 6px 12px; align-items: center; font-size: 0.92rem; }
 .bar { height: 10px; background: var(--line); border-radius: 5px; min-width: 60px; overflow: hidden; }
-.bar > div { height: 100%; background: var(--accent); border-radius: 5px; }
 .compare { padding: 10px 14px; border-radius: 10px; background: var(--accent-soft); }
 .result-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding-top: 4px; }
 @media (max-width: 430px) { .result-actions { grid-template-columns: 1fr; } }
@@ -393,23 +376,6 @@ details > .body { padding: 0 14px 14px; display: flex; flex-direction: column; g
 [data-net="LinkedIn"] .disc { background: #0a66c2; color: #fff; }
 [data-net="Reddit"] .disc { background: radial-gradient(closest-side, #fff 80%, #ff4500 81%); color: #ff4500; }
 [data-net="Email"] .disc { background: var(--accent); color: var(--accent-ink); }
-.big-num { font-family: var(--font-mono); font-size: clamp(2.2rem, 10vw, 3rem); font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums; }
-.scale { position: relative; height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--good) 0%, var(--line) 50%, var(--bad) 100%); margin-top: 14px; }
-.scale .mark { position: absolute; top: -7px; width: 4px; height: 26px; background: var(--ink); border-radius: 2px; transform: translateX(-2px); }
-.scale-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); font-family: var(--font-mono); padding-top: 4px; }
-.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-.tile { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: var(--surface); }
-.tile b { display: block; font-family: var(--font-mono); font-size: 1.5rem; font-weight: 500; font-variant-numeric: tabular-nums; }
-.awards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
-.award { border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px; padding: 16px 18px; background: var(--surface); display: flex; flex-direction: column; gap: 8px; }
-.award.miss { border-left-color: var(--bad); }
-.award.hit { border-left-color: var(--good); }
-.award .eyebrow { color: var(--ink); }
-.table-wrap { overflow-x: auto; }
-table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
-th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
-th { font-weight: 600; color: var(--muted); font-size: 0.82rem; }
-td.num, th.num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 .review-item { display: flex; flex-direction: column; gap: 8px; padding: 14px 0; border-bottom: 1px solid var(--line); }
 .review-item:first-child { padding-top: 4px; }
 .review-item:last-child { border-bottom: 0; padding-bottom: 0; }
@@ -441,9 +407,8 @@ button.dot::after { content: ""; position: absolute; inset: -14px -2px; }
 .dot.now.here { outline: 0; }
 .linky { font: inherit; font-weight: 600; color: var(--ink); background: none; border: 0; padding: 0; text-align: left; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; line-height: 1.35; }
 .linky:hover { text-decoration-color: currentColor; }
-.verdict-word.long { font-size: clamp(1.5rem, 6vw, 2.1rem); line-height: 1.1; text-wrap: balance; }
 
-/* Guess mode: the ruler. A guess is placed on the lower edge of the field, then the truth and the scoring bands appear on the same edge. */
+/* The ruler. A guess is placed on the lower edge of the field, then the truth and the scoring bands appear on the same edge. */
 :root { --band-full: #57d3a9; --band-half: #f2c867; }
 .slide { user-select: none; -webkit-user-select: none; }
 .stage { background: var(--field); color: var(--on-field); }
@@ -482,7 +447,7 @@ button.dot::after { content: ""; position: absolute; inset: -14px -2px; }
 @keyframes nudge { 0%, 100% { margin-left: -24px; } 30% { margin-left: -38px; } 70% { margin-left: -10px; } }
 @media (prefers-reduced-motion: reduce) { .g-range.unset ~ .knob, .g-range.unset ~ .knob.nudge { animation: none; } }
 @media (forced-colors: active) {
-  .ans, .pick, .photo { border: 2px solid ButtonText; }
+  .pick, .photo { border: 2px solid ButtonText; }
   .edge { border-top: 2px solid CanvasText; }
   .t, .stem, .span { forced-color-adjust: none; background: CanvasText; }
   .bands > i, .dot, .legend i { forced-color-adjust: none; }
@@ -543,7 +508,7 @@ button.dot::after { content: ""; position: absolute; inset: -14px -2px; }
   .picks { grid-template-columns: 1fr 1fr; gap: 12px; }
   .fill .pick { font-size: 1.28rem; min-height: 104px; padding: 18px 26px; }
 }
-.pick:disabled, .ans:disabled { opacity: 1; cursor: default; }
+.pick:disabled { opacity: 1; cursor: default; }
 .on-field .right, .on-field .pick.right { background: var(--f-good); color: var(--f-ink); }
 .on-field .wrong, .on-field .pick.wrong { background: var(--f-bad); color: var(--f-ink); }
 .on-field .pick.near { background: var(--f-meh); color: var(--f-ink); }
@@ -581,7 +546,7 @@ span.bar { display: block; }
 .missed .small { grid-column: 2; }
 footer { color: var(--muted); font-size: 0.85rem; }
 @media (prefers-reduced-motion: reduce) {
-  .progress > div, .btn, .disc { transition: none; }
+  .btn, .disc { transition: none; }
   .verdict, .dot.pop, .grid i { animation: none; }
 }
 </style>
@@ -603,10 +568,8 @@ setTimeout(function () {
    It is added to shared results. Left empty, the page uses its own address.
    The link-preview image tags in the <head> also carry the public address and need updating if it changes.
    feedbackUrl is the page where people send a note about a question. It is feedback.html in this folder, which needs a form
-   service connected first (see the top of its script). While feedbackUrl is "", the links to it are not shown.
-   modes lists the ways of playing the start screen offers, the first one chosen to begin with: "yesno" and "guess". Leave one out and the page shows no trace of it
-   (the link-preview text in the <head> fits either way of playing). */
-const CONFIG = { siteUrl: "", checked: "November 25, 2026", feedbackUrl: "", modes: ["guess", "yesno"] };
+   service connected first (see the top of its script). While feedbackUrl is "", the links to it are not shown. */
+const CONFIG = { siteUrl: "", checked: "November 25, 2026", feedbackUrl: "" };
 
 /* ---------- Where to learn more ----------
    Shown as the "Keep exploring" card at the end of the results. Neutral data comes first, then the case
@@ -662,10 +625,11 @@ const RESOURCES = [
 ];
 
 /* ---------- Questions ----------
-   a: true means the answer is yes. Every question is worded so the answer is a plain yes or no.
-   worse (optional): "yes" or "no", whichever answer is the wilder one: AI more capable, more autonomous, spreading faster, or less controlled or regulated than the alternative, even when the capability itself is useful and whether or not the news is bad. Leave it out when neither answer is. The draw uses it to give each round as many questions whose true answer is the wilder one as the tamer one, the results use it to say which way a player's misses went (wilder or tamer than they guessed), and the review page counts the split across the bank.
+   The bank of facts. What players are asked is made from it further down: a slider or a short list (GUESS_FORMS), or a statement in a set of four (GUESS_CLAIMS).
+   q and a: the point of the entry as a plain question, and its answer (true for yes). Players are not shown q. a says whether the entry's statement is true.
+   worse (optional): "yes" or "no", whichever answer to q is the wilder one: AI more capable, more autonomous, spreading faster, or less controlled or regulated than the alternative, even when the capability itself is useful and whether or not the news is bad. Leave it out when neither answer is. Rounds use it to mix wilder truths with tamer ones, the results use it to say which way a player's misses went (wilder or tamer than they guessed), and the review page counts the split across the bank.
    group (optional): questions that would give each other away, because one question's wording or revealed answer implies another's answer, share a group name. A quiz holds at most one question from each group.
-   kind (optional): "opinion" for what people think or have said (polls, surveys, statements), "rule" for what a law, court, regulator or company policy says. A round takes one of each per ten questions, never as an opener.
+   kind (optional): "opinion" for what people think or have said (polls, surveys, statements), "rule" for what a law, court, regulator or company policy says. A round takes at most two of each per ten questions.
    rank (optional): 1 to 10, how much the question tells you about where AI stands. 10 is a key idea, 1 is a bit of trivia, and 5 is assumed when it is missing. New players get the high ones first.
    safety (optional): one extra fact, shown under the verdict as "Worth knowing". It has to be a fact from the question's own sources. Never a lesson, a moral or a summing-up. */
 const QUESTIONS = [
@@ -706,7 +670,7 @@ const QUESTIONS = [
 { id:"forecasting", cat:"Forecasting", a:true, worse:"yes", asOf:"November 2026",
   rank:8,
   q:"Can AI predict world events better than most people can?",
-  short:"It can, and it is catching up with the best. AI now does better than the general public on a leading test, and in summer 2026 an AI won an open forecasting contest with hundreds of entrants. In a separate contest that summer, professionals and the best bots came out about even.",
+  short:"They are, and AI is catching up with the best. It now does better than the general public on a leading test, and in summer 2026 an AI won an open forecasting contest with hundreds of entrants. In a separate contest that summer, professionals and the best bots came out about even.",
   detail:"The open contest was the Metaculus Cup, whose questions ranged from oil prices to data-center rules. Bots also took second and fifth place. The winner's developer says he built it in under 150 hours for a couple of thousand dollars. Part of a bot's edge is stamina: it can research every question and update its forecasts whenever the evidence changes. In the separate contest, ten professional forecasters as a team finished a quarter of a point per question ahead of the best bots as a team, well within chance. In the spring they had led by just over a point, also within chance, and nine of the ten beat every single bot. A separate benchmark in July 2026 put the best AI systems about level with elite human forecasters, using human forecasts last collected in 2024.",
   safety:"In a series of contests between AI bots and professional forecasters, the bots trailed by about 9 points in late 2024, 20 in mid-2025, one in spring 2026 and a quarter of a point that summer.",
   src:[["Exobrain: AI wins at forecasting","https://www.exobrain.co.uk/insights/ai-wins-at-forecasting"],["Forecasting Research Institute: AI models have likely reached parity with superforecasters","https://forecastingresearch.substack.com/p/ai-models-have-likely-reached-parity"],["Metaculus: Pros beat bots, but the gap is nearly gone","https://www.lesswrong.com/posts/wZBbDqzfBjYG58CxK/futureeval-spring-results-pros-beat-bots-but-the-gap-is"],["Metaculus: AI forecasting in 2026, what 11 analyses say","https://www.lesswrong.com/posts/a82q6yd8zKpYk56cF/ai-forecasting-in-2026-what-11-analyses-say"],["Metaculus: FutureEval methodology, professionals against bots","https://www.metaculus.com/futureeval/methodology/"],["Metaculus: Summer 2026 result, added in November 2026","https://github.com/Metaculus/metaculus/pull/5292"]] },
@@ -714,7 +678,7 @@ const QUESTIONS = [
 { id:"hurricanes", cat:"Forecasting", a:true, worse:"yes", asOf:"October 2026",
   rank:2,
   q:"Can AI predict hurricane paths better than the official forecasts do?",
-  short:"Google DeepMind's does. Through early September 2026 its hurricane tracks were more accurate than the National Hurricane Center's official forecasts and the other models it was compared with.",
+  short:"Google DeepMind's has. Through early September 2026 its hurricane tracks were more accurate than the National Hurricane Center's official forecasts and the other models it was compared with.",
   detail:"It was the second year running that it beat the official forecasts at most lead times. In October 2026 it correctly called a Florida Panhandle landfall when conventional models pointed toward Louisiana. A longtime hurricane expert notes that many other AI weather models are unproven.",
   src:[["Michael Lowry: The AI hurricane model that continues to blow away the competition","https://michaelrlowry.substack.com/p/the-ai-model-that-continues-to-blow"],["WUSF: How AI is transforming hurricane forecasts","https://www.wusf.org/2026-10-26/how-ai-is-transforming-hurricane-forecasts"]] },
 
@@ -791,7 +755,7 @@ const QUESTIONS = [
 { id:"escape-hack", cat:"Security", a:true, worse:"yes", group:"hugging-face-incident", asOf:"November 18, 2026",
   rank:10,
   q:"Have AI agents broken out of a test and hacked a real company?",
-  short:"OpenAI's did, the company disclosed in July 2026. In a hacking test with reduced safeguards, its models escaped the testing setup and broke into the systems of another AI company, Hugging Face, with no human directing the steps.",
+  short:"The company disclosed it in July 2026. In a hacking test with reduced safeguards, its models escaped the testing setup and broke into the systems of another AI company, Hugging Face, with no human directing the steps.",
   detail:"OpenAI called the incident unprecedented and, ABC News reported at the time, the first known autonomous AI cyberattack. It happened during cybersecurity evaluations, when its agents got past controls meant to keep them off the internet. Hugging Face said the intrusion was driven end to end by an AI agent system. Anthropic has since disclosed similar cases, and Meta and Google have confirmed theirs. The cases at those three companies came from hacking tests set up by the same outside firm, in which the AI had internet access by mistake. Four of Anthropic's models got into real outside systems. Anthropic says it found no sign that any of them pursued goals beyond its assigned task or tried to evade oversight. Google's model got into three real companies' systems by guessing logins. Google says the model stopped each time before finishing. In November 2026 California's attorney general sued OpenAI over the attack, saying the company had admitted losing control of its AI agents at least 80 times during testing.",
   safety:"In its written reasoning, one agent called the attack 'arguably unauthorized' and risky, but a way to reach its goal.",
   src:[["ABC News: OpenAI says its AI models escaped testing environment, launched their own hack of other company","https://abcnews.com/Technology/openai-ai-models-escaped-testing-environment-launched-hack/story?id=134981298"],["OpenAI: The Hugging Face incident and the road ahead","https://openai.com/index/hugging-face-incident-and-the-road-ahead/"],["Anthropic: prospectus filed with the SEC, November 18, 2026","https://www.sec.gov/Archives/edgar/data/2130357/000162828026074944/anthropicpbc-424b4.htm"],["SecurityWeek: Widened scan turns up fourth rogue Claude cyber incident","https://www.securityweek.com/widened-scan-turns-up-fourth-rogue-claude-cyber-incident/"],["California attorney general: lawsuit against OpenAI","https://oag.ca.gov/node/632941"],["Al Jazeera: Google's Gemini AI hacks 3 companies in security test, then stops","https://www.aljazeera.com/news/2026/9/19/googles-gemini-ai-hacks-3-companies-in-security-test-then-stops"],["Al Jazeera: Meta's AI model follows rivals in revealing hacks of outside systems","https://www.aljazeera.com/news/2026/8/6/metas-ai-model-follows-rivals-in-revealing-hacks-of-outside-systems"]] },
@@ -904,7 +868,7 @@ const QUESTIONS = [
 { id:"hire-humans", cat:"Autonomy", a:true, worse:"yes", group:"ai-store", asOf:"November 2026",
   rank:8,
   q:"Can AI get things done in the physical world without a robot?",
-  short:"It can hire people. A site called RentAHuman, opened in February 2026, was built for AI agents to do that. In a separate experiment, an AI running a San Francisco store found painters on Yelp, paid them, and hired two employees through ordinary job sites.",
+  short:"A site called RentAHuman, opened in February 2026, was built for AI agents to do that. In a separate experiment, an AI running a San Francisco store found painters on Yelp, paid them, and hired two employees through ordinary job sites.",
   detail:"The store is an experiment by the company Andon Labs, which is the staff's legal employer. Its AI posted the job ads, held the interviews by phone and chose whom to hire. RentAHuman lists more than 787,000 profiles, offering errands, deliveries and photos on request, though it says having one does not mean someone is active. A Wired reporter who signed up in its first weeks found little real work, mostly publicity for AI startups. Of 303 jobs on the site that researchers studied, about a third had come in through software. Some asked for help with abuse, such as impersonating people.",
   safety:"The store's AI did not always say what it was. One applicant noticed its camera was off and only then learned that the interviewer was an AI.",
   src:[["Andon Labs: We gave an AI a 3-year retail lease in SF and asked it to make a profit","https://andonlabs.com/blog/andon-market-launch"],["RentAHuman: About","https://rentahuman.ai/about"],["Wired: I tried RentAHuman, where AI agents hired me to hype their AI startups","https://www.wired.com/story/i-tried-rentahuman-ai-agents-hired-me-to-hype-their-ai-startups/"],["Security Risks of AI Agents Hiring Humans: An Empirical Marketplace Study","https://arxiv.org/abs/2602.19514"]] },
@@ -1019,7 +983,7 @@ const QUESTIONS = [
 { id:"dogfight", cat:"Robots", a:true, worse:"yes", group:"military-ai", asOf:"November 2, 2026",
   rank:6,
   q:"Can AI fly a real fighter jet in mock combat?",
-  short:"It can. In April 2026 an AI steered a modified F-16 through 27 intercepts of another crewed plane. That July the US Air Force said a semi-autonomous fighter drone had fired a missile at a simulated target, after a person gave the order.",
+  short:"In April 2026 an AI steered a modified F-16 through 27 intercepts of another crewed plane. That July the US Air Force said a semi-autonomous fighter drone had fired a missile at a simulated target, after a person gave the order.",
   detail:"The modified jet is the X-62A, a flying test bed that can mimic other aircraft and now tries out self-flying software. In 2023 an AI flew it in practice dogfights against an F-16 flown by a person, with safety pilots on board who never needed to take over. In the April 2026 flights the AI used an infrared sensor to find and chase a T-38, over eight flights, according to Lockheed Martin. In July DARPA said an AI was also flying a standard F-16 fitted with a conversion kit, with a human pilot in the cockpit who can switch it off. The drone, Anduril's YFQ-44A, is one of two models the Air Force has ordered to fly alongside crewed jets.",
   src:[["El Cronista: US Armed Forces adapted the X-62A fighter jet with AI","https://www.cronista.com/en/today/us-armed-forces-adapted-the-x-62a-fighter-jet-with-ai-to-replace-pilots-in-these-combat-maneuvers-detecting-tracking-and-intercepting-enemy-aircraft/"],["DARPA: DARPA, US Air Force fly AI-controlled F-16","https://www.darpa.mil/news/2026/darpa-us-air-force-fly-ai-controlled-f-16"],["The Register: US Air Force says AI-controlled F-16 has been dogfighting with humans","https://theregister.com/2024/04/18/darpa_f16_flight"],["Air & Space Forces: Anduril YFQ-44 fires live air-to-air missile in landmark test","https://www.airandspaceforces.com/anduril-yfq-44-fires-live-missile-landmark-cca-test/"],["DefenseScoop: Air Force live-fire test of a missile from a drone","https://defensescoop.com/2026/07/15/air-force-live-fire-test-missile-anduril-cca-drone/"]] },
 { id:"ai-war", cat:"Security", a:true, worse:"yes", group:"military-ai", asOf:"September 2026",
@@ -1353,7 +1317,7 @@ const QUESTIONS = [
 { id:"auto-exploit", cat:"Security", a:true, worse:"yes", group:"automated-attacks", asOf:"November 17, 2026",
   rank:9,
   q:"Has Google reported hackers using AI that finds software flaws and attacks through them on its own?",
-  short:"It has, for the first time in 2026. Google says that AI agents on a server hackers had left open found flaws in popular web software, wrote attacks on them and launched them, with no person involved.",
+  short:"Google reported it for the first time in 2026. It says that AI agents on a server hackers had left open found flaws in popular web software, wrote attacks on them and launched them, with no person involved.",
   detail:"The server held data stolen from victims, and its files pointed to Russian-speaking hackers going after French media, entertainment and education websites. Google's claim covers finding flaws and launching attacks. CyberScoop reported that its analysts believe the whole attack ran without a person, though Google's report describes fully autonomous break-ins as where such tools are heading. Google says the tools trade stealth for speed, which makes them easier to spot. The first ransomware attack credited to an AI, reported in July 2026, still needed a person. The AI handled the technical steps, from breaking in to writing the ransom note, but someone set up the servers, chose the victim and supplied stolen login details.",
   safety:"In the case Google described, the flaws already had fixes. They were not unknown ones.",
   src:[["Google Threat Intelligence Group: Agentic threat activity crosses a significant threshold","https://cloud.google.com/blog/topics/threat-intelligence/agentic-threat-activity-crosses-a-significant-threshold"],["CyberScoop: Google says Russian-speaking hackers ran the first fully automated AI cyberattack","https://cyberscoop.com/google-fully-automated-ai-cyberattack/"],["Help Net Security: Google finds AI agent writing and launching exploits with no human in the loop","https://www.helpnetsecurity.com/2026/11/17/ai-powered-cyberattacks-gtig-report/"],["TechTarget: Google finds AI agents autonomously turning patches into exploits","https://www.techtarget.com/news/google-finds-ai-agents-autonomously-turning-patches-into-exploits/874837/"],["TechCrunch: The 'first' AI-run ransomware attack still needed a human","https://techcrunch.com/2026/07/06/the-first-ai-run-ransomware-attack-still-needed-a-human/"],["CyberScoop: Sysdig clocks first documented case of agentic ransomware","https://cyberscoop.com/sysdig-judepuffer-ai-agentic-ransomware-attack/"]] },
@@ -1380,7 +1344,7 @@ const QUESTIONS = [
 { id:"takeover-warning", cat:"Risk and rules", a:true, worse:"yes", group:"insider-warnings", kind:"opinion", asOf:"November 2026",
   rank:8,
   q:"Has a board member of the foundation controlling OpenAI warned AI could take over within a year?",
-  short:"Paul Christiano has. The AI-safety researcher said in November 2026 that the risk over the next year looks more like 10% than 1%. He was speaking for himself.",
+  short:"Paul Christiano did. The AI-safety researcher said in November 2026 that the risk over the next year looks more like 10% than 1%. He was speaking for himself.",
   detail:"On a podcast he said the world had moved from 'some hypothetical risk at some point in the future to there being a pretty severe risk even over the next 6-12 months'. A week earlier he told a lecture audience that if AI companies build as fast as they can, the odds within three years are about a coin flip. He joined the board in September 2026 to help oversee safety. Others reject such numbers: in 2024 the Princeton researchers Arvind Narayanan and Sayash Kapoor argued that forecasts of AI wiping out humanity are too unreliable to base policy on.",
   safety:"This is one person's estimate, not a measurement. In September 2026 he had put the risk of a catastrophic loss of human control within a year at 4%, and acknowledged that such figures are subjective judgments.",
   src:[["The Next Web: OpenAI board member puts the risk of an AI takeover next year at about 10%","https://thenextweb.com/news/paul-christiano-ai-takeover-hinton-lectures-openai-board"],["Gizmodo: OpenAI board member tells audience an AI accident is the most likely thing to kill them","https://gizmodo.com/openai-board-member-tells-audience-an-ai-accident-is-the-most-likely-thing-to-kill-them-2000838491"],["Dwarkesh Podcast: Paul Christiano","https://www.dwarkesh.com/p/paul-christiano-2"],["OpenAI: Paul Christiano joins OpenAI Foundation Board","https://openai.com/index/paul-christiano-joins-openai-foundation-board/"],["Narayanan and Kapoor: AI existential risk probabilities are too unreliable to inform policy","https://www.normaltech.ai/p/ai-existential-risk-probabilities"]] },
@@ -1513,7 +1477,7 @@ const QUESTIONS = [
 { id:"superintelligence-statement", cat:"Society", a:true, worse:"yes", group:"godfathers", kind:"opinion", asOf:"October 2026",
   rank:9,
   q:"Have most of the 'godfathers of AI' called for a ban on building superintelligent AI?",
-  short:"Two of the three scientists known by that name have. Geoffrey Hinton and Yoshua Bengio signed a statement in October 2025 calling for a prohibition on developing superintelligence until that can be done safely and has strong public support.",
+  short:"Geoffrey Hinton and Yoshua Bengio signed a statement in October 2025 calling for a prohibition on developing superintelligence until that can be done safely and has strong public support.",
   detail:"The statement, organized by the Future of Life Institute, calls for a prohibition on developing superintelligence until there is broad scientific consensus that it will be done safely and controllably, and strong public buy-in. In October 2026 Hinton and Bengio also signed a letter with about 400 scientists asking for an international body to oversee how powerful AI is contained, which stopped short of a ban. Hinton, Bengio and Yann LeCun, often called the godfathers of AI, shared the 2018 Turing Award for the neural-network research behind modern AI, and Hinton is also a Nobel laureate. The other signers run from Apple co-founder Steve Wozniak and Richard Branson to Steve Bannon, Glenn Beck and Susan Rice, and Prince Harry and Meghan.",
   safety:"The third, Yann LeCun, did not sign it and has said recent AI incidents mostly reflect engineering failures. The heads of the big AI companies did not sign it either.",
   src:[["Statement on Superintelligence","https://superintelligence-statement.org/"],["NBC News: From Prince Harry to Steve Bannon, hundreds call for ban on AI superintelligence","https://www.nbcnews.com/tech/innovation/ai-superintelligence-ban-from-prince-harry-to-steve-bannon-unlikely-c-rcna238747"],["Future of Life Institute: Prominent scientists, faith leaders, policymakers and artists call for a prohibition on superintelligence","https://futureoflife.org/press-release/prominent-scientists-faith-leaders-policymakers-and-artists-call-for-a-prohibition-on-superintelligence/"],["The Register: Hinton quits Google, warns of AI danger","https://www.theregister.com/2023/05/01/ai_geoffrey_hinton_resigns/"],["BBC News: AI 'godfather' Yoshua Bengio feels 'lost' over life's work","https://www.bbc.com/news/technology-65760449"],["Reuters, via Yahoo: Scientists call for international body to oversee advanced AI","https://www.yahoo.com/news/science/articles/scientists-call-international-body-oversee-105629126.html"],["MIT Technology Review: The AI industry has taken a doomer turn. What now?","https://www.technologyreview.com/2026/09/14/1144048/the-ai-industry-has-taken-a-doomer-turn-what-now/"]] },
@@ -1830,7 +1794,7 @@ const QUESTIONS = [
 { id:"vending-cartel", cat:"AI behavior", a:false, worse:"no", group:"deception", asOf:"September 24, 2026",
   rank:3,
   q:"In a business simulation, did AIs keep the deals they made with each other?",
-  short:"All three broke them. Each ran a vending machine. One of OpenAI's models talked the others into charging at least $2.15 a bottle, then at once dropped its own price to $2.14. Claude broke the most truces, eleven.",
+  short:"All three broke the deals they made. Each ran a vending machine. One of OpenAI's models talked the others into charging at least $2.15 a bottle, then at once dropped its own price to $2.14. Claude broke the most truces, eleven.",
   detail:"In the July 2026 contest, run by the testing company Andon Labs, GPT-5.6 Sol, Claude Opus 5 and Kimi K3 each ran a vending machine on the same tourist street for a simulated year, with orders to make more money than the others. Claude Opus 5 finished just behind GPT-5.6 Sol and well ahead of Kimi K3. Along the way it ignored customers who were owed refunds and slipped bribes and threats into its emails to the other machines.",
   safety:"In a September round, the newer Claude Opus 5.5 considered colluding about thirty times and refused every time. It still lied to suppliers and refused some refunds.",
   src:[["TechCrunch: Claude Opus 5 became downright ruthless when tasked with running a vending machine","https://techcrunch.com/2026/07/29/claude-opus-5-became-downright-ruthless-when-tasked-with-running-a-vending-machine/"],["Andon Labs: Opus 5.5, GPT-6 Sol and Grok 4.7 on Vending-Bench","https://andonlabs.com/blog/opus-5-5-gpt-6-sol-grok-4-7-vending-bench"],["Andon Labs: Vending-Bench Arena","https://andonlabs.com/evals/vending-bench-arena"]] },
@@ -2052,32 +2016,6 @@ const QUESTIONS = [
   src:[["Tice and colleagues: Alignment pretraining, AI discourse causes self-fulfilling (mis)alignment","https://arxiv.org/abs/2601.10160"],["Anthropic: Teaching Claude why","https://www.anthropic.com/research/teaching-claude-why"]] },
 ];
 
-/* ---------- Scoring (pure functions) ---------- */
-// p is the stated probability that the answer is yes, 0 to 1. outcome is 1 for yes, 0 for no.
-function brierPoints(p, outcome) { const off = Math.round((p - outcome) * 100); return off * off; }   // whole points squared, so that equally good answers always add up to the same sum
-function brierOne(p, outcome) { return brierPoints(p, outcome) / 1e4; }
-function summarize(answers) {
-  const n = answers.length;
-  let brier = 0, right = 0, wrong = 0, unsure = 0, sureSum = 0;
-  const buckets = {};
-  for (const r of answers) {
-    const o = r.a ? 1 : 0;
-    brier += brierPoints(r.p, o);
-    const conf = Math.max(r.p, 1 - r.p);
-    if (r.p !== 0.5) sureSum += conf;
-    const key = Math.round(conf * 100);
-    buckets[key] = buckets[key] || { n: 0, right: 0 };
-    buckets[key].n++;
-    if (r.p === 0.5) unsure++;
-    else if ((r.p > 0.5) === r.a) { right++; buckets[key].right++; }
-    else wrong++;
-  }
-  // sure and hit cover only the answers that leaned one way.
-  const leaned = right + wrong;
-  // milli: the score in whole thousandths, the one figure that the link carries and every screen shows.
-  return { n, brier: n ? brier / 1e4 / n : 0, milli: n ? Math.round(brier / (10 * n)) : 0, right, wrong, unsure, leaned, sure: leaned ? sureSum / leaned : 0, hit: leaned ? right / leaned : 0, buckets };
-}
-
 /* ---------- Helpers ---------- */
 const $app = document.getElementById("app");
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
@@ -2130,7 +2068,6 @@ const GLOSSARY = [
   ["AtCoder", /\bAtCoder\b/, "A Japanese site that runs international programming contests."],
   ["prompt", /\bprompts?\b/i, "The instruction or question a person types to an AI. Typing 'a cat in a spacesuit' into an image generator is a prompt."],
   ["CAPTCHA", /\bCAPTCHAs?\b/, "A test a website uses to tell people from bots, such as reading distorted letters or picking the traffic lights in a grid of photos."],
-  ["Brier score", /Brier score/i, "A score for probability estimates. Square the gap between your probability and what happened, then average. 0 is perfect and 0.25 is what you get by always saying 50%."],
   ["mining cryptocurrency", /min(?:ed|ing) cryptocurrency/i, "Earning digital money by having computers do huge amounts of calculation."]
 ];
 // Turns plain text into safe HTML, with the first occurrence of each glossary term made tappable.
@@ -2188,7 +2125,7 @@ function lineupHtml(id) {
       <div class="lu-ends"><span>least worried, ${all[0]}%</span><span>most worried, ${all[99]}%</span></div>
     </figure>`;
 }
-/* How guess mode asks each question. Answers, notes and sources come from QUESTIONS; only the way of asking is here.
+/* How each question is asked. Answers, notes and sources come from QUESTIONS; only the way of asking is here.
    GUESS_FORMS, by question id (a key ending in ~2 is a second slider for the same question, which must be in a group):
      type "pct" is a 0 to 100 slider, "lin" a slider from min to max, "log" one where each step multiplies, "pick" a short list.
      truth and truthText; full (one point) and half (half a point); wild ("high" or "low": which way reality is wilder than a guess).
@@ -2196,8 +2133,8 @@ function lineupHtml(id) {
      unit, on a "log" slider: usd, cents, count, years, months, days (hours below a day), hours, times, or gallons (water, in cups and spoons below a gallon).
      hint: the grey line under the question. refs: familiar values marked on the slider, as [name, value], or [name, value, 1] where the name says the value. fuzzy: do not say how far off a guess was.
      floor: the truth is a reported minimum, so a higher guess is not called too high. cap: a reported maximum, so a lower one is not called too low.
-     skip: drop that many opening sentences of the question's short answer (they reply to the yes-or-no wording). short: replace it.
-     check: strings that must still be in the question. If one is gone, the number may have moved, and it is asked as yes or no until this is fixed. */
+     skip: drop that many opening sentences of the entry's short answer (they reply to its q, which is not what is asked here). short: replace it.
+     check: strings that must still be in the entry. If one is gone, the number may have moved, and the question is left out until this is fixed. */
 const GUESS_FORMS = {
   "imo": { type: "lin", min: 0, max: 42, unit: " out of 42", q: "What was the best score an AI maker reported on the 2026 math olympiad for high-school students?", truth: 42, truthText: "42 out of 42", full: [42, 42], half: [38, 42], wild: "high", check: ["perfect 42 out of 42"] },
   "math-papers": { type: "pct", q: "What share of new math papers say that AI was used?", hint: "On the research site arXiv, in October 2026. In April it was 4%.", truth: 48, truthText: "48%", full: [42, 54], half: [32, 64], wild: "high", check: ["48% of the math papers"] },
@@ -2297,7 +2234,7 @@ const GUESS_FORMS = {
   "good-stories": { type: "pct", q: "A small AI read extra text about AI doing the right thing. How often did it then pick the harmful option?", hint: "Without it, 45% of the time.", truth: 9, truthText: "9% of the time", full: [5, 14], half: [1, 24], wild: "high", check: ["9% of the time instead of 45%"], short: "In a January 2026 study, that was down from 45%. At Anthropic, stories about good AI plus other documents cut misbehavior in tests by over two-thirds." },
   "escape-hack~2": { type: "lin", min: 0, max: 20, q: "How many AI companies have said their own AI broke into real outside systems during tests?", truth: 4, floor: true, truthText: "At least four", full: [4, 5], half: [3, 7], wild: "high", check: ["Meta and Google have confirmed theirs"], short: "OpenAI, Anthropic, Meta and Google, all in 2026. Google says its model stopped each time before finishing." }
 };
-/* GUESS_CLAIMS: the rest, each as a plain statement with the answer it was written for, shown four at a time. */
+/* GUESS_CLAIMS: the rest, each as a plain statement and whether it is true, which must match the entry's a. Shown four at a time. */
 const GUESS_CLAIMS = {
   "agi-arrived": ["Experts agree that AI has reached human-level intelligence", false],
   "chats-train": ["Unless you change a setting, OpenAI can train its AI on chats in your personal ChatGPT account", true],
@@ -2445,17 +2382,14 @@ function leanOf(q) {
   if (q.worse !== "yes" && q.worse !== "no") return "neutral";
   return (q.worse === "yes") === !!q.a ? "wild" : "tame";
 }
-// good = leaned the right way, bad = leaned the wrong way, meh = sat at 50%. In guess mode meh is a guess that was close.
-function markOf(r) { return r.it ? (r.grade === 1 ? "good" : r.grade === 0 ? "bad" : "meh") : r.p === 0.5 ? "meh" : ((r.p > 0.5) === r.a ? "good" : "bad"); }
+// good is a full point, meh half a point for a near miss, and bad none.
+function markOf(r) { return r.grade === 1 ? "good" : r.grade === 0 ? "bad" : "meh"; }
 function reducedMotion() { try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } }
-function minutes(n, mode) { const m = Math.max(1, Math.round(n * (mode === "quick" ? 24 : 30) / 60)); return m + (m === 1 ? " minute" : " minutes"); }
-// Which ways of playing the page offers. "quick" and "confidence" are the two ways to answer yes or no.
-const HAS_GUESS = CONFIG.modes.includes("guess"), HAS_YESNO = CONFIG.modes.includes("yesno") || !HAS_GUESS;
-function okMode(m) { return m === "guess" ? (HAS_GUESS ? "guess" : "quick") : !HAS_YESNO ? "guess" : m === "confidence" ? "confidence" : "quick"; }
-// Scores hold halves in guess mode.
+function minutes(n) { const m = Math.max(1, Math.round(n / 2)); return m + (m === 1 ? " minute" : " minutes"); }
+// Scores hold halves.
 function pts(n) { return Number.isInteger(n) ? String(n) : (n > 1 ? Math.floor(n) : "") + "½"; }
-function theirPoints(ch) { return ch.theirs.reduce((sum, x) => sum + (ch.mode === "guess" ? x / 2 : x === 2 ? 1 : 0), 0); }
-function roundPoints(r) { return r.mode === "guess" ? r.ps.reduce((sum, g, i) => sum + Guess.grade(r.list[i], g), 0) : r.ps.filter((p, i) => markOf({ p, a: r.list[i].a }) === "good").length; }
+function theirPoints(ch) { return ch.theirs.reduce((sum, x) => sum + x / 2, 0); }
+function roundPoints(r) { return r.ps.reduce((sum, g, i) => sum + Guess.grade(r.list[i], g), 0); }
 function seenCount() { return store.seen.filter(id => BY_ID[id]).length; }
 
 /* GUESS_FACES: which of four photos was made by AI. ai is the file made by AI and real the three photographs, all the same size
@@ -2480,15 +2414,14 @@ const GUESS_FACES = [
 ];
 // The photos are separate files. Where they are not beside the page (a copy of this file alone), no photo question is dealt.
 const PHOTOS = { here: false, checked: Promise.resolve() };
-if (GUESS_FACES.length && CONFIG.modes.includes("guess")) { const im = new Image(); PHOTOS.checked = new Promise(done => { im.onload = () => { PHOTOS.here = true; done(); }; im.onerror = done; }); im.src = GUESS_FACES[0].ai; }
-/* ---------- Guess mode ----------
-   The same questions, asked so that being close counts. GUESS_FORMS turns a question into a slider or a short list,
+if (GUESS_FACES.length) { const im = new Image(); PHOTOS.checked = new Promise(done => { im.onload = () => { PHOTOS.here = true; done(); }; im.onerror = done; }); im.src = GUESS_FACES[0].ai; }
+/* ---------- Asking, grading and dealing ----------
+   Questions are asked so that being close counts. GUESS_FORMS turns an entry into a slider or a short list,
    GUESS_CLAIMS into a plain statement (shown four at a time), GUESS_QUOTES adds a few "who said it" picks, and GUESS_FACES
    asks which of four photos was made by AI.
-   A form names the exact figures it was written from (check). When one is no longer in the question's text, or a
-   statement's answer has flipped, the question is asked as yes or no until the table is brought up to date. */
+   A form names the exact figures it was written from (check). When one is no longer in the entry's text, or a
+   statement has stopped being true or false, the question is left out until the table is brought up to date. */
 const Guess = (() => {
-  const LENGTHS = [10, 20];
   const comma = n => Math.round(n).toLocaleString("en-US");
   const two = n => Number(n.toPrecision(2));
   const big = (n, money) => {
@@ -2548,22 +2481,22 @@ const Guess = (() => {
   const stops = f => f.type === "pct" ? 100 : f.type === "log" ? 600 : Math.round((f.max - f.min) / (f.step || 1));
 
   /* How each question in the bank is asked. */
-  const NUM = [], CLAIM = [], YN = [], QUOTE = [], FACE = [], adrift = [];
+  const NUM = [], CLAIM = [], QUOTE = [], FACE = [], adrift = [];
   for (const q of QUESTIONS) {
     const f = GUESS_FORMS[q.id], c = GUESS_CLAIMS[q.id], text = [q.q, q.short, q.detail, q.safety || ""].join("\n");
     const holds = x => (x.check || []).every(s => text.includes(s));
     if (f && holds(f)) NUM.push({ kind: f.type, id: q.id, f, q });
     else if (c && c[1] === q.a) CLAIM.push({ id: q.id, text: c[0], q });
-    else { YN.push({ kind: "yn", id: q.id, q }); adrift.push(q.id); }
+    else adrift.push(q.id);
     // A question with two good numbers can have a second slider. Only a grouped one, so that a round never holds both.
     const second = q.group && GUESS_FORMS[q.id + "~2"];
     if (second && holds(second)) NUM.push({ kind: second.type, id: q.id + "~2", f: second, q });
   }
   for (const x of GUESS_QUOTES) QUOTE.push({ id: x.id, x, q: { id: x.id, cat: "Who said it", group: x.group, rank: 7, q: x.q, short: x.short, detail: "", src: x.src } });
   for (const x of GUESS_FACES) FACE.push({ id: x.id, x: { ...x, options: [x.ai].concat(x.real) }, q: { id: x.id, cat: "Media", group: x.group, rank: 7, q: x.q, short: x.short, detail: "", src: x.src } });
-  if (adrift.length && CONFIG.modes.includes("guess")) console.warn("Guess mode asks these as yes or no, because their form or statement no longer matches the question: " + adrift.join(", "));
+  if (adrift.length) console.warn("These are left out, because their slider, list or statement no longer matches the entry: " + adrift.join(", "));
   const index = list => Object.assign(Object.create(null), Object.fromEntries(list.map(x => [x.id, x])));
-  const numById = index(NUM), claimById = index(CLAIM), ynById = index(YN), quoteById = index(QUOTE.concat(FACE));
+  const numById = index(NUM), claimById = index(CLAIM), quoteById = index(QUOTE.concat(FACE));
   const extra = new Set([...NUM.filter(x => x.id !== x.q.id), ...QUOTE, ...FACE].map(x => x.id));   // ids that are not questions in the bank
 
   function makeQuad(claims) {
@@ -2580,11 +2513,12 @@ const Guess = (() => {
     return { kind: "pick", quote: true, id: o.id, q: o.q, order, f: { type: "pick", q: o.x.q, options, answer: order.indexOf(0), truthText: o.x.options[0], short: o.x.short } };
   }
   const idsOf = it => it.kind === "quad" ? it.claims.map(c => c.id) : [it.id];
-  const titleOf = it => it.kind === "quad" ? (it.oddFalse ? "Three of these are true. Which one isn't?" : "Only one of these is true. Which one?") : it.kind === "yn" ? it.q.q : it.f.q;
-  const truthOf = it => it.kind === "quad" ? (it.oddFalse ? "Not true: " : "True: ") + it.claims[it.answer].text : it.kind === "yn" ? (it.q.a ? "Yes" : "No") : it.f.truthText;
-  const bankOf = it => it.kind === "quad" ? it.claims[it.answer].q : it.q;   // the question whose answer and sources are shown
+  const titleOf = it => it.kind === "quad" ? (it.oddFalse ? "Three of these are true. Which one isn't?" : "Only one of these is true. Which one?") : it.f.q;
+  const truthOf = it => it.kind === "quad" ? (it.oddFalse ? "Not true: " : "True: ") + it.claims[it.answer].text : it.f.truthText;
+  const bankOf = it => it.kind === "quad" ? it.claims[it.answer].q : it.q;   // the entry whose answer and sources are shown
+  const askedOf = it => it.kind === "quad" ? it.claims[it.answer].text : it.f.q;   // the words it was put in
   const optionsOf = it => it.kind === "quad" ? it.claims.map(c => c.text) : it.f.options;
-  const saidOf = r => r.it.kind === "quad" ? r.it.claims[r.g].text : r.it.kind === "pick" ? r.it.f.options[r.g] : r.it.kind === "yn" ? (r.g ? "Yes" : "No") : say(r.it.f, r.g);
+  const saidOf = r => r.it.kind === "quad" ? r.it.claims[r.g].text : r.it.kind === "pick" ? r.it.f.options[r.g] : say(r.it.f, r.g);
   function answerText(it) {
     const f = it.f;
     if (f && f.short) return f.short;
@@ -2598,7 +2532,6 @@ const Guess = (() => {
   const within = (g, [a, b]) => g >= a && g <= b;
   function grade(it, g) {
     if (it.kind === "quad") return g === it.answer ? 1 : 0;
-    if (it.kind === "yn") return g === !!it.q.a ? 1 : 0;
     const f = it.f;
     if (f.type === "pick") return g === f.answer ? 1 : (f.near || []).includes(g) ? 0.5 : 0;
     return within(g, f.full) ? 1 : within(g, f.half) ? 0.5 : 0;
@@ -2606,8 +2539,8 @@ const Guess = (() => {
   /* Which way a miss went: "wilder" when reality is wilder than the guess, "tamer" when it is tamer, null for a full point or a question that leans neither way. */
   function lean(it, g) {
     if (grade(it, g) === 1) return null;
-    if (it.kind === "yn" || it.kind === "quad") {
-      const q = it.kind === "yn" ? it.q : it.claims[g].q;   // in a set of four, the statement picked is the one the player had wrong
+    if (it.kind === "quad") {
+      const q = it.claims[g].q;   // the statement picked is the one the player had wrong
       if (q.worse !== "yes" && q.worse !== "no") return null;
       return (q.worse === "yes") === !!q.a ? "wilder" : "tamer";
     }
@@ -2616,7 +2549,7 @@ const Guess = (() => {
     const low = g < (f.type === "pick" ? f.answer : f.truth);
     return (f.wild === "high") === low ? "wilder" : "tamer";
   }
-  const valid = (it, g) => it.kind === "yn" ? typeof g === "boolean" : typeof g === "number" && Number.isFinite(g) && (it.kind === "quad" ? [0, 1, 2, 3].includes(g) : it.kind === "pick" ? Number.isInteger(g) && g >= 0 && g < it.f.options.length : pos(it.f, g) > -0.02 && pos(it.f, g) < 1.02);   // rounding can put a stop a hair outside the slider
+  const valid = (it, g) => typeof g === "number" && Number.isFinite(g) && (it.kind === "quad" ? [0, 1, 2, 3].includes(g) : it.kind === "pick" ? Number.isInteger(g) && g >= 0 && g < it.f.options.length : pos(it.f, g) > -0.02 && pos(it.f, g) < 1.02);   // rounding can put a stop a hair outside the slider
   const result = (it, g) => ({ id: it.id, it, g, grade: grade(it, g), lean: lean(it, g) });
   function compare(f, g) {
     if (f.type === "pick") return "";
@@ -2694,7 +2627,7 @@ const Guess = (() => {
     // A photo question comes up in about six rounds of ten, and each only until the player has seen it.
     if (PHOTOS.here && !store.noPhotos && Math.random() < 0.6) for (const o of order(FACE, 4)) if (!photo && !seen.has(o.id) && fits(o)) rest.push(photo = makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
     if (photo && !ahead) preload([photo]);
-    const items = order(NUM.concat(YN), 5), ends = order(NUM, 10), plain = () => rest.filter(x => !x.quote);
+    const items = order(NUM, 5), ends = order(NUM, 10), plain = () => rest.filter(x => !x.quote);
     const room = x => !(grim(x.q) && plain().filter(y => grim(y.q)).length >= per(2)) && !(isAboutOne(x.q) && plain().filter(y => isAboutOne(y.q)).length >= per(2)) && !(MONEY.has(x.q.id) && plain().some(y => MONEY.has(y.q.id)));
     const fill = (m, ok, capCat, loose, from) => { for (const x of from || items) { if (m <= 0 || rest.length >= need) return; if (!rest.includes(x) && ok(x) && (loose || room(x)) && fits(x, capCat)) { rest.push(take(x)); m--; } } };
     // The first and the last are chosen before the rest, a new one if there is any, and with more chance in it: rounds should not all begin alike.
@@ -2720,23 +2653,23 @@ const Guess = (() => {
   }
 
   /* A round as text, for saving it, and as short codes, for a challenge link. */
-  const pack = it => it.kind === "quad" ? "c:" + it.claims.map(c => c.id).join(",") : it.quote ? "q:" + it.id + ":" + it.order.join("") : (it.kind === "yn" ? "y:" : "n:") + it.id;
+  const pack = it => it.kind === "quad" ? "c:" + it.claims.map(c => c.id).join(",") : it.quote ? "q:" + it.id + ":" + it.order.join("") : "n:" + it.id;
   function unpack(s) {
-    const m = /^([cqyn]):([a-z0-9~,-]+)(?::(\d+))?$/.exec(String(s));
+    const m = /^([cqn]):([a-z0-9~,-]+)(?::(\d+))?$/.exec(String(s));
     if (!m) return null;
     if (m[1] === "c") return makeQuad(m[2].split(",").map(id => claimById[id]));
     if (m[1] === "q") return makeQuote(quoteById[m[2]], (m[3] || "").split("").map(Number));
-    return (m[1] === "y" ? ynById : numById)[m[2]] || null;
+    return numById[m[2]] || null;
   }
   // What a link's code stands for: the question and its answer. What a saved round must still match: everything it is graded by.
-  const keyOf = x => x.x ? x.id + "|" + x.x.options[0] : x.text || x.kind === "yn" ? answerKey(x.q) : x.id + "|" + (x.f.type === "pick" ? x.f.options[x.f.answer] : x.f.truth);
-  const gradeKey = it => codeOf(it.kind === "quad" ? it.claims.map(keyOf).join() : it.quote ? keyOf(quoteById[it.id]) : it.kind === "yn" ? keyOf(it) : JSON.stringify([it.id, it.f.truth, it.f.full, it.f.half, it.f.options, it.f.answer, it.f.near, it.f.wild]));
+  const keyOf = x => x.x ? x.id + "|" + x.x.options[0] : x.text ? answerKey(x.q) : x.id + "|" + (x.f.type === "pick" ? x.f.options[x.f.answer] : x.f.truth);
+  const gradeKey = it => codeOf(it.kind === "quad" ? it.claims.map(keyOf).join() : it.quote ? keyOf(quoteById[it.id]) : JSON.stringify([it.id, it.f.truth, it.f.full, it.f.half, it.f.options, it.f.answer, it.f.near, it.f.wild]));
   let byCode = null;
   const codes = () => {
     if (byCode) return byCode;
     byCode = { one: Object.create(null), claim: Object.create(null) };
-    for (const x of NUM.concat(YN, QUOTE, FACE)) { const c = codeOf(keyOf(x)); if (byCode.one[c]) console.warn("Two guess questions share the challenge code " + c); else byCode.one[c] = x; }
-    for (const x of CLAIM) byCode.claim[codeOf(keyOf(x))] = x;
+    for (const x of NUM.concat(QUOTE, FACE)) { const c = codeOf(keyOf(x)); if (byCode.one[c]) console.warn("Two questions share the challenge code " + c); else byCode.one[c] = x; }
+    for (const x of CLAIM) { const c = codeOf(keyOf(x)); if (byCode.claim[c]) console.warn("Two statements share the challenge code " + c); else byCode.claim[c] = x; }
     return byCode;
   };
   const encode = it => (it.kind === "quad" ? it.claims : [it.quote ? quoteById[it.id] : it]).map(x => codeOf(keyOf(x))).join("");
@@ -2752,13 +2685,15 @@ const Guess = (() => {
   function summarize(answers) {
     let right = 0, wrong = 0, close = 0;
     for (const r of answers) { right += r.grade; if (r.grade === 0) wrong++; else if (r.grade === 0.5) close++; }
-    return { n: answers.length, right, wrong, close, unsure: 0 };
+    return { n: answers.length, right, wrong, close };
   }
+  // Splits the misses by direction: under where the truth was wilder than the guess, over where it was tamer, and other where it is neither.
   function analyze(answers) {
     let under = 0, over = 0, other = 0;
     for (const r of answers) { if (r.lean === "wilder") under++; else if (r.lean === "tamer") over++; else if (r.grade < 1) other++; }
-    return { under, over, wildN: under + over, tameN: under + over, other };
+    return { under, over, other };
   }
+  // A direction is named only when it clearly dominates. Anything less is noise in a short round.
   function findingOf(s, an) {
     if (s.n && s.right / s.n >= 0.8) return "clear";
     if (an.under >= 3 && an.under >= 2 * an.over) return "wilder";
@@ -2774,7 +2709,6 @@ const Guess = (() => {
       const opts = optionsOf(it);
       return `<div class="picks wrap">${opts.map((o, i) => `<button class="btn pick" type="button" data-i="${i}">${esc(o)}</button>`).join("")}</div>`;
     }
-    if (it.kind === "yn") return `<div class="yn"><button class="btn ans" data-yn="1" type="button">Yes</button><button class="btn ans" data-yn="0" type="button">No</button></div>`;
     if (!open) return "";
     const n = stops(f);
     return slideHtml(f, { id: "slider", out: "readout", unset: true, max: n, step: 1, value: slider === null ? Math.round(n / 2) : slider, label: "Your guess", refs: f.refs, button: "Slide to make your guess" });
@@ -2787,7 +2721,7 @@ const Guess = (() => {
     return `
       <div class="slide" data-live>
         <div class="stage"><div class="inner"><output class="reading${o.unset ? " unset" : ""}" id="${o.out}" for="${o.id}"><b></b> <span></span></output><i class="stem"></i></div></div>
-        <div class="edge"><div class="inner">${ticks(f, refs.map(r => clamp01(pos(f, r[1]))), o.ends)}
+        <div class="edge"><div class="inner">${ticks(f, refs.map(r => clamp01(pos(f, r[1]))))}
           <input type="range" id="${o.id}" class="g-range${o.unset ? " unset" : ""}" min="0" max="${o.max}" step="${o.step}" value="${o.value}" aria-label="${o.label}"${o.unset ? ` aria-valuetext="Not set"` : ""}>
           <span class="knob" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h18M7.5 7.5 3 12l4.5 4.5M16.5 7.5 21 12l-4.5 4.5"/></svg></span>
           ${refs.length ? `<div class="marks" id="marks">${refs.map(r => `<span class="mark-lab" data-p="${clamp01(pos(f, r[1]))}">${esc(r[0])}${r[2] ? "" : `<b>${esc(say(f, r[1]))}</b>`}</span>`).join("")}</div>` : ""}
@@ -2804,7 +2738,7 @@ const Guess = (() => {
     return m && kind(m[0]) === kind(a[0]) && Math.abs(v(m[0]) - v(a[0])) <= Math.max(0.5, v(a[0]) * 0.05) ? [m[0], a[1]] : a;
   };
   // The ruler's lines and labels. Positions are percentages, so they hold at any width. Class w shows on wide screens only, n on narrow ones.
-  function ticks(f, avoid, endNames) {
+  function ticks(f, avoid) {
     const L = lo(f), H = hi(f), P = v => pos(f, v) * 100, out = [], near = (a, b) => Math.abs(a - b) < 1e-9 * Math.max(1, Math.abs(b));
     const tick = (v, cls) => out.push(`<i class="t ${cls}" style="left:${P(v).toFixed(2)}%"></i>`);
     const label = (v, text, cls) => out.push(`<span class="tl ${cls}" style="left:${P(v).toFixed(2)}%" aria-hidden="true">${esc(text)}</span>`);
@@ -2825,7 +2759,7 @@ const Guess = (() => {
       mid = majors.find(v => near(v, (L + H) / 2));
     }
     [L, ...majors, H].forEach(v => tick(v, "maj"));
-    const ends = endNames || (/^ of /.test(f.unit || "") ? [String(L), String(H)] : [say(f, L), say(f, H)]);
+    const ends = /^ of /.test(f.unit || "") ? [String(L), String(H)] : [say(f, L), say(f, H)];
     out.push(`<span class="tl s" aria-hidden="true">${esc(ends[0])}</span><span class="tl e" aria-hidden="true">${esc(ends[1])}</span>`);
     // Between the two ends, as many labels as fit on a ruler this wide without touching each other, the ends or a marker's line.
     const name = v => f.type === "log" ? (/^(years|months|times)$/.test(f.unit) ? say(f, v).replace(/ [a-z]+$/, "") : say(f, v)) : f.signed || f.year ? say(f, v) : f.type === "pct" ? `${v}%` : (f.prefix || "") + Number(v.toFixed(1)).toLocaleString("en-US");
@@ -2838,7 +2772,7 @@ const Guess = (() => {
       }
       return [];
     };
-    fits(640, endNames ? [mid] : majors).forEach(v => label(v, name(v), "w"));
+    fits(640, majors).forEach(v => label(v, name(v), "w"));
     (f.type === "log" ? fits(284, majors) : mid === undefined || mid === null ? [] : fits(284, [mid])).forEach(v => label(v, name(v), "n"));
     return out.join("");
   }
@@ -2922,10 +2856,6 @@ const Guess = (() => {
       const bits = []; if (it.kind === "quad") bits.push(it.claims[i].q.a ? "True" : "Not true"); if (i === g) bits.push("Your pick");
       if (bits.length) b.insertAdjacentHTML("beforeend", `<span class="tag">${bits.join("<br>")}</span>`);
     });
-    else if (it.kind === "yn") control.querySelectorAll("[data-yn]").forEach(b => {
-      const v = b.dataset.yn === "1"; b.disabled = true; b.style.opacity = 1;
-      if (v === !!it.q.a) b.classList.add("pick", "right"); else if (v === g) b.classList.add("pick", "wrong");
-    });
     else { control.innerHTML = resultRuler(f, g); layoutMarks(); }
   }
   // The other three statements in a set of four, each with its own short answer.
@@ -2933,7 +2863,7 @@ const Guess = (() => {
   // The sources of every statement in a set of four are listed together.
   const sourceOf = it => it.kind !== "quad" ? bankOf(it) : Object.assign({}, bankOf(it), { src: it.claims.flatMap(c => c.q.src) });
 
-  return { LENGTHS, NUM, CLAIM, YN, QUOTE, FACE, extra, say, at, pos, stops, idsOf, titleOf, truthOf, saidOf, optionsOf, bankOf, sourceOf, answerText, grade, lean, valid, result, compare, draw, swapFor, preload, pack, unpack, encode, decode, gradeKey,
+  return { NUM, CLAIM, QUOTE, FACE, adrift, extra, say, at, pos, stops, idsOf, titleOf, truthOf, saidOf, optionsOf, bankOf, askedOf, sourceOf, answerText, grade, lean, valid, result, compare, draw, swapFor, preload, pack, unpack, encode, decode, gradeKey,
     summarize, analyze, findingOf, controlHtml, layoutMarks, resultRuler, mark, othersHtml, isSlide, parts, showReading, travel, slideHtml, unknown };
 })();
 window.addEventListener("resize", Guess.layoutMarks);
@@ -2945,21 +2875,21 @@ try { document.fonts.ready.then(Guess.layoutMarks); document.fonts.addEventListe
    the last settings, the best scores and any round left unfinished. Nothing is sent anywhere,
    and everything works without it. */
 const STORE_KEY = "can-ai-do-this.v1", ROUND_KEY = "can-ai-do-this.round", LAST_KEY = "can-ai-do-this.last";
-const LENGTHS = [10, 20, 50];
+const LENGTHS = [10, 20];
 function loadStore() {
-  const blank = { seen: [], plays: 0, best: {}, mode: okMode(CONFIG.modes[0] === "guess" ? "guess" : "quick"), length: 10, bonus: false, noPhotos: false };
+  const blank = { seen: [], plays: 0, best: {}, length: 10, bonus: false, noPhotos: false };
   try {
     const s = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
     if (!s || typeof s !== "object") return blank;
     const best = {};
     if (s.best && typeof s.best === "object") {
-      for (const k of Object.keys(s.best)) { const v = Number(s.best[k]); if (/^(quick|confidence|guess):\d+$/.test(k) && Number.isFinite(v)) best[k] = v; }
+      // The best score over each number of questions. Older pages wrote "guess:10" for 10.
+      for (const k of Object.keys(s.best)) { const m = /^(?:guess:)?(\d+)$/.exec(k), v = Number(s.best[k]); if (m && Number.isFinite(v)) best[m[1]] = Math.max(v, best[m[1]] || 0); }
     }
     return {
       seen: Array.isArray(s.seen) ? [...new Set(s.seen.filter(id => typeof id === "string" && (BY_ID[id] || Guess.extra.has(id))))] : [],
       plays: Number.isFinite(Number(s.plays)) ? Math.max(0, Math.floor(Number(s.plays))) : 0,
       best,
-      mode: okMode(s.mode),
       length: LENGTHS.includes(s.length) ? s.length : 10,
       bonus: s.bonus === true,
       noPhotos: s.noPhotos === true
@@ -2972,18 +2902,15 @@ function saveStore() { try { localStorage.setItem(STORE_KEY, JSON.stringify(stor
 window.addEventListener("storage", e => { if (e.key === STORE_KEY || e.key === null) store = loadStore(); });
 window.addEventListener("pageshow", e => { if (e.persisted) store = loadStore(); });
 function remember(id) { if (!store.seen.includes(id)) { store.seen.push(id); saveStore(); } }
-// A round in progress is saved after every answer, so a refresh, a stray Back or a phone
-// reloading the tab does not throw it away.
-// The round in progress is saved after every answer. The last finished round is kept too, so a result
-// can be opened again later, for example to share it the next day.
+// The round in progress is saved after every answer, so a refresh, a stray Back or a phone reloading the tab does not throw it away.
+// The last finished round is kept too, so a result can be opened again later, for example to share it the next day.
 const unstored = {};   // a round that the browser refuses to store stays here for as long as the page is open
 function keepRound(key) {
   try {
-    const ch = state.challenge, guess = state.mode === "guess";
+    const ch = state.challenge;
     const text = JSON.stringify({
-      t: Date.now(), mode: state.mode, ids: state.list.map(q => guess ? Guess.pack(q) : q.id), ps: state.answers.map(r => guess ? r.g : r.p),
-      fp: state.list.map(q => guess ? Guess.gradeKey(q) : codeOf(answerKey(q))),
-      ch: ch ? { mode: ch.mode, theirs: ch.theirs, brier: ch.brier } : null
+      t: Date.now(), ids: state.list.map(it => Guess.pack(it)), ps: state.answers.map(r => r.g), fp: state.list.map(it => Guess.gradeKey(it)),
+      ch: ch ? { theirs: ch.theirs } : null
     });
     unstored[key] = text; localStorage.setItem(key, text); delete unstored[key];
   } catch (e) {}
@@ -2994,7 +2921,7 @@ function clearRound() { delete unstored[ROUND_KEY]; try { localStorage.removeIte
 function clearOwnRound() {
   let saved = null;
   try { saved = JSON.parse(unstored[ROUND_KEY] || localStorage.getItem(ROUND_KEY) || "null"); } catch (e) {}
-  if (!saved || !Array.isArray(saved.ids) || state.list.every(q => saved.ids.includes(state.mode === "guess" ? Guess.pack(q) : q.id))) clearRound();
+  if (!saved || !Array.isArray(saved.ids) || state.list.every(it => saved.ids.includes(Guess.pack(it)))) clearRound();
 }
 function clearLast() { delete unstored[LAST_KEY]; try { localStorage.removeItem(LAST_KEY); } catch (e) {} }
 function loadRound() { return readRound(ROUND_KEY, 7, false); }
@@ -3004,259 +2931,55 @@ function readRound(key, days, finished) {
     const r = JSON.parse(unstored[key] || localStorage.getItem(key) || "null");
     if (!r || typeof r !== "object" || !Array.isArray(r.ids) || !Array.isArray(r.ps)) return null;
     if (!(Date.now() - Number(r.t) < days * 864e5)) return null;
-    const guess = r.mode === "guess";
-    if (guess ? !HAS_GUESS : !HAS_YESNO) return null;   // a round played a way the page no longer offers
-    let list = r.ids.map(id => typeof id !== "string" ? null : guess ? Guess.unpack(id) : BY_ID[id] || null);
+    let list = r.ids.map(id => typeof id === "string" ? Guess.unpack(id) : null);
     if (!Array.isArray(r.fp) || r.fp.length !== list.length) return null;
     // If an answered question has gone or changed how it is graded since, the round would be marked against answers the player never saw.
     // One still to come is asked as it is now, or left out if it has gone. A friend's round is kept whole or not at all, because its marks go by place.
-    if (list.some((q, i) => (i < r.ps.length || r.ch) && (!q || r.fp[i] !== (guess ? Guess.gradeKey(q) : codeOf(answerKey(q)))))) return null;
+    if (list.some((it, i) => (i < r.ps.length || r.ch) && (!it || r.fp[i] !== Guess.gradeKey(it)))) return null;
     list = list.filter(Boolean);
     if (list.length < 2) return null;
-    const names = guess ? list.flatMap(Guess.idsOf) : list.map(q => q.id);
+    const names = list.flatMap(it => Guess.idsOf(it));
     if (new Set(names).size !== names.length) return null;
-    const ps = guess ? r.ps : r.ps.map(Number);
-    if (!ps.length || ps.length > list.length || ps.some((p, i) => guess ? !Guess.valid(list[i], p) : !(p >= 0 && p <= 1))) return null;
+    const ps = r.ps;
+    if (!ps.length || ps.length > list.length || ps.some((g, i) => !Guess.valid(list[i], g))) return null;
     if (finished && ps.length !== list.length) return null;
     let ch = null;
     if (r.ch && typeof r.ch === "object") {
       const marks = r.ch.theirs;
-      const theirs = Array.isArray(marks) && marks.length === list.length && marks.every(x => x === 0 || x === 1 || x === 2) ? marks : null;
-      const brier = typeof r.ch.brier === "number" && r.ch.brier >= 0 && r.ch.brier <= 1 ? r.ch.brier : null;
-      ch = { mode: guess ? "guess" : r.ch.mode === "confidence" ? "confidence" : "quick", list, theirs, brier, missing: 0 };
+      ch = { list, theirs: Array.isArray(marks) && marks.length === list.length && marks.every(x => x === 0 || x === 1 || x === 2) ? marks : null, missing: 0 };
     }
-    return { mode: okMode(r.mode), list, ps, ch };
+    return { list, ps, ch };
   } catch (e) { return null; }
 }
 
-/* ---------- Drawing a round ----------
-   Every round is about half yes and half no: four to six yes answers in ten. Always answering one way gets
-   nowhere, and nobody can count their way to the last few answers.
-   Questions that share a group would give each other away (one question's wording or revealed
-   answer implies another's), so a round holds at most one question from each group.
-   Questions marked kind "opinion" ask what people think or have said. A round takes at most
-   one of those for every ten questions, and never opens with one. */
-const YES_POOL = QUESTIONS.filter(q => q.a), NO_POOL = QUESTIONS.filter(q => !q.a);
-// The largest half-and-half round the bank can supply with one question per group. Each group
-// can serve one side or the other, so try every split of the groups between the two sides.
-const MAX_BALANCED = (() => {
-  const groupsIn = pool => new Set(pool.filter(q => q.group).map(q => q.group));
-  const loose = pool => pool.filter(q => !q.group).length;
-  const gNo = groupsIn(NO_POOL), gYes = groupsIn(YES_POOL);
-  const shared = [...gNo].filter(g => gYes.has(g)).length;
-  const noOnly = gNo.size - shared, yesOnly = gYes.size - shared;
-  let best = 0;
-  for (let takeNo = 0; takeNo <= gNo.size; takeNo++) {
-    const sharedUsedByNo = Math.max(0, takeNo - noOnly);
-    best = Math.max(best, Math.min(loose(NO_POOL) + takeNo, loose(YES_POOL) + yesOnly + shared - sharedUsedByNo));
-  }
-  return 2 * best;
-})();
-// Collects questions for one round, enforcing the group rule and the cap on opinion questions.
-// Variety: a round takes at most two questions in ten from any one category, so the big categories
-// (rules and policy above all) cannot crowd out the rest. And the two may not lean the same way: a round
-// can pair "there is no such law" with "this safeguard exists", but not stack two of either, which is what
-// makes a quiz read as an argument. The limits bend before freshness does: a question the player has not
-// seen still beats one they have, whatever its category.
-// Heavy subjects (AI misbehaving, break-ins, weapons, catastrophe) are to hold three or four places in ten, with one or two
-// calm answers among them, so that neither kind crowds out the other, and no round is to be mostly about one company. These
-// are aims: for a returning player a question not yet seen goes before them. A round should inform and still be fun, not read like a campaign.
+/* ---------- What a round is made of ----------
+   Lists that Guess.draw() goes by. Heavy subjects (AI misbehaving, break-ins, weapons, catastrophe) and questions about one company are
+   rationed, so that a round informs and is still fun, and does not read like a campaign. */
 const HEAVY_CATS = ["AI behavior", "Security", "Autonomy", "Risk and rules"];
 const HEAVY_TOO = new Set(["chosen-values", "launch-scrapped", "virology", "phage", "novice-virology", "control-unsolved", "held-back", "internal-models", "ai-aligns-ai", "safety-workforce", "unplanned-skills", "training-pause", "superintelligence-statement", "pause-poll", "recall-weights", "mind-reading"]);
 const NOT_HEAVY = new Set(["plans-ahead", "flattery-rollback", "confessions", "vending-cartel", "answer-key", "subliminal", "captcha", "signal-proof", "hire-humans"]);
 const isHeavy = q => !NOT_HEAVY.has(q.id) && (HEAVY_CATS.includes(q.cat) || HEAVY_TOO.has(q.id));
 const isAboutOne = q => /Anthropic|Claude|Mythos/.test(q.q + " " + q.short);
-function picker(opinionCap, catCap, seen) {
-  const used = new Set(), out = [], cats = {}, sides = {}, taken = new Set();
-  const coin = () => (Math.random() < 0.5 ? 1 : 0);
-  const heavyCap = 3 * opinionCap + coin(), wildHeavyCap = heavyCap - opinionCap, calmHeavyCap = 2 * opinionCap, oneCap = 2 * opinionCap + coin();
-  let heavies = 0, wildHeavies = 0, calmHeavies = 0, ones = 0;
-  const sideCap = Math.max(1, Math.round(catCap / 2));
-  // Groups that still hold something the player has not seen. A seen question from one of them waits until
-  // last: picked early, it would claim the group and shut out the unseen question waiting further down.
-  const freshGroups = new Set(seen ? QUESTIONS.filter(q => q.group && !seen.has(q.id)).map(q => q.group) : []);
-  // Questions about laws, bans and pledges are the homework of the quiz, so a round holds one per ten
-  // while the player still has other new questions to see.
-  const ruleCap = opinionCap;
-  let opinions = 0, rules = 0;
-  const take = (list, want) => {
-    let got = 0;
-    // New and within the limits, new and beyond them, then seen likewise, then seen ones whose group still has something new.
-    for (let pass = 0; pass < 6 && got < want; pass++) {
-      for (const q of list) {
-        if (got === want) break;
-        if (taken.has(q)) continue;
-        const side = q.cat + "|" + leanOf(q);
-        const heavy = isHeavy(q), calm = heavy && leanOf(q) !== "wild", grim = heavy && !calm, one = isAboutOne(q);
-        const over = (cats[q.cat] || 0) >= catCap || (sides[side] || 0) >= sideCap || (q.kind === "rule" && rules >= ruleCap)
-          || (heavy && heavies >= heavyCap) || (calm && calmHeavies >= calmHeavyCap) || (grim && wildHeavies >= wildHeavyCap) || (one && ones >= oneCap);
-        const old = seen && seen.has(q.id);
-        const rank = (!old ? 0 : q.group && freshGroups.has(q.group) ? 4 : 2) + (over ? 1 : 0);
-        if (rank !== pass) continue;
-        if (q.group && used.has(q.group)) continue;
-        if (q.kind === "opinion" && opinions >= opinionCap) continue;
-        if (q.group) used.add(q.group);
-        if (q.kind === "opinion") opinions++;
-        if (q.kind === "rule") rules++;
-        if (heavy) heavies++;
-        if (calm) calmHeavies++;
-        if (grim) wildHeavies++;
-        if (one) ones++;
-        cats[q.cat] = (cats[q.cat] || 0) + 1; sides[side] = (sides[side] || 0) + 1;
-        taken.add(q); out.push(q); got++;
-      }
-    }
-    return got === want;
-  };
-  return { take, out };
-}
-const catCapFor = n => Math.max(2, Math.round(n / 5));
-// Questions that are quick to grasp and fun to tell someone about. A round opens on one of them that is not heavy, and closes on another.
+// Questions that are quick to grasp and fun to tell someone about.
 const HOOKS = new Set(["crypto-mining", "good-stories", "free-chatgpt", "fake-video", "voice-clone", "face-test", "turing", "persuasion", "competitive-programming", "chatbot-learns", "mass-job-loss", "grown-not-written", "hallucination", "flattery-rollback",
   "doctor-empathy", "er-diagnosis", "therapy-bot", "als-voice", "brain-to-text", "freelance", "hire-humans", "ai-boss", "young-workers", "code-share", "billion-users", "teens", "half-the-web", "labs-vs-exxon",
   "compute-spend", "electricity", "water-burger", "brain-power", "chip-speed", "training-text", "home-robot", "driverless", "waymo-safety", "robotaxi-help", "sprint", "table-tennis", "robot-soccer", "hot-100",
   "authors-settlement", "vesuvius-scroll", "animal-language", "planets", "earthquakes", "hurricanes", "trading", "radiologists", "imo", "riemann", "arc-agi-3", "computer-use", "forecasting", "unmask-author",
   "exam-markers", "author-style", "captcha", "home-computer", "ai-tutor", "companion-lonely", "nuclear-plant", "punished-thoughts", "switched-off", "held-back", "nuclear-human-control", "harder-to-trick", "freelance-most", "persuasive-wrong", "agi-arrived", "chats-train"]);
-// Orders a round. The first two are about what AI can do, or easy ones, and questions about rules, society and opinions
-// come later, so a round never starts with a civics test.
-const SLOW_OPENERS = ["Risk and rules", "Society", "Scale"];
-// Of up to 40 orders, the first in which no answer comes up five times running (or, a third of the time, four), no two neighbors
-// share a category and no two heavy ones touch. The limit is not always three, or the answer after three alike could be told in advance.
-function arrange(list) {
-  const limit = Math.random() < 0.35 ? 3 : 4;
-  let best = null;
-  for (let k = 0; k < 40; k++) {
-    const out = arrangeOnce(list);
-    let bad = 0, run = 1;
-    for (let i = 1; i < out.length; i++) {
-      run = out[i].a === out[i - 1].a ? run + 1 : 1;
-      bad += (run > limit ? 3 : 0) + (out[i].cat === out[i - 1].cat ? 1 : 0) + (isHeavy(out[i]) && isHeavy(out[i - 1]) ? 1 : 0);
-    }
-    if (!best || bad < best.bad) best = { out, bad };
-    if (!bad) break;
-  }
-  return best.out;
-}
-function arrangeOnce(list) {
-  const pool = shuffle(list);
-  const hook = q => HOOKS.has(q.id) && q.kind !== "opinion" && q.kind !== "rule";
-  const quick = pool.filter(q => q.kind !== "opinion" && q.kind !== "rule" && !SLOW_OPENERS.includes(q.cat));
-  const first = pool.find(q => hook(q) && !isHeavy(q)) || quick.find(q => !isHeavy(q)) || quick[0] || pool[0];
-  const second = first && (quick.find(q => q !== first && q.cat !== first.cat && !(isHeavy(q) && isHeavy(first))) || quick.find(q => q !== first));
-  const out = [first, second].filter(Boolean);
-  let rest = pool.filter(q => !out.includes(q));
-  const last = list.length >= 5 ? rest.find(hook) : null;
-  if (last) rest = rest.filter(q => q !== last);
-  // Each next question comes from a different category than the one before, and no two heavy ones sit together,
-  // whenever there is a choice. A category, or the heavy ones, that fill more than half of what remains go next,
-  // or they would end up bunched together at the end.
-  while (rest.length) {
-    const prev = out[out.length - 1], left = {};
-    rest.forEach(q => { left[q.cat] = (left[q.cat] || 0) + 1; });
-    const heavyLeft = rest.filter(isHeavy).length;
-    const apart = rest.filter(q => q.cat !== prev.cat && !(isHeavy(q) && isHeavy(prev)));
-    let options = apart.length ? apart : rest.filter(q => q.cat !== prev.cat);
-    if (!options.length) options = rest;
-    const pressing = options.filter(q => left[q.cat] * 2 > rest.length || (isHeavy(q) && heavyLeft * 2 > rest.length));
-    const pick = (pressing.length ? pressing : options)[0];
-    out.push(pick); rest.splice(rest.indexOf(pick), 1);
-  }
-  if (last) out.push(last);
-  return out;
-}
-// A plain half-yes, half-no draw with one question per group. The fallback when the balanced draw below cannot fill a round.
-function drawPlain(half, opinionCap) {
-  let best = [];
-  for (let attempt = 0; attempt < 25 && best.length < 2 * half; attempt++) {
-    const { take, out } = picker(opinionCap, catCapFor(2 * half), new Set(store.seen));
-    const fill = pool => { const from = out.length; take(shuffle(pool), half); return out.slice(from); };
-    // Either side may draw first, so neither side's groups are always the ones taken.
-    const yesFirst = Math.random() < 0.5;
-    const a = fill(yesFirst ? YES_POOL : NO_POOL), b = fill(yesFirst ? NO_POOL : YES_POOL);
-    const n = Math.min(a.length, b.length);
-    const picked = a.slice(0, n).concat(b.slice(0, n));
-    if (picked.length > best.length) best = picked;
-  }
-  return arrange(best);
-}
-// The normal draw. On top of about half yes and half no, it keeps the two leans level: as many questions
-// whose true answer is the "wild" one as the "tame" one (give or take one), so guessing the
-// scary-sounding answer every time scores no better than guessing the calm one. Questions this
-// browser has not shown before come first.
-function drawRound(count) {
-  const n = Math.min(count, MAX_BALANCED), half = Math.floor(n / 2), opinionCap = Math.max(1, Math.round(n / 10));
-  if (n >= MAX_BALANCED) return drawPlain(half, opinionCap);   // more than the bank can balance
-  const seen = new Set(store.seen);
-  const cell = (yes, lean) => {
-    const all = QUESTIONS.filter(q => q.a === yes && leanOf(q) === lean);
-    // Unseen questions come first, the important ones ahead of the trivia. A little chance is mixed in, so that
-    // questions close in rank trade places and two new players do not get the same round. There is more of it
-    // where few questions compete, or the top two or three would turn up in almost every first round.
-    const byRank = list => list.map(q => ({ q, w: (q.rank || 5) + Math.random() * (list.length < 40 ? 7 : 4) })).sort((x, y) => y.w - x.w).map(x => x.q);
-    return byRank(all.filter(q => !seen.has(q.id))).concat(shuffle(all.filter(q => seen.has(q.id))));
-  };
-  const fresh = list => list.filter(q => !seen.has(q.id)).length;
-  const roll = (times, p) => { let c = 0; for (let i = 0; i < times; i++) if (Math.random() < p) c++; return c; };
-  const spare = Math.max(1, Math.round(half / 8));   // neutral questions allowed on each side
-  const tilt = Math.max(1, Math.round(half / 5));    // how far from half and half the yes answers may be
-  const anyNew = QUESTIONS.some(q => !seen.has(q.id));
-  const dead = new Set();   // mixes that could not be filled, usually because of groups, so they are not tried again
-  for (let attempt = 0; attempt < 40; attempt++) {
-    const tameYes = cell(true, "tame"), wildNo = cell(false, "wild"), neutYes = cell(true, "neutral"), neutNo = cell(false, "neutral");
-    const wildYes = cell(true, "wild"), tameNo = cell(false, "tame");
-    // A neutral question the player has already seen stays away while anything in the bank is still new to them.
-    const open = list => (anyNew ? fresh(list) : list.length);
-    // Neutral questions are an occasional extra, drawn about as often as any other question. When a side has run
-    // low on new questions they stop being occasional, or an unseen neutral question would sit unused while the
-    // player gets repeats.
-    const low = (x, y) => anyNew && fresh(x) + fresh(y) < half;
-    const share = list => Math.min(0.9, list.filter(q => (q.rank || 5) >= 5).length * n / QUESTIONS.length / spare);   // trivia waits for a player who has seen the rest
-    const a = Math.min(open(neutYes), low(tameYes, wildYes) ? spare : roll(spare, share(neutYes)));
-    const b = Math.min(open(neutNo), low(wildNo, tameNo) ? spare : roll(spare, share(neutNo)));
-    // A round has half + d yes answers. k of them are tame, and j of the no answers are wild. j follows from k, d and
-    // the neutral questions, so the leans stay within one of each other. k and j run from about a fifth to three
-    // fifths of a side, so "yes" is never a synonym for the startling answer. Among the mixes that fit, the draw
-    // picks from those that need the fewest already-seen questions, and it leans toward an even split.
-    const kHi = Math.min(Math.round(half * 0.6), tameYes.length), kLo = Math.min(kHi, Math.max(1, Math.round(half * 0.2)));
-    let options = [], least = Infinity;
-    for (let d = -tilt; d <= tilt; d++) for (let k = kLo; k <= kHi; k++) {
-      if (dead.has([k, a, b, d].join(":"))) continue;
-      const j = k + Math.trunc((a - b) / 2) - d, needWildYes = half + d - k - a, needTameNo = half - d - j - b;
-      if (j < kLo || j > wildNo.length || needWildYes < 0 || needWildYes > wildYes.length || needTameNo < 0 || needTameNo > tameNo.length) continue;
-      const repeats = Math.max(0, k - fresh(tameYes)) + Math.max(0, j - fresh(wildNo)) + Math.max(0, needWildYes - fresh(wildYes)) + Math.max(0, needTameNo - fresh(tameNo));
-      if (repeats < least) { least = repeats; options = []; }
-      if (repeats === least) options.push({ d, k, j });
-    }
-    if (!options.length) continue;
-    const ds = [...new Set(options.map(o => o.d))], weighted = ds.flatMap(d => Array(tilt + 1 - Math.abs(d)).fill(d));
-    const d = weighted[Math.floor(Math.random() * weighted.length)], fits = options.filter(o => o.d === d);
-    const { k, j } = fits[Math.floor(Math.random() * fits.length)];
-    const { take, out } = picker(opinionCap, catCapFor(n), seen);
-    // Neutral questions first, so the category limits count them. Then the scarce cells, so the big cells
-    // work around the groups those used.
-    if (take(neutYes, a) && take(neutNo, b) && take(tameYes, k) && take(wildNo, j)
-        && take(wildYes, half + d - k - a) && take(tameNo, half - d - j - b)) return arrange(out);
-    dead.add([k, a, b, d].join(":"));
-  }
-  return drawPlain(half, opinionCap);
-}
 
 /* ---------- Challenge links ----------
    A shared link carries the exact questions of the round and how the sharer did on each, so whoever
-   opens it plays the same round and can compare. Format of the c parameter:
-   mode letter (q or c), then a four-character code per question, then a dot and one digit per
-   question (2 right, 1 unsure, 0 wrong), then for confidence rounds a dot and the Brier score times 1000.
-   Codes are a hash of the question id and its answer, so they survive questions being added, removed, reordered or reworded,
-   but not an answer that has flipped: that question then drops out of the link instead of being compared. */
+   opens it plays the same round and can compare. Format of the c parameter: the letter g, then the code of each question
+   with hyphens between them (four characters, or sixteen for a set of four statements), then a dot and one digit per
+   question (2 a point, 1 half a point, 0 none). The q parameter is the letter g and the code of one question.
+   A code is a hash of the question's id and its answer, so it survives questions being added, removed, reordered or reworded,
+   but not an answer that has changed: that question then drops out of the link instead of being compared. */
 const answerKey = q => q.id + (q.a ? "" : "!");
 function codeOf(id) {
   let h = 0x811c9dc5;
   for (let i = 0; i < id.length; i++) { h ^= id.charCodeAt(i); h = Math.imul(h, 0x01000193); }
   return (h >>> 0).toString(36).padStart(7, "0").slice(-4);
 }
-const BY_CODE = Object.create(null);
-QUESTIONS.forEach(q => { const c = codeOf(answerKey(q)); if (BY_CODE[c]) console.warn("Two questions share the challenge code " + c + ": " + BY_CODE[c].id + " and " + q.id); else BY_CODE[c] = q; });
-const MAX_SHARED = 20;   // longer rounds share the plain address: the link would be too long for some sites
 // A quiet check for whoever edits the bank by hand: any entry that would break a screen is named in the console.
 QUESTIONS.forEach((q, i) => {
   const bad = [];
@@ -3269,34 +2992,16 @@ QUESTIONS.forEach((q, i) => {
 });
 if (Object.keys(BY_ID).length !== QUESTIONS.length) console.warn("Two questions share an id.");
 function readChallenge(raw) {
-  const g = /^g((?:[0-9a-z]{4}|[0-9a-z]{16})(?:-(?:[0-9a-z]{4}|[0-9a-z]{16})){3,19})(?:\.([012]+))?$/.exec(raw || "");
-  if (g) {
-    if (!HAS_GUESS) return null;
-    const parts = g[1].split("-"), marks = g[2] || "", hasMarks = marks.length === parts.length, list = [], theirs = [], used = new Set();
-    parts.forEach((c, i) => {
-      const it = Guess.decode(c);
-      if (!it || Guess.idsOf(it).some(id => used.has(id))) return;
-      Guess.idsOf(it).forEach(id => used.add(id));
-      list.push(it); theirs.push(hasMarks ? Number(marks[i]) : null);
-    });
-    return list.length < 4 ? null : { mode: "guess", list, theirs: hasMarks ? theirs : null, brier: null, missing: parts.length - list.length };
-  }
-  const m = /^([qc])((?:[0-9a-z]{4}){4,50})(?:\.([012]+))?(?:\.(\d{1,4}))?$/.exec(raw || "");
-  if (!m || !HAS_YESNO) return null;
-  const codes = m[2].match(/.{4}/g), marks = m[3] || "", hasMarks = marks.length === codes.length;
-  const list = [], theirs = [];
-  codes.forEach((c, i) => {
-    const q = BY_CODE[c];
-    if (q && !list.includes(q)) { list.push(q); theirs.push(hasMarks ? Number(marks[i]) : null); }
+  const m = /^g((?:[0-9a-z]{4}|[0-9a-z]{16})(?:-(?:[0-9a-z]{4}|[0-9a-z]{16})){3,19})(?:\.([012]+))?$/.exec(raw || "");
+  if (!m) return null;
+  const parts = m[1].split("-"), marks = m[2] || "", hasMarks = marks.length === parts.length, list = [], theirs = [], used = new Set();
+  parts.forEach((c, i) => {
+    const it = Guess.decode(c);
+    if (!it || Guess.idsOf(it).some(id => used.has(id))) return;
+    Guess.idsOf(it).forEach(id => used.add(id));
+    list.push(it); theirs.push(hasMarks ? Number(marks[i]) : null);
   });
-  if (list.length < 4) return null;
-  // The sharer's Brier score only means something if every one of their questions is still in the bank.
-  const whole = list.length === codes.length;
-  return {
-    mode: m[1] === "c" ? "confidence" : "quick", list, theirs: hasMarks ? theirs : null,
-    brier: hasMarks && whole && m[4] !== undefined && Number(m[4]) <= 1000 ? Number(m[4]) / 1000 : null,
-    missing: codes.length - list.length
-  };
+  return list.length < 4 ? null : { list, theirs: hasMarks ? theirs : null, missing: parts.length - list.length };
 }
 function clearDare() {
   state.dare = null;
@@ -3313,31 +3018,26 @@ function siteUrl() {
   } catch (e) {}
   return "";
 }
-// The link to share: the site address plus this round's questions and results, or just the address for long rounds.
-function shareUrl(s) {
+// The link to share: the site address plus this round's questions and results.
+function shareUrl() {
   const base = siteUrl();
-  if (!base || state.list.length > MAX_SHARED) return base;
-  const marks = state.answers.map(r => ({ good: 2, meh: 1, bad: 0 })[markOf(r)]).join("");
-  if (state.mode === "guess") return base + "?c=g" + state.list.map(Guess.encode).join("-") + "." + marks;
-  const codes = state.list.map(q => codeOf(answerKey(q))).join("");
-  const conf = state.mode === "confidence";
-  return base + "?c=" + (conf ? "c" : "q") + codes + "." + marks + (conf ? "." + s.milli : "");
+  return base && base + "?c=g" + state.list.map(it => Guess.encode(it)).join("-") + "." + state.answers.map(r => ({ good: 2, meh: 1, bad: 0 })[markOf(r)]).join("");
 }
 
 // One question to pass on. The link carries that question alone, and the friend answers it on the start screen.
 function readDare(raw) {
-  if (/^g(?:[0-9a-z]{4}|[0-9a-z]{16})$/.test(raw)) { const it = HAS_GUESS ? Guess.decode(raw.slice(1)) : null; return it ? { it } : null; }
-  return HAS_YESNO && BY_CODE[raw] ? { q: BY_CODE[raw] } : null;
+  const m = /^g([0-9a-z]{4}|[0-9a-z]{16})$/.exec(raw);
+  if (m) return Guess.decode(m[1]);
+  // Links from before November 25, 2026 carry the code of an entry. It is asked as it is now, if it has a question of its own.
+  return (/^[0-9a-z]{4}$/.test(raw) && Guess.NUM.find(x => codeOf(answerKey(x.q)) === raw)) || null;
 }
-// What is passed on is { q }, a yes-or-no question, or { it }, one from a guess round.
-function dareText(d) {
-  const base = siteUrl(), it = d.it, f = it && it.f;
-  const ask = !it ? `${d.q.q} Yes or no?` : it.kind === "yn" ? `${it.q.q} Yes or no?`
-    : Guess.titleOf(it) + (it.photos ? "" : it.kind === "quad" || it.kind === "pick" ? "\n" + Guess.optionsOf(it).map(o => "- " + o).join("\n") : (f.hint ? ` (${f.hint})` : "") + " Take a guess.");
-  return ask + (base ? `\n${base}?q=${it ? "g" + Guess.encode(it) : codeOf(answerKey(d.q))}` : "");
+function dareText(it) {
+  const base = siteUrl(), listed = it.kind === "quad" || it.kind === "pick";
+  const ask = Guess.titleOf(it) + (it.photos ? "" : listed ? "\n" + Guess.optionsOf(it).map(o => "- " + o).join("\n") : (it.f.hint ? ` (${it.f.hint})` : "") + " Take a guess.");
+  return ask + (base ? `\n${base}?q=g${Guess.encode(it)}` : "");
 }
-async function sendDare(d, say) {
-  const text = dareText(d);
+async function sendDare(it, say) {
+  const text = dareText(it);
   if (typeof navigator.share === "function") {
     try { await navigator.share({ text }); return; } catch (e) { if (e && e.name === "AbortError") return; }
   }
@@ -3353,16 +3053,7 @@ async function sendDare(d, say) {
 }
 
 /* ---------- Shared pieces of the screens ---------- */
-function confWords(pct) {
-  if (pct === 0) return "Certain the answer is no";
-  if (pct <= 20) return "Very likely no";
-  if (pct <= 40) return "Leaning no";
-  if (pct === 50) return "Could go either way";
-  if (pct <= 70) return "Leaning yes";
-  if (pct <= 90) return "Very likely yes";
-  return "Certain the answer is yes";
-}
-function detailsBlock(q, label, note) {
+function detailsBlock(q, label, note, asked) {
   const links = q.src.map(s => `<li><a href="${esc(s[1])}" target="_blank" rel="noopener noreferrer">${esc(s[0])}</a></li>`).join("");
   return `<details>
     <summary>${esc(label)}</summary>
@@ -3372,7 +3063,7 @@ function detailsBlock(q, label, note) {
       ${q.asOf ? `<p class="small muted">Latest source: ${esc(q.asOf)}.</p>` : ""}
       <p class="src-h" aria-hidden="true">Sources</p>
       <ul class="sources" aria-label="Sources">${links}</ul>
-      ${CONFIG.feedbackUrl ? `<p class="small"><a href="${esc(CONFIG.feedbackUrl + "#" + new URLSearchParams({ id: q.id, q: q.q }))}" target="_blank" rel="noopener">Something wrong with this answer? Send a note</a></p>` : ""}
+      ${CONFIG.feedbackUrl ? `<p class="small"><a href="${esc(CONFIG.feedbackUrl + "#" + new URLSearchParams({ id: q.id, q: asked || q.q }))}" target="_blank" rel="noopener">Something wrong with this answer? Send a note</a></p>` : ""}
     </div>
   </details>`;
 }
@@ -3460,11 +3151,11 @@ function closeLearn() {
 const RAW_C = (() => { try { return new URLSearchParams(location.search).get("c") || ""; } catch (e) { return ""; } })();
 // A link can also carry a single question that a friend passed on (?q=code).
 const RAW_Q = (() => { try { return new URLSearchParams(location.search).get("q") || ""; } catch (e) { return ""; } })();
-const state = { dare: RAW_C ? null : readDare(RAW_Q), screen: "start", mode: store.mode, length: store.length, list: [], index: 0, view: 0, answers: [], slider: null, finished: false, learnFrom: "start", resultScroll: 0, bestNote: "", challenge: readChallenge(RAW_C), parked: null, opening: false, dealt: "", shownAt: 0, seenBefore: new Set(), recorded: false };
+const state = { dare: RAW_C ? null : readDare(RAW_Q), screen: "start", length: store.length, list: [], index: 0, view: 0, answers: [], slider: null, finished: false, learnFrom: "start", resultScroll: 0, bestNote: "", challenge: readChallenge(RAW_C), parked: null, opening: false, dealt: 0, shownAt: 0, seenBefore: new Set(), recorded: false };
 let bootNotice = "";
 if (RAW_Q && !state.dare) clearDare();   // a question that has since been retired, or a mangled link
 if (RAW_C && !state.challenge) {
-  bootNotice = "That challenge link didn't work.";
+  bootNotice = /^[qc][0-9a-z]{16}/.test(RAW_C) ? "That challenge was made in an older version of the quiz." : "That challenge link didn't work.";
   try { history.replaceState(history.state, "", location.pathname); } catch (e) {}
 }
 function setScreen(name) {
@@ -3484,63 +3175,55 @@ function toTop(focusId) {
 // The first question of a fresh round is the start screen: no menu comes before it. A friend's challenge, a question a friend sent and an
 // unfinished round take its place when there is one.
 function renderStart(notice, fresh) {
-  const from = state.screen;
   setScreen("start");
   state.opening = false;
-  if (from !== "start") state.mode = store.mode;   // a challenge or a reopened result may have switched it for one round
   const total = QUESTIONS.length, ch = state.challenge, dare = state.dare, saved = loadRound();
   const last = !saved && !ch ? loadLast() : null;
-  if (!LENGTHS.includes(state.length)) state.length = 10;
-  const open = !ch && !dare && (!saved || fresh);
-  const guess = state.mode === "guess", offered = guess ? Guess.LENGTHS : LENGTHS, len = offered.includes(state.length) ? state.length : offered[offered.length - 1];
-  const best = store.best[state.mode + ":" + len], word = { 10: "Ten", 20: "Twenty", 50: "Fifty" }[len];
+  const open = !ch && !dare && (!saved || fresh), len = state.length, best = store.best[len];
   if (!notice && bootNotice) { notice = bootNotice + (open ? " Here is a fresh round instead." : ""); bootNotice = ""; }
   const note = notice ? `<p class="small" role="status">${esc(notice)}</p>` : "", seenN = seenCount();
   let body;
   if (ch) {
-    const n = ch.list.length, guess = ch.mode === "guess";
+    const n = ch.list.length;
     body = `<section class="field"><div class="wrap">${topBar(true)}${note}
       <div class="hello challenge">
         <p class="eyebrow" id="ch-h">You've been challenged</p>
         <h1 class="q-h">${!ch.theirs ? `A friend sent you this exact set of ${n} questions.` : `A friend got ${pts(theirPoints(ch))} out of ${n} on this exact set of questions.`}</h1>
-        ${ch.theirs && n <= 20 ? `<ol class="dots" aria-hidden="true">${ch.theirs.map(m => `<li><span class="dot ${["bad", "meh", "good"][m] || ""}"></span></li>`).join("")}</ol>` : ""}
+        ${ch.theirs ? `<ol class="dots" aria-hidden="true">${ch.theirs.map(m => `<li><span class="dot ${["bad", "meh", "good"][m] || ""}"></span></li>`).join("")}</ol>` : ""}
         <p class="challenge-line">Same questions, your turn.</p>
         <button class="btn btn-primary btn-big" id="take" type="button">Take the challenge</button>
-        <p class="small muted">About ${minutes(n, guess ? "guess" : "quick")}, ${guess ? "sliding to a number or picking an answer" : "answering yes or no"}. Every answer comes with its sources.${ch.mode === "confidence" ? ` Your friend gave a percentage for each answer. <button type="button" class="link" id="take-conf">Answer that way too</button>` : ""}</p>
+        <p class="small muted">About ${minutes(n)}, sliding to a number or picking an answer. Every answer comes with its sources.</p>
         ${ch.missing ? `<p class="small muted">${ch.missing === 1 ? "One question from their round has" : ch.missing + " questions from their round have"} since changed or been retired, so this round is a little shorter.</p>` : ""}
         <p class="small"><button type="button" class="link" id="fresh">Play a fresh round instead</button></p>
         ${saved ? `<p class="small muted">You have an unfinished round. <button type="button" class="link" id="resume">Pick up where you left off</button></p>` : ""}
       </div></div></section>`;
   } else if (dare) {
-    body = `<section class="field${dare.it && Guess.isSlide(dare.it) ? " tight" : ""}"><div class="wrap">${topBar(true)}${note}<p class="eyebrow" id="dare-h">A friend sent you this one</p>
-      <div class="q-body"><h1 class="q-h${brief(dare.it ? Guess.titleOf(dare.it) : dare.q.q)}">${gloss(dare.it ? Guess.titleOf(dare.it) : dare.q.q)}</h1>
-      ${dare.it && dare.it.f && dare.it.f.hint ? `<p class="muted">${gloss(dare.it.f.hint)}</p>` : ""}</div></div></section>
-      <div id="dare-control" class="control${dare.it && Guess.isSlide(dare.it) ? "" : " on-field"}${listed(dare.it)}">${dare.it ? Guess.controlHtml(dare.it, true, null) : `<div class="yn"><button class="btn ans" id="dare-yes" type="button">Yes</button><button class="btn ans" id="dare-no" type="button">No</button></div>`}</div>
+    const slide = Guess.isSlide(dare), title = Guess.titleOf(dare);
+    body = `<section class="field${slide ? " tight" : ""}"><div class="wrap">${topBar(true)}${note}<p class="eyebrow" id="dare-h">A friend sent you this one</p>
+      <div class="q-body"><h1 class="q-h${brief(title)}">${gloss(title)}</h1>
+      ${dare.f && dare.f.hint ? `<p class="muted">${gloss(dare.f.hint)}</p>` : ""}</div></div></section>
+      <div id="dare-control" class="control${slide ? "" : " on-field"}${listed(dare)}">${Guess.controlHtml(dare, true, null)}</div>
       <div id="dare-reveal" class="reveal wrap"></div>`;
   } else if (!open) {
-    const n = saved.list.length, done = saved.ps.length === n, guess = saved.mode === "guess";
-    const marks = saved.ps.map((p, i) => markOf(guess ? Guess.result(saved.list[i], p) : { id: saved.list[i].id, p, a: saved.list[i].a }));
+    const n = saved.list.length, done = saved.ps.length === n, marks = saved.ps.map((g, i) => markOf(Guess.result(saved.list[i], g)));
     body = `<section class="field"><div class="wrap">${topBar(true)}${note}
       <div class="hello resume">
         <p class="eyebrow" id="resume-h">Unfinished round</p>
         <h1 class="q-h">${done ? `You answered all ${n} questions but did not see your result.` : `You stopped at question ${saved.ps.length + 1} of ${n}.`}</h1>
-        ${n <= 20 ? `<ol class="dots" aria-hidden="true">${saved.list.map((q, i) => `<li><span class="dot ${marks[i] || ""}"></span></li>`).join("")}</ol>` : ""}
+        <ol class="dots" aria-hidden="true">${saved.list.map((it, i) => `<li><span class="dot ${marks[i] || ""}"></span></li>`).join("")}</ol>
         <button class="btn btn-primary btn-big" id="resume" type="button">${done ? "See my result" : "Pick up where you left off"}</button>
         <p class="small"><button class="link" id="fresh-round" type="button">Start a new round instead</button></p>
       </div></div></section>`;
   } else {
     // The same question again on the way back from another page, with the pin where it was left.
-    const want = state.mode + ":" + state.length;
-    if (state.dealt !== want || state.answers.length) { deal(); state.dealt = want; }
+    if (state.dealt !== len || state.answers.length) { deal(); state.dealt = len; }
     state.opening = true;
-    body = questionHtml(0, topBar(true) + note + `<p class="intro" id="start-note">${word} quick ${guess ? "guesses" : "yes-or-no questions"} about where AI really stands.<span class="more"> About ${minutes(len, state.mode)}, and every answer has its sources.</span></p>`);
+    body = questionHtml(0, topBar(true) + note + `<p class="intro" id="start-note">${len === 20 ? "Twenty" : "Ten"} quick guesses about where AI really stands.<span class="more"> About ${minutes(len)}, and every answer has its sources.</span></p>`);
   }
   const options = open ? `
-    <p class="note" id="start-rule">${guess ? "Close counts. A near miss scores half a point." : "About half the answers are yes." + (state.mode === "confidence" ? " You give each one a percentage, and get an extra score for how well your confidence matched reality." : "")}</p>
+    <p class="note" id="start-rule">Close counts. A near miss scores half a point.</p>
     <div class="foot">
-      ${HAS_YESNO && HAS_GUESS ? `<button type="button" class="link" id="mode-switch">Try a ${guess ? "yes-or-no" : "best-guess"} round</button>` : ""}
-      <span class="lens" role="group" aria-label="Number of questions"><span aria-hidden="true">Questions</span>${offered.map(v => `<button type="button" id="len-${v}" aria-pressed="${v === len}">${v}</button>`).join("")}</span>
-      ${!guess && HAS_YESNO ? `<button type="button" class="link" id="sure-switch">${state.mode === "confidence" ? "Just say yes or no" : "Say how sure you are"}</button>` : ""}
+      <span class="lens" role="group" aria-label="Number of questions"><span aria-hidden="true">Questions</span>${LENGTHS.map(v => `<button type="button" id="len-${v}" aria-pressed="${v === len}">${v}</button>`).join("")}</span>
       ${seenN ? `<p class="small muted" id="returning">You have seen ${seenN} of the ${total} questions.${typeof best === "number" ? ` Your best over ${len} is ${pts(best)}.` : ""}</p>` : ""}
     </div>
     ${saved ? `<p class="small muted">You still have an unfinished round. <button type="button" class="link" id="resume">Pick up where you left off</button></p>` : ""}` : dare ? `<p id="dare-more">There are ${total - 1} more where that came from.</p>
@@ -3552,11 +3235,9 @@ function renderStart(notice, fresh) {
     <details>
       <summary>How this quiz works</summary>
       <div class="body">
-        ${HAS_YESNO ? `<p>${HAS_GUESS ? "In a yes-or-no round, about half the answers are yes." : "About half the answers in a round are yes."} In about half of the questions the truth is the wilder answer, where AI does more, spreads faster or has fewer limits. In the rest it is the tamer one. Always guessing one way gets you nowhere.</p>` : ""}
-        ${HAS_GUESS ? `<p>${HAS_YESNO ? "In a best-guess round, a" : "A"} right pick, or a guess inside the green band around the truth, scores one point. A guess near it scores half a point. Sliders for money, people and time climb by multiplying (10, 100, 1,000 and so on), because the ranges are huge.</p>` : ""}
+        <p>A right pick, or a guess inside the green band around the truth, scores one point. A guess near it scores half a point. Sliders for things like money, people and time climb by multiplying (10, 100, 1,000 and so on), because the ranges are huge.</p>
         <p>Each answer links to its sources and shows how recent the evidence is. The whole bank of ${total} questions was last checked on ${esc(CONFIG.checked)}. AI moves fast, and several answers changed during 2026.</p>
         <p>Words with a dotted underline, like ${gloss("Turing test")}, show a plain-English definition when you tap them.</p>
-        ${HAS_YESNO ? `<p>If you choose to say how sure you are, you also get a confidence score. Statisticians call it a ${gloss("Brier score")}. It rewards being sure when you are right and punishes being sure when you are wrong. 0 is perfect, and 0.25 is what you get for saying 50% to everything.</p>` : ""}
         <p>Nothing you answer is sent anywhere. Your browser remembers which questions you have seen, so that new rounds stay fresh, and your last result, so that you can come back to it. <button type="button" class="link" id="forget">Forget my history</button></p>
         <p>This is an independent project. No one is paying for it, apart from its maker covering the hosting. It tries to pick questions which surprise in both directions. The ones that seem to matter most tend to come up first.${CONFIG.feedbackUrl ? ` If an answer looks wrong or out of date, <a href="${esc(CONFIG.feedbackUrl)}" target="_blank" rel="noopener">send a note</a>.` : ""}</p>
       </div>
@@ -3569,29 +3250,24 @@ function renderStart(notice, fresh) {
     const act = document.querySelector("#control .act"); if (act) act.append(document.getElementById("start-rule"));
   }
   const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener("click", fn); };
-  const again = id => { store.mode = state.mode; store.length = state.length; saveStore(); renderStart("", true); const el = document.getElementById(id); if (el) el.focus({ preventScroll: true }); };
-  on("mode-switch", () => { state.mode = okMode(guess ? "quick" : "guess"); again("mode-switch"); });
-  on("sure-switch", () => { state.mode = okMode(state.mode === "confidence" ? "quick" : "confidence"); again("sure-switch"); });
-  offered.forEach(v => on("len-" + v, () => { state.length = v; again("len-" + v); }));
+  const again = id => { store.length = state.length; saveStore(); renderStart("", true); const el = document.getElementById(id); if (el) el.focus({ preventScroll: true }); };
+  LENGTHS.forEach(v => on("len-" + v, () => { state.length = v; again("len-" + v); }));
   const answerDare = r => {
-    const control = document.getElementById("dare-control"), it = dare.it || dare.q;
-    (dare.it ? Guess.idsOf(dare.it) : [dare.q.id]).forEach(remember);
-    if (dare.it) Guess.mark(r, control); else control.innerHTML = "";
-    document.getElementById("dare-reveal").innerHTML = revealHtml(r, it, {});
-    if (dare.it && Guess.isSlide(dare.it) && !reducedMotion()) Guess.travel(control, dare.it.f, r.g);
+    const control = document.getElementById("dare-control");
+    Guess.idsOf(dare).forEach(remember);
+    Guess.mark(r, control);
+    document.getElementById("dare-reveal").innerHTML = revealHtml(r, {});
+    if (Guess.isSlide(dare) && !reducedMotion()) Guess.travel(control, dare.f, r.g);
     document.getElementById("fresh-round").classList.add("btn-ink");
     state.shownAt = performance.now();
     const v = document.getElementById("verdict");
     try { v.focus({ preventScroll: true }); } catch (e) {}
-    showVerdict(v, !!dare.it && Guess.isSlide(dare.it));
+    showVerdict(v, Guess.isSlide(dare));
     // The answer is known now, so a refresh or a Back should not ask again.
     clearDare();
   };
-  if (dare && dare.it) wireGuess(dare.it, g => { if (state.dare) answerDare(Guess.result(dare.it, g)); });
-  on("dare-yes", () => answerDare({ id: dare.q.id, p: 1, a: dare.q.a }));
-  on("dare-no", () => answerDare({ id: dare.q.id, p: 0, a: dare.q.a }));
-  on("take", () => { state.mode = ch.mode === "guess" ? "guess" : "quick"; startRound(ch.list.slice()); });
-  on("take-conf", () => { state.mode = "confidence"; startRound(ch.list.slice()); });
+  if (dare) wireGuess(dare, g => { if (state.dare) answerDare(Guess.result(dare, g)); });
+  on("take", () => startRound(ch.list.slice()));
   const begin = () => { renderStart("", true); document.getElementById("question").focus({ preventScroll: true }); };
   on("fresh", () => { clearChallenge(); begin(); });
   on("fresh-round", () => { if (dare) startRound(); else begin(); });
@@ -3599,8 +3275,8 @@ function renderStart(notice, fresh) {
   on("last", () => resumeRound(last, true));
   on("forget", () => {
     try { localStorage.removeItem(STORE_KEY); } catch (e) {}
-    clearRound(); clearLast(); state.dealt = "";
-    store = loadStore(); state.mode = store.mode; state.length = store.length;
+    clearRound(); clearLast(); state.dealt = 0;
+    store = loadStore(); state.length = store.length;
     renderStart("Done. This browser no longer remembers which questions you have seen or how you did.");
   });
   Guess.layoutMarks();
@@ -3616,14 +3292,13 @@ const FIRST = new Set(["exam-markers", "face-test", "code-share", "brain-to-text
 // Sets up a round without showing it.
 function deal(list) {
   clearDare();
-  const guess = state.mode === "guess", draw = () => guess ? Guess.draw(Guess.LENGTHS.includes(state.length) ? state.length : 20, true, store.plays || store.seen.length ? null : FIRST) : drawRound(state.length);
-  state.list = list || draw();
-  state.index = 0; state.view = 0; state.answers = []; state.slider = null; state.finished = false; state.recorded = false; state.dealt = "";
+  state.list = list || Guess.draw(state.length, true, store.plays || store.seen.length ? null : FIRST);
+  state.index = 0; state.view = 0; state.answers = []; state.slider = null; state.finished = false; state.recorded = false; state.dealt = 0;
   state.seenBefore = new Set(store.seen);
 }
 function startRound(list) {
   deal(list);
-  if (!list && state.mode === "guess") Guess.preload(state.list);
+  if (!list) Guess.preload(state.list);
   // The unfinished round, if there is one, stays saved until this round has its first answer. A mistaken tap
   // on Play followed by Back then loses nothing.
   enterQuiz();
@@ -3632,34 +3307,29 @@ function startRound(list) {
 function resumeRound(saved, alreadyCounted) {
   // A friend's challenge that was waiting on the start screen is set aside, not dropped, while an older round is finished.
   state.parked = alreadyCounted || sameRound(saved.ch, state.challenge) ? null : state.challenge;
-  state.mode = saved.mode; state.challenge = saved.ch; state.list = saved.list;
-  const guess = saved.mode === "guess";
-  state.answers = saved.ps.map((p, i) => guess ? Guess.result(saved.list[i], p) : ({ id: saved.list[i].id, p, a: saved.list[i].a }));
+  state.challenge = saved.ch; state.list = saved.list;
+  state.answers = saved.ps.map((g, i) => Guess.result(saved.list[i], g));
   state.index = Math.min(saved.ps.length, saved.list.length - 1); state.slider = null; state.finished = false; state.recorded = !!alreadyCounted;
-  const mine = new Set(saved.list.slice(0, saved.ps.length).flatMap(q => guess ? Guess.idsOf(q) : [q.id]));   // answered in this round, so not "seen before"
+  const mine = new Set(saved.list.slice(0, saved.ps.length).flatMap(it => Guess.idsOf(it)));   // answered in this round, so not "seen before"
   state.seenBefore = new Set(store.seen.filter(id => !mine.has(id)));
   enterQuiz();
   if (saved.ps.length === saved.list.length) renderResults(); else renderQuestion();
 }
-// Two challenges are the same when they ask the same questions in the same way. How sure the player says they are does not count.
+// Two challenges are the same when they ask the same questions.
 function sameRound(a, b) {
-  const key = c => (c.mode === "guess" ? "g" : "q") + c.list.map(it => c.mode === "guess" ? Guess.encode(it) : it.id).join();
+  const key = c => c.list.map(it => Guess.encode(it)).join();
   return !!a && !!b && key(a) === key(b);
 }
 // The row at the top of a question. Answered questions can be opened again, with the arrows or by tapping their square.
 function navHtml(justAnswered) {
   const n = state.list.length, end = state.finished ? n - 1 : state.index, any = state.answers.length > 0;
   const arrow = (mark, to, ok, label) => `<button type="button" class="arrow" data-go="${to}" aria-label="${label}"${any ? "" : " hidden"}${ok ? "" : " disabled"}>${mark}</button>`;
-  let middle;
-  if (n > 20) middle = `<div class="progress" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${state.index}"><div style="width:${(state.index / n) * 100}%"></div></div>`;
-  else {
-    const how = { good: "right", bad: "wrong", meh: state.mode === "guess" ? "close" : "on the fence" };
-    middle = `<ol class="dots${n > 10 ? " many" : ""}">${state.list.map((q, j) => {
-      const r = state.answers[j], cls = (r ? markOf(r) : j === state.index ? "now" : "") + (j === justAnswered ? " pop" : ""), label = `Question ${j + 1}${r ? ", " + how[markOf(r)] : ""}`;
-      if (j === state.view) return `<li><span class="dot ${cls} here" role="img" aria-label="${label}, showing"></span></li>`;
-      return r || j === state.index ? `<li><button type="button" class="dot ${cls}" data-go="${j}" aria-label="Go to ${label.charAt(0).toLowerCase() + label.slice(1)}"></button></li>` : `<li><span class="dot" aria-hidden="true"></span></li>`;
-    }).join("")}</ol>`;
-  }
+  const how = { good: "right", bad: "wrong", meh: "close" };
+  const middle = `<ol class="dots${n > 10 ? " many" : ""}">${state.list.map((it, j) => {
+    const r = state.answers[j], cls = (r ? markOf(r) : j === state.index ? "now" : "") + (j === justAnswered ? " pop" : ""), label = `Question ${j + 1}${r ? ", " + how[markOf(r)] : ""}`;
+    if (j === state.view) return `<li><span class="dot ${cls} here" role="img" aria-label="${label}, showing"></span></li>`;
+    return r || j === state.index ? `<li><button type="button" class="dot ${cls}" data-go="${j}" aria-label="Go to ${label.charAt(0).toLowerCase() + label.slice(1)}"></button></li>` : `<li><span class="dot" aria-hidden="true"></span></li>`;
+  }).join("")}</ol>`;
   return `<nav class="q-top" aria-label="Questions in this round">${middle}<span class="count mono">${state.view + 1} / ${n}</span>${arrow("‹", state.view - 1, state.view > 0, "Previous question")}${arrow("›", state.view + 1, state.view < end, "Next question")}</nav>`;
 }
 function wireNav() { $app.querySelectorAll(".q-top [data-go]").forEach(b => b.addEventListener("click", () => showQuestion(Number(b.dataset.go)))); }
@@ -3675,21 +3345,11 @@ function showQuestion(k) {
   toTop("question");
 }
 function questionHtml(k, top) {
-  const it = state.list[k], guess = state.mode === "guess", open = k >= state.answers.length;
-  const title = guess ? Guess.titleOf(it) : it.q, qHtml = gloss(title), hint = guess && it.f && it.f.hint;
+  const it = state.list[k], open = k >= state.answers.length, slide = Guess.isSlide(it), title = Guess.titleOf(it), qHtml = gloss(title), hint = it.f && it.f.hint;
   const tip = open && store.plays === 0 && k < 4 && qHtml.includes('class="term"') ? `<p class="small muted">Tap an underlined word for a plain-English definition.</p>` : "";
-  const tap = open && guess && store.plays === 0 && listed(it) && !state.answers.some(r => listed(r.it)) ? `<p class="small muted tap">One tap locks it in.</p>` : "";
-  const again = open && (guess ? Guess.idsOf(it) : [it.id]).every(id => state.seenBefore.has(id));
-  let control = "";
-  const swap = open && guess && it.photos && !state.challenge;   // a friend's round is the same for both, so nothing is swapped there
-  const key = c => top ? "" : `<kbd aria-hidden="true">${c}</kbd>`;   // the keys work while the question has the focus, which the opening one does not take
-  const sure = !guess && open && state.mode === "confidence", slide = sure || (guess && Guess.isSlide(it));
-  if (guess) control = Guess.controlHtml(it, open, state.slider);
-  else if (sure) {
-    control = Guess.slideHtml({ type: "pct" }, { id: "conf", out: "conf-out", max: 100, step: 10, value: state.slider === null ? 50 : state.slider, label: "How likely is it that the answer is yes?", ends: ["definitely no", "definitely yes"], button: "Lock it in" });
-  } else if (open) {
-    control = `<div class="yn"><button class="btn ans" id="say-yes" type="button">Yes${key("Y")}</button><button class="btn ans" id="say-no" type="button">No${key("N")}</button></div>`;
-  }
+  const tap = open && store.plays === 0 && listed(it) && !state.answers.some(r => listed(r.it)) ? `<p class="small muted tap">One tap locks it in.</p>` : "";
+  const again = open && Guess.idsOf(it).every(id => state.seenBefore.has(id));
+  const swap = open && it.photos && !state.challenge;   // a friend's round is the same for both, so nothing is swapped there
   return `
     <section class="field${slide ? " tight" : ""}"><div class="wrap">
       ${top || ""}${navHtml()}
@@ -3697,11 +3357,11 @@ function questionHtml(k, top) {
         ${again ? `<p class="small muted">You have seen this one before.</p>` : ""}
         <h1 id="question" class="q-h${brief(title)}" tabindex="-1">${qHtml}</h1>
         ${swap ? `<p class="sr-only">This one needs sight. A button after the four photos swaps it for another question.</p>` : ""}
-        ${hint ? `<p class="muted">${gloss(hint)}</p>` : sure ? `<p class="muted" aria-hidden="true">How likely is it that the answer is yes?</p>` : ""}
+        ${hint ? `<p class="muted">${gloss(hint)}</p>` : ""}
         ${tip}${tap}
       </div>
     </div></section>
-    <div id="control" class="control${slide ? "" : " on-field"}${open && !slide ? " fill" : ""}${listed(it)}">${control}${swap ? `<p class="small center wrap" id="swap-row"><button type="button" class="link" id="swap">Can't see the photos? Swap this question</button></p>` : ""}</div>
+    <div id="control" class="control${slide ? "" : " on-field"}${open && !slide ? " fill" : ""}${listed(it)}">${Guess.controlHtml(it, open, state.slider)}${swap ? `<p class="small center wrap" id="swap-row"><button type="button" class="link" id="swap">Can't see the photos? Swap this question</button></p>` : ""}</div>
     <div id="reveal" class="reveal wrap"></div>`;
 }
 // Moves a pin, its stem and the large number to where its slider is.
@@ -3743,34 +3403,15 @@ function swapPhotos() {
   document.getElementById("question").focus({ preventScroll: true });
 }
 function wireQuestion(k) {
-  const it = state.list[k], guess = state.mode === "guess";
   wireNav();
   const swap = document.getElementById("swap");
   if (swap) swap.addEventListener("click", swapPhotos);
   if (k < state.answers.length) paintAnswer(k);
-  else if (guess) wireGuess(it, answerGuess, state.slider, v => { state.slider = v; });
-  else if (state.mode === "confidence") {
-    const slider = document.getElementById("conf");
-    const read = () => {
-      const v = Number(slider.value);
-      movePin(slider, v + "%", confWords(v));
-      slider.setAttribute("aria-valuetext", `${v}%, ${confWords(v)}`);
-      document.getElementById("lock").textContent = `Lock in ${v}%`;
-    };
-    const moved = () => { state.slider = Number(slider.value); read(); };
-    slider.addEventListener("input", moved);
-    dragPin(slider, moved);
-    read();
-    document.getElementById("lock").addEventListener("click", () => answer(Number(slider.value) / 100));
-  } else {
-    document.getElementById("say-yes").addEventListener("click", () => answer(1));
-    document.getElementById("say-no").addEventListener("click", () => answer(0));
-  }
+  else wireGuess(state.list[k], answerGuess, state.slider, v => { state.slider = v; });
 }
-// Wires the controls of a guess question. say(g) gets the answer. A slider starts at the position it was left at, if any.
+// Wires the controls of a question. say(g) gets the answer. A slider starts at the position it was left at, if any.
 function wireGuess(it, say, at, keep) {
   $app.querySelectorAll(".pick, .photo").forEach(b => b.addEventListener("click", () => say(Number(b.dataset.i))));
-  $app.querySelectorAll("[data-yn]").forEach(b => b.addEventListener("click", () => say(b.dataset.yn === "1")));
   const slider = document.getElementById("slider");
   if (!slider) return;
   const out = document.getElementById("readout"), btn = document.getElementById("lock"), slide = slider.closest(".slide");
@@ -3795,33 +3436,26 @@ function wireGuess(it, say, at, keep) {
   Guess.layoutMarks();
 }
 const asking = () => (state.screen === "question" || (state.screen === "start" && state.opening)) && state.view === state.index && state.answers.length <= state.index;
-function answer(p) {
-  if (!asking()) return;
-  const q = state.list[state.index];
-  settle({ id: q.id, p, a: q.a }, [q.id]);
-}
 function answerGuess(g) {
-  if (!asking()) return;
-  const it = state.list[state.index];
-  settle(Guess.result(it, g), Guess.idsOf(it));
+  if (asking()) settle(Guess.result(state.list[state.index], g));
 }
-function settle(r, ids) {
+function settle(r) {
   // Answering the question on the start screen begins the round.
   if (state.opening) {
     state.opening = false; enterQuiz(); setScreen("question");
     const x = document.getElementById("extras"); if (x) x.remove();
-    if (r.it) Guess.preload(state.list);
+    Guess.preload(state.list);
   }
   const tap = $app.querySelector(".tap"); if (tap) tap.remove();
   state.answers.push(r);
-  ids.forEach(remember);
+  Guess.idsOf(r.it).forEach(remember);
   saveRound();
   paintAnswer(state.index, true);
   $app.querySelector(".q-top").outerHTML = navHtml(state.index);
   wireNav();
   try { document.getElementById("verdict").focus({ preventScroll: true }); } catch (e) {}
   // A slider or a list stays above its answer, so the answer may start below the fold.
-  if (r.it) showVerdict($app.querySelector(".verdict"), Guess.isSlide(r.it));
+  showVerdict($app.querySelector(".verdict"), Guess.isSlide(r.it));
 }
 // Brings an answer into view. After a guess on the ruler the number travels to the truth first, and the page follows once it is there,
 // unless the reader has moved on.
@@ -3838,60 +3472,48 @@ function showVerdict(v, slid) {
   const y = window.scrollY;
   setTimeout(() => { if (Math.abs(window.scrollY - y) < 4) show(true); }, 950);
 }
-// The answer to one question: the verdict, the note and the detail. o may add the mode, a streak and how the challenger did.
-function revealHtml(r, it, o) {
-  const kind = markOf(r), guess = !!r.it, q = guess ? Guess.bankOf(it) : it;
-  let tag, word, body;
-  if (guess) {
-    tag = kind === "good" ? (it.f && it.f.type !== "pick" ? "Right on. One point" : "Right. One point") : kind === "meh" ? "Close. Half a point" : "Not this time. No points";
-    // What was slid to or picked. A picked answer may have scrolled out of view.
-    const line = it.f && it.f.type !== "pick" ? Guess.compare(it.f, r.g) : kind === "good" ? "" : it.kind === "quad" ? `You picked: ${Guess.saidOf(r)}. That one is ${it.claims[r.g].q.a ? "true" : "not true"}.` : it.photos ? `You picked photo ${"ABCD"[r.g]}, which is real.` : it.kind === "pick" ? `You picked ${Guess.saidOf(r)}.` : "", quad = it.kind === "quad";
-    word = quad ? (it.oddFalse ? "Not true" : "True") : Guess.truthOf(it);
-    // The note speaks of the answer above it ("That was..."), so nothing about the guess comes between the two.
-    body = `${quad ? `<p class="claim" id="verdict-claim">${esc(it.claims[it.answer].text)}</p>` : ""}<p>${gloss(Guess.answerText(it))}</p>${quad ? "" : lineupHtml(it.id)}${line ? `<p class="small their">${esc(line)}</p>` : ""}`;
-  } else {
-    tag = kind === "good" ? "Correct" : kind === "bad" ? "Not this time" : "On the fence";
-    if (o.mode === "confidence") {
-      const sure = Math.round(Math.max(r.p, 1 - r.p) * 100);
-      tag += r.p === 0.5 ? ". You said 50/50" : `. You were ${sure}% sure it was ${r.p > 0.5 ? "yes" : "no"}`;
-    }
-    word = q.a ? "Yes" : "No";
-    body = `<p>${gloss(q.short)}</p>${lineupHtml(q.id)}`;
-  }
+// The answer to one question: the verdict, the note and the detail. o may add a streak, the score so far and how the challenger did.
+function revealHtml(r, o) {
+  const it = r.it, kind = markOf(r), q = Guess.bankOf(it), quad = it.kind === "quad", slid = !quad && it.f.type !== "pick";
+  let tag = kind === "good" ? (slid ? "Right on. One point" : "Right. One point") : kind === "meh" ? "Close. Half a point" : "Not this time. No points";
+  // What was slid to or picked. A picked answer may have scrolled out of view.
+  const line = slid ? Guess.compare(it.f, r.g) : kind === "good" ? "" : quad ? `You picked: ${Guess.saidOf(r)}. That one is ${it.claims[r.g].q.a ? "true" : "not true"}.` : it.photos ? `You picked photo ${"ABCD"[r.g]}, which is real.` : `You picked ${Guess.saidOf(r)}.`;
+  const word = quad ? (it.oddFalse ? "Not true" : "True") : Guess.truthOf(it);
+  // The note speaks of the answer above it ("That was..."), so nothing about the guess comes between the two.
+  const body = `${quad ? `<p class="claim" id="verdict-claim">${esc(it.claims[it.answer].text)}</p>` : ""}<p>${gloss(Guess.answerText(it))}</p>${quad ? "" : lineupHtml(it.id)}${line ? `<p class="small their">${esc(line)}</p>` : ""}`;
   if (o.streak >= 3) tag += ` · ${o.streak} in a row`; else if (o.so) tag += ` · ${o.so} so far`;
   const t = o.theirs;
-  const their = typeof t === "number" ? `<p class="small their">Your challenger ${t === 2 ? "got this one right" : t === 0 ? "got this one wrong" : guess ? "was close on this one" : "sat on the fence here"}.</p>` : "";
+  const their = typeof t === "number" ? `<p class="small their">Your challenger ${t === 2 ? "got this one right" : t === 0 ? "got this one wrong" : "was close on this one"}.</p>` : "";
   return `
-    <section class="verdict ${kind}" id="verdict" tabindex="-1" aria-labelledby="verdict-tag verdict-word${guess && it.kind === "quad" ? " verdict-claim" : ""}">
+    <section class="verdict ${kind}" id="verdict" tabindex="-1" aria-labelledby="verdict-tag verdict-word${quad ? " verdict-claim" : ""}">
       <p class="verdict-tag" id="verdict-tag">${ICON[kind]}<span>${tag}</span></p>
-      <p class="verdict-word${guess ? " long" : ""}" id="verdict-word">${esc(word)}</p>
+      <p class="verdict-word" id="verdict-word">${esc(word)}</p>
       ${body}
       ${their}
     </section>
     <div class="side">${q.safety ? `<aside class="why"><p class="eyebrow">Worth knowing</p><p>${gloss(q.safety)}</p></aside>` : ""}
-    ${guess ? Guess.othersHtml(it) : ""}
-    ${detailsBlock(guess ? Guess.sourceOf(it) : q, q.detail ? "More detail and sources" : "Sources")}</div>`;
+    ${Guess.othersHtml(it)}
+    ${detailsBlock(Guess.sourceOf(it), q.detail ? "More detail and sources" : "Sources", false, Guess.askedOf(it))}</div>`;
 }
 // The answer to question k, under the question.
 function paintAnswer(k, fresh) {
-  const r = state.answers[k], it = state.list[k], guess = !!r.it, ch = state.challenge;
+  const r = state.answers[k], it = state.list[k], ch = state.challenge;
   const current = k === state.index && !state.finished, last = k === state.list.length - 1;
   let streak = 0;
   if (fresh) for (let i = k; i >= 0 && markOf(state.answers[i]) === "good"; i--) streak++;
-  // The score so far, once there is one. With percentages the line already says enough.
-  const done = state.answers.slice(0, k + 1), won = done.reduce((sum, x) => sum + (guess ? x.grade : markOf(x) === "good" ? 1 : 0), 0);
-  const so = !fresh || !k || !won || state.mode === "confidence" ? "" : guess ? pts(won) : `${won} of ${k + 1}`;
+  // The score so far, once there is one.
+  const won = state.answers.slice(0, k + 1).reduce((sum, x) => sum + x.grade, 0), so = fresh && k && won ? pts(won) : "";
   const control = document.getElementById("control"), swap = document.getElementById("swap-row");
   if (swap) swap.remove();
   control.classList.remove("fill");
   if (fresh) state.shownAt = performance.now();
-  if (guess) Guess.mark(r, control); else control.innerHTML = "";
-  if (fresh && guess && Guess.isSlide(it) && !reducedMotion()) Guess.travel(control, it.f, r.g);
+  Guess.mark(r, control);
+  if (fresh && Guess.isSlide(it) && !reducedMotion()) Guess.travel(control, it.f, r.g);
   const label = !current ? (state.finished ? "Back to my result" : `Back to question ${state.index + 1}`) : !last ? "Next question" : store.bonus ? "See my result" : "One last question";
-  document.getElementById("reveal").innerHTML = `${revealHtml(r, it, { mode: state.mode, streak, so, theirs: ch && ch.theirs ? ch.theirs[k] : null })}
+  document.getElementById("reveal").innerHTML = `${revealHtml(r, { streak, so, theirs: ch && ch.theirs ? ch.theirs[k] : null })}
     <p class="small center pass-on"><button type="button" class="link" id="pass">Send this question to a friend</button> <span class="muted" id="pass-status" role="status"></span></p>
     <div class="next-row"><button class="btn btn-primary btn-big btn-block" id="next" type="button">${label}</button></div>`;
-  document.getElementById("pass").addEventListener("click", () => sendDare(guess ? { it } : { q: it }, msg => { const el = document.getElementById("pass-status"); if (el) el.textContent = msg; }));
+  document.getElementById("pass").addEventListener("click", () => sendDare(it, msg => { const el = document.getElementById("pass-status"); if (el) el.textContent = msg; }));
   document.getElementById("next").addEventListener("click", () => {
     if (state.finished) renderResults();
     else if (!current) showQuestion(state.index);
@@ -3903,82 +3525,50 @@ function paintAnswer(k, fresh) {
 
 /* ---------- One last question ----------
    A question about the quiz itself, asked once per browser between the last answer and the first result.
-   It is never scored, shared or drawn, so it is not part of QUESTIONS. Guess mode asks it as a slider. */
+   It is never scored, shared or drawn, so it is not part of QUESTIONS. */
 const BONUS = {
-  q: "Did AI write all of the code behind this quiz?", a: true,
-  it: { kind: "pct", id: "bonus", f: { type: "pct", q: "How much of the code behind this quiz did AI write?", truth: 100, truthText: "All of it", full: [97, 100], half: [85, 100] } },
+  kind: "pct", id: "bonus", f: { type: "pct", q: "How much of the code behind this quiz did AI write?", truth: 100, truthText: "All of it", full: [97, 100], half: [85, 100] },
   short: "AI wrote all of the code powering this app. That took quite a bit of iteration, with prompts like 'Make it so people can share their results easily'. The content isn't slop, though: we carefully reviewed the questions and sources."
 };
 function renderBonus() {
   setScreen("bonus");
-  const guess = state.mode === "guess";
   $app.innerHTML = `
-    <section class="field${guess ? " tight" : ""}"><div class="wrap"><p class="eyebrow">One last question, just for fun</p>
-    <div class="q-body"><h1 id="question" class="q-h" tabindex="-1">${esc(guess ? BONUS.it.f.q : BONUS.q)}</h1></div></div></section>
-    <div id="control" class="control unscored${guess ? "" : " on-field fill"}">${guess ? Guess.controlHtml(BONUS.it, true, null) : `<div class="yn"><button class="btn ans" id="say-yes" type="button">Yes<kbd aria-hidden="true">Y</kbd></button><button class="btn ans" id="say-no" type="button">No<kbd aria-hidden="true">N</kbd></button></div>`}</div>
+    <section class="field tight"><div class="wrap"><p class="eyebrow">One last question, just for fun</p>
+    <div class="q-body"><h1 id="question" class="q-h" tabindex="-1">${esc(BONUS.f.q)}</h1></div></div></section>
+    <div id="control" class="control unscored">${Guess.controlHtml(BONUS, true, null)}</div>
     <div id="reveal" class="reveal wrap" aria-live="polite"></div>`;
-  if (guess) wireGuess(BONUS.it, answerBonus, null);
-  else {
-    document.getElementById("say-yes").addEventListener("click", () => answerBonus(true));
-    document.getElementById("say-no").addEventListener("click", () => answerBonus(false));
-  }
+  wireGuess(BONUS, answerBonus, null);
   toTop("question");
 }
-// Gets true or false, or a number from the slider.
 function answerBonus(g) {
   if (state.screen !== "bonus" || store.bonus) return;
   store.bonus = true; saveStore();
-  const guess = typeof g === "number", control = document.getElementById("control");
-  const grade = guess ? Guess.grade(BONUS.it, g) : g === BONUS.a ? 1 : 0, kind = grade === 1 ? "good" : grade ? "meh" : "bad";
-  control.classList.remove("fill"); state.shownAt = performance.now();
-  if (guess) { Guess.mark({ it: BONUS.it, g, grade }, control); if (!reducedMotion()) Guess.travel(control, BONUS.it.f, g); } else control.innerHTML = "";
+  const control = document.getElementById("control"), r = Guess.result(BONUS, g), kind = markOf(r);
+  state.shownAt = performance.now();
+  Guess.mark(r, control);
+  if (!reducedMotion()) Guess.travel(control, BONUS.f, g);
   document.getElementById("reveal").innerHTML = `
     <section class="verdict ${kind}">
-      <p class="verdict-tag">${ICON[kind]}<span>${kind === "bad" ? "Not this time" : kind === "meh" ? "Close" : guess ? "Right on" : "Correct"}</span></p>
-      <p class="verdict-word${guess ? " long" : ""}">${guess ? esc(BONUS.it.f.truthText) : BONUS.a ? "Yes" : "No"}</p>
+      <p class="verdict-tag">${ICON[kind]}<span>${kind === "bad" ? "Not this time" : kind === "meh" ? "Close" : "Right on"}</span></p>
+      <p class="verdict-word">${esc(BONUS.f.truthText)}</p>
       <p>${esc(BONUS.short)}</p>
-      <p class="small their">${guess ? esc(Guess.compare(BONUS.it.f, g)) + " " : ""}This one doesn't count toward your score.</p>
+      <p class="small their">${esc(Guess.compare(BONUS.f, g))} This one doesn't count toward your score.</p>
     </section>
     <div class="next-row"><button class="btn btn-primary btn-big btn-block" id="next" type="button">See my result</button></div>`;
   const next = document.getElementById("next");
   next.addEventListener("click", renderResults);
   try { next.focus({ preventScroll: true }); } catch (e) {}
-  showVerdict(document.querySelector("#reveal .verdict"), guess);
+  showVerdict(document.querySelector("#reveal .verdict"), true);
 }
 
 /* ---------- Results ---------- */
-// Splits the misses by direction. "under" means the truth was the wilder answer and the player guessed the
-// tamer one, and "over" means the opposite. wildN and tameN count how many questions of each lean were in the round.
-// A few questions lean neither way. Their misses are counted in "other".
-function analyze(answers) {
-  let under = 0, over = 0, wildN = 0, tameN = 0, other = 0;
-  for (const r of answers) {
-    const lean = leanOf(BY_ID[r.id]), bad = markOf(r) === "bad";
-    if (lean === "wild") { wildN++; if (bad) under++; }
-    else if (lean === "tame") { tameN++; if (bad) over++; }
-    else if (bad) other++;
-  }
-  return { under, over, wildN, tameN, other };
-}
 const FINDINGS = {
   clear: { title: "Hard to fool", share: "Turns out I'm hard to fool." },
   wilder: { title: "Wilder than you guessed", share: "Reality was wilder than my guesses." },
   tamer: { title: "Tamer than you guessed", share: "Reality was tamer than my guesses." },
   both: { title: "Surprised both ways", share: "It surprised me both ways." },
-  some: { title: "A few surprises", share: "It had a few surprises for me." },
-  fence: { title: "On the fence", share: "I kept my options open." }
+  some: { title: "A few surprises", share: "It had a few surprises for me." }
 };
-// A direction is only named when it clearly dominates: at least three misses that way, two more and twice as
-// many as the other, and a higher miss rate. Anything less is noise in a short round.
-function findingOf(s, an) {
-  if (s.n && s.right / s.n >= 0.8) return "clear";
-  const uRate = an.wildN ? an.under / an.wildN : 0, oRate = an.tameN ? an.over / an.tameN : 0;
-  if (an.under >= 3 && an.under - an.over >= 2 && an.under >= 2 * an.over && uRate - oRate >= 0.25) return "wilder";
-  if (an.over >= 3 && an.over - an.under >= 2 && an.over >= 2 * an.under && oRate - uRate >= 0.25) return "tamer";
-  if (an.under > 0 && an.over > 0) return "both";
-  if (s.wrong === 0) return "fence";
-  return "some";
-}
 function findingLine(key, s, an) {
   if (key === "clear") {
     return s.right === s.n ? "A perfect round. You got every one of these."
@@ -3988,11 +3578,10 @@ function findingLine(key, s, an) {
   if (key === "tamer") return "When you missed, it was mostly because the truth was tamer than your guess.";
   if (key === "both") {
     // The headline names a direction only when it clearly dominates. A smaller tilt is still worth one plain sentence.
-    const gap = an ? (an.wildN ? an.under / an.wildN : 0) - (an.tameN ? an.over / an.tameN : 0) : 0;
+    const gap = (an.under - an.over) / (an.under + an.over);
     const tilt = Math.abs(gap) < 0.2 ? "" : gap > 0 ? " More often they were wilder." : " More often they were tamer.";
     return "You missed in both directions. Some answers were wilder than you guessed, and some were tamer." + tilt;
   }
-  if (key === "fence") return "You never leaned the wrong way. You just kept your options open on a few.";
   return "A few of these caught you out. That is normal: the truth about AI right now is a strange mix.";
 }
 function gridOf(answers) {
@@ -4001,25 +3590,19 @@ function gridOf(answers) {
   for (let i = 0; i < squares.length; i += 10) rows.push(squares.slice(i, i + 10).join(""));
   return rows.join("\n");
 }
-// The questions that caught the player out, most important first, and the shorter one when two tie.
-// Only plain facts: an opinion or a law reads oddly in a post with no answer beside it.
+// The questions that caught the player out, the widest miss first, with what the player said. A set of four statements or a quote says
+// nothing without its choices, and an opinion or a law reads oddly in a post with no answer beside it.
 function gotMe(answers) {
-  const bad = answers.filter(r => markOf(r) === "bad");
-  // In guess mode the widest miss leads, with what the player said. A set of four statements or a quote says nothing without its choices.
-  if (answers.some(r => r.it)) return bad.filter(r => r.it.f && !r.it.quote && !r.it.q.kind).map(r => ({ q: Guess.titleOf(r.it), said: Guess.saidOf(r), far: r.it.kind === "pick" ? 0.3 : Math.abs(Guess.pos(r.it.f, r.g) - Guess.pos(r.it.f, r.it.f.truth)) }))
+  return answers.filter(r => markOf(r) === "bad" && r.it.f && !r.it.quote && !r.it.q.kind)
+    .map(r => ({ q: Guess.titleOf(r.it), said: Guess.saidOf(r), far: r.it.kind === "pick" ? 0.3 : Math.abs(Guess.pos(r.it.f, r.g) - Guess.pos(r.it.f, r.it.f.truth)) }))
     .filter(x => x.q.length <= 110).sort((x, y) => y.far - x.far);
-  return bad.map(r => BY_ID[r.id]).filter(q => q && !q.kind && q.q.length <= 110)
-    .sort((x, y) => (y.rank || 0) - (x.rank || 0) || x.q.length - y.q.length);
 }
-// How that question is introduced, on the picture and in a post. It never says what the answer was.
-const saidSoft = x => x.said.replace(/^[A-Z](?=[a-z ])/, c => c.toLowerCase());   // in the middle of a sentence
-function gotLead(x) { return x.said ? `I said ${saidSoft(x)}:` : "This one got me:"; }
-function gotLine(x) { return x.said ? `${x.q} I said ${saidSoft(x)}.` : `${gotLead(x)} ${x.q}`; }
-function closeToCoinFlip(brier) { return Math.abs(brier - 0.25) < 0.0005; }
+// How one of them is put on the picture and in a post. It never says what the answer was.
+function gotLine(x) { return `${x.q} I said ${x.said.replace(/^[A-Z](?=[a-z ])/, c => c.toLowerCase())}.`; }
 // The text a player shares. It never gives an answer away: the squares show right and wrong in order,
 // and the teaser names one question that caught the player out without saying how.
 function shareText(s, key, url) {
-  const conf = state.mode === "confidence", ch = state.challenge;
+  const ch = state.challenge;
   let first = `What's up with AI? I got ${pts(s.right)}/${s.n}.`;
   if (ch && ch.theirs) {
     const theirs = theirPoints(ch);
@@ -4027,12 +3610,7 @@ function shareText(s, key, url) {
     else if (s.right === theirs) first = `What's up with AI? I got ${pts(s.right)}/${s.n} and tied your ${pts(theirs)}.`;
     else first = `What's up with AI? I got ${pts(s.right)}/${s.n}. Your ${pts(theirs)} still stands.`;
   }
-  let second = FINDINGS[key].share;
-  if (conf) {
-    const b = (s.milli / 1000).toFixed(3);
-    second += closeToCoinFlip(s.brier) ? ` My confidence matched a coin flip (Brier ${b}).`
-      : s.brier < 0.25 ? ` My confidence beat a coin flip (Brier ${b}).` : ` My confidence did worse than a coin flip (Brier ${b}).`;
-  }
+  const second = FINDINGS[key].share;
   const lines = [first, gridOf(state.answers), second];
   const tail = !url ? ["How well do you know AI?"] : url.includes("?c=") ? [`Same ${s.n} questions for you:`, url] : ["Try it:", url];
   // Rough length as the strictest sites count it: a square counts double and a link counts as 23.
@@ -4041,78 +3619,23 @@ function shareText(s, key, url) {
   if (tease) lines.push(tease);
   return lines.concat(tail).join("\n");
 }
-function brierVerdict(s) {
-  if (s.brier <= 0.10) return "Sharp. In this round you knew what you knew.";
-  if (s.brier <= 0.18) return "Good. Clearly better than hedging on everything.";
-  if (closeToCoinFlip(s.brier)) return "The same as answering 50% to every question.";
-  if (s.brier < 0.25) return "A little better than answering 50% to every question.";
-  return "Worse than answering 50% to every question. That usually means confident answers that turned out wrong.";
-}
-function calibrationNote(s) {
-  if (!s.leaned) return "You said 50/50 every time, so there is no confidence to check.";
-  const gap = Math.round((s.sure - s.hit) * 100), few = (s.leaned < 15 ? " With this few answers, some of that is chance." : "") + (s.unsure ? " Answers at 50/50 are left out." : "");
-  if (Math.abs(gap) <= 5) return "In this round, how sure you were matched how often you were right." + few;
-  if (gap > 0) return `In this round your confidence ran about ${gap} points ahead of how often you were right. That is overconfidence, the most common pattern.` + few;
-  return `In this round you were right about ${-gap} points more often than you expected to be. You could afford to be bolder.` + few;
-}
-// Picks the answer with the largest error and the most confident answer that was right.
-// Ties go to the earlier question. A miss only counts if the player leaned the wrong way.
-function pickAwards(answers) {
-  let miss = null, hit = null;
-  answers.forEach((r, i) => {
-    const err = brierOne(r.p, r.a ? 1 : 0), kind = markOf(r);
-    if (kind === "bad" && (!miss || err > miss.err)) miss = { r, i, err };
-    if (kind === "good" && (!hit || err < hit.err)) hit = { r, i, err };
-  });
-  return { miss, hit };
-}
-function sureLine(p) {
-  if (p === 0.5) return "You said 50/50";
-  return `You were ${Math.round(Math.max(p, 1 - p) * 100)}% sure it was ${p > 0.5 ? "yes" : "no"}`;
-}
-function awardCard(kind, title, entry) {
-  const q = BY_ID[entry.r.id];
-  const line = `${sureLine(entry.r.p)}. It was ${q.a ? "yes" : "no"}.`;
-  return `<div class="award ${kind}">
-    <p class="eyebrow">${esc(title)}</p>
-    <p><b>${gloss(q.q)}</b></p>
-    <p class="small">${line}</p>
-    <p class="small muted">${gloss(q.short)}</p>
-  </div>`;
-}
 function reviewItem(r, i) {
-  const guess = !!r.it, q = guess ? Guess.bankOf(r.it) : BY_ID[r.id], conf = state.mode === "confidence", at = state.answers.indexOf(r);
-  const num = typeof i === "number" ? (i + 1) + ". " : "";
-  if (guess) return `<div class="review-item">
-      <div class="row"><span class="pill ${markOf(r)}">${{ good: "One point", meh: "Half a point", bad: "Missed" }[markOf(r)]}</span></div>
-      <p><b>${num}${gloss(Guess.titleOf(r.it))}</b></p>
-      <p class="small"><b>${esc(Guess.truthOf(r.it))}</b></p>
-      <p class="small">${gloss(Guess.answerText(r.it))}</p>
-      ${r.grade === 1 && (r.it.kind === "quad" || r.it.kind === "pick" || r.it.kind === "yn") ? "" : `<p class="small muted">You said: ${esc(Guess.saidOf(r))}</p>`}
-      <p class="small"><button type="button" class="link" data-look="${at}">See the question again</button></p>
-      ${detailsBlock(Guess.sourceOf(r.it), q.detail ? "Detail and sources" : "Sources", true)}
-    </div>`;
-  const you = conf ? sureLine(r.p) : `You said ${r.p === 1 ? "yes" : "no"}`;
+  const it = r.it, q = Guess.bankOf(it), kind = markOf(r), at = state.answers.indexOf(r);
   return `<div class="review-item">
-      <div class="row"><span class="pill ${markOf(r)}">${you}</span><span class="pill">Answer: ${q.a ? "yes" : "no"}</span></div>
-      <p><b>${num}${gloss(q.q)}</b></p>
-      <p class="small">${gloss(q.short)}</p>
-      ${detailsBlock(q, "Detail and sources", true)}
+      <div class="row"><span class="pill ${kind}">${{ good: "One point", meh: "Half a point", bad: "Missed" }[kind]}</span></div>
+      <p><b>${typeof i === "number" ? (i + 1) + ". " : ""}${gloss(Guess.titleOf(it))}</b></p>
+      <p class="small"><b>${esc(Guess.truthOf(it))}</b></p>
+      <p class="small">${gloss(Guess.answerText(it))}</p>
+      ${r.grade === 1 && !Guess.isSlide(it) ? "" : `<p class="small muted">You said: ${esc(Guess.saidOf(r))}</p>`}
+      <p class="small"><button type="button" class="link" data-look="${at}">See the question again</button></p>
+      ${detailsBlock(Guess.sourceOf(it), q.detail ? "Detail and sources" : "Sources", true, Guess.askedOf(it))}
     </div>`;
-}
-// Which way a miss went: "under" when the truth was the wilder answer, "over" when it was the tamer one, null otherwise.
-function missDir(r) {
-  if (r.it) return r.lean === "wilder" ? "under" : r.lean === "tamer" ? "over" : null;
-  if (markOf(r) !== "bad") return null;
-  const lean = leanOf(BY_ID[r.id]);
-  return lean === "wild" ? "under" : lean === "tame" ? "over" : null;
 }
 // A row of the result card: how many misses went one way. It opens to show which questions they were.
-function missRow(label, dir, missed, of, count) {
-  if (!of) return "";
-  const head = `<span>${label}</span><span class="bar"><span style="width:${missed / of * 100}%"></span></span><b class="mono">${count}</b>`;
+function missRow(label, dir, missed, of) {
+  const head = `<span>${label}</span><span class="bar"><span style="width:${missed / of * 100}%"></span></span><b class="mono">${missed}</b>`;
   if (!missed) return `<div class="lean"><div class="lean-head">${head}</div></div>`;
-  const items = state.answers.map((r, i) => missDir(r) !== dir ? "" : `<li><i class="${markOf(r)}" aria-hidden="true"></i><button type="button" class="linky" data-look="${i}">${esc(r.it ? Guess.titleOf(r.it) : BY_ID[r.id].q)}</button><span class="small"><b>${esc(r.it ? Guess.truthOf(r.it) : BY_ID[r.id].a ? "Yes" : "No")}</b>${r.it ? ` <span class="muted">You said: ${esc(Guess.saidOf(r))}</span>` : ""}</span></li>`).join("");
+  const items = state.answers.map((r, i) => r.lean !== dir ? "" : `<li><i class="${markOf(r)}" aria-hidden="true"></i><button type="button" class="linky" data-look="${i}">${esc(Guess.titleOf(r.it))}</button><span class="small"><b>${esc(Guess.truthOf(r.it))}</b> <span class="muted">You said: ${esc(Guess.saidOf(r))}</span></span></li>`).join("");
   return `<details class="lean"><summary>${head}</summary><ul class="missed">${items}</ul></details>`;
 }
 // The share buttons' drawings. The logos are part of the page, so nothing is loaded from those sites until a button is pressed.
@@ -4151,20 +3674,18 @@ function shareLinks(text, url) {
   return links;
 }
 function renderResults() {
-  const returning = state.finished, guess = state.mode === "guess";   // back from looking at a question again, or from Learn more
+  const returning = state.finished;   // back from looking at a question again, or from Learn more
   setScreen("results");
   state.finished = true; state.view = state.list.length - 1;
   if (!state.recorded) { keepRound(LAST_KEY); clearOwnRound(); }   // a result opened again says nothing about a round begun since
   try { if (/[?&]c=/.test(location.search)) history.replaceState(history.state, "", location.pathname); } catch (e) {}
-  const conf = state.mode === "confidence";
-  const s = guess ? Guess.summarize(state.answers) : summarize(state.answers), an = guess ? Guess.analyze(state.answers) : analyze(state.answers);
-  const key = guess ? Guess.findingOf(s, an) : findingOf(s, an), n = s.n;
+  const s = Guess.summarize(state.answers), an = Guess.analyze(state.answers), key = Guess.findingOf(s, an), n = s.n;
   // Personal best, kept in this browser only.
-  const bestKey = state.mode + ":" + n, prev = store.best[bestKey];
+  const prev = store.best[n];
   let newBest = false;
   if (!state.recorded) {
     newBest = typeof prev === "number" && s.right > prev;
-    if (typeof prev !== "number" || s.right > prev) store.best[bestKey] = s.right;
+    if (typeof prev !== "number" || s.right > prev) store.best[n] = s.right;
     store.plays++; saveStore(); state.recorded = true;
     state.bestNote = newBest ? `<p class="compare"><b>A new personal best.</b> Your previous best over ${n} questions was ${pts(prev)}.</p>` : "";
   } else if (!returning) state.bestNote = "";
@@ -4172,39 +3693,25 @@ function renderResults() {
   let compare = "";
   if (ch && ch.theirs) {
     const theirs = theirPoints(ch);
-    let verdict = s.right > theirs ? "You win." : s.right < theirs ? "They win this one." : "A tie.";
-    let extra = "";
-    if (conf && typeof ch.brier === "number") {
-      const mine = s.milli, other = Math.round(ch.brier * 1000);   // the link carries thousandths
-      extra = ` Their confidence score was ${(other / 1000).toFixed(3)} and yours is ${(mine / 1000).toFixed(3)}. Lower is better.`;
-      if (s.right === theirs && mine !== other) verdict = mine < other ? "A tie on answers, and your confidence was sharper." : "A tie on answers, and their confidence was sharper.";
-    }
-    compare = `<p class="compare"><b>You ${pts(s.right)}, your challenger ${pts(theirs)}.</b> ${verdict}${extra}</p>`;
+    compare = `<p class="compare"><b>You ${pts(s.right)}, your challenger ${pts(theirs)}.</b> ${s.right > theirs ? "You win." : s.right < theirs ? "They win this one." : "A tie."}</p>`;
   } else compare = state.bestNote;
-  // In a yes-or-no round each row shows misses out of the questions on that side, because a round rarely holds the same number of each.
   const other = an.other ? `
       <p class="small muted">Not counted here: ${an.other === 1 ? "1 miss that points" : an.other + " misses that point"} neither way.</p>` : "";
-  const split = !(an.under + an.over) ? "" : guess ? `
-      <div>${missRow("Reality was wilder", "under", an.under, an.under + an.over, an.under)}${missRow("Reality was tamer", "over", an.over, an.under + an.over, an.over)}</div>
-      <p class="small muted">Counting guesses that missed a full point. Wilder means AI does more, spreads faster or has fewer limits than you guessed. Tamer is the opposite. Tap a row to see which.</p>${other}` : `
-      <p class="small muted">What you missed</p>
-      <div>${missRow("Wilder answers", "under", an.under, an.wildN, an.under + " of " + an.wildN)}${missRow("Tamer answers", "over", an.over, an.tameN, an.over + " of " + an.tameN)}</div>
-      <p class="small muted">A wilder answer is one where AI does more, spreads faster or has fewer limits. A tamer one is the opposite. Tap a row to see which you missed.</p>${other}`;
+  const split = !(an.under + an.over) ? "" : `
+      <div>${missRow("Reality was wilder", "wilder", an.under, an.under + an.over)}${missRow("Reality was tamer", "tamer", an.over, an.under + an.over)}</div>
+      <p class="small muted">Counting guesses that missed a full point. Wilder means AI does more, spreads faster or has fewer limits than you guessed. Tamer is the opposite. Tap a row to see which.</p>${other}`;
   const unseen = QUESTIONS.length - seenCount();
-  const url = shareUrl(s);
+  const url = shareUrl();
   // The words as edited and the round to come stay with this result while a question or Learn more is looked at.
   const kept = state.kept && state.kept.list === state.list ? state.kept : (state.kept = { list: state.list, text: null, next: null });
   const text = kept.text === null ? shareText(s, key, url) : kept.text;
   const canNative = typeof navigator.share === "function";
-  // Playing again goes on in the way just played. After a friend's challenge that may not be the saved one.
-  // (Saying how sure you are is a setting of yes or no, so there the saved choice counts.)
-  const nextMode = (store.mode === "guess") === guess ? store.mode : state.mode, nextGuess = nextMode === "guess";
   // The round to come is dealt now, so that the button can promise new questions only when every one of them is.
-  const next = kept.next = kept.next || (nextGuess ? Guess.draw(Guess.LENGTHS.includes(state.length) ? state.length : 20, true) : drawRound(state.length)), seen = new Set(store.seen);
-  const againLabel = next.every(it => (nextGuess ? Guess.idsOf(it) : [it.id]).every(id => !seen.has(id))) ? `Play ${next.length} new questions` : "Play again";
+  const next = kept.next = kept.next || Guess.draw(state.length, true), seen = new Set(store.seen);
+  const againLabel = next.every(it => Guess.idsOf(it).every(id => !seen.has(id))) ? `Play ${next.length} new questions` : "Play again";
 
   // The score stands on the same edge as the guesses did, and a challenger's score beside it.
-  const at = x => Math.max(0, Math.min(1, x / n)), step = n <= 10 ? 1 : n <= 20 ? 2 : 5, notes = [s.unsure ? "Amber squares are the ones where you said 50/50. They are not marked wrong, but they do not add to your score." : "", guess && s.close ? "Amber squares are close guesses, worth half a point each." : ""].filter(Boolean);
+  const at = x => Math.max(0, Math.min(1, x / n)), step = n <= 10 ? 1 : 2;
   const scoreTicks = [...Array.from({ length: Math.ceil(n / step) }, (_, i) => i * step), n].map(v => `<i class="t maj" style="left:${at(v) * 100}%"></i>${v > 0 && n - v >= step ? `<span class="tl" style="left:${at(v) * 100}%">${v}</span>` : ""}`).join("") + `<span class="tl s">0</span><span class="tl e">${n}</span>`;
   const head = `
     <section class="field tight"><div class="wrap">
@@ -4213,7 +3720,7 @@ function renderResults() {
         <p class="eyebrow">Your result</p>
         <h2 class="finding">${esc(FINDINGS[key].title)}</h2>
         <p>${esc(findingLine(key, s, an))}</p>
-        <div class="grid${n > 20 ? " many" : ""}" aria-hidden="true">${state.answers.map((r, i) => `<i class="${markOf(r)}" style="--i:${i}"></i>`).join("")}</div>
+        <div class="grid" aria-hidden="true">${state.answers.map((r, i) => `<i class="${markOf(r)}" style="--i:${i}"></i>`).join("")}</div>
         ${compare}
       </div>
     </div></section>
@@ -4230,55 +3737,13 @@ function renderResults() {
         <button class="btn btn-big" id="again" type="button">${againLabel}</button>
       </div>
       <p class="small muted" id="share-status" role="status"></p>
-      ${HAS_YESNO && HAS_GUESS ? `<p class="small"><button class="link" id="switch-mode" type="button">${state.mode === "guess" ? "Try a yes-or-no round" : "Try a best-guess round"}</button>${unseen > 0 ? ` <span class="muted">${unseen} of the ${QUESTIONS.length} questions are still new to you.</span>` : ""}</p>` : ""}
+      ${unseen > 0 ? `<p class="small muted">${unseen} of the ${QUESTIONS.length} questions are still new to you.</p>` : ""}
       ${split}
-      ${notes.map(t => `<p class="small muted">${t}</p>`).join("")}
+      ${s.close ? `<p class="small muted">Amber squares are close guesses, worth half a point each.</p>` : ""}
     </section>`;
 
-  let confCard = "";
-  if (conf) {
-    const pos = Math.min(s.brier, 0.5) / 0.5 * 100;
-    const rows = [50, 60, 70, 80, 90, 100].filter(k => s.buckets[k]).map(k => {
-      const b = s.buckets[k], hit = b.right / b.n;
-      if (k === 50) return `<tr><td class="num">50%</td><td class="num">${b.n}</td><td class="num">–</td><td></td></tr>`;
-      return `<tr><td class="num">${k}%</td><td class="num">${b.n}</td><td class="num">${Math.round(hit * 100)}%</td><td><div class="bar"><div style="width:${hit * 100}%"></div></div></td></tr>`;
-    }).join("");
-    const a = pickAwards(state.answers), cards = [];
-    if (a.miss) cards.push(awardCard("miss", "Biggest miss", a.miss));
-    if (a.hit) cards.push(awardCard("hit", "Best call", a.hit));
-    confCard = `
-    <section class="card stack">
-      <div class="stack-sm">
-        <h3>How good was your confidence?</h3>
-        <p class="small muted">Your confidence score, which statisticians call a ${gloss("Brier score")}. Lower is better.</p>
-      </div>
-      <div>
-        <div class="big-num">${(s.milli / 1000).toFixed(3)}</div>
-        <div class="scale" role="img" aria-label="Your score ${(s.milli / 1000).toFixed(3)} on a scale where 0 is perfect and 0.25 is a coin flip"><div class="mark" style="left:${pos}%"></div></div>
-        <div class="scale-labels"><span>0 perfect</span><span>0.25 coin flip</span><span>0.5+</span></div>
-      </div>
-      <p>${brierVerdict(s)}</p>
-      ${s.leaned ? `<div class="tiles">
-        <div class="tile"><b>${Math.round(s.sure * 100)}%</b><span class="small muted">how sure you were, on average</span></div>
-        <div class="tile"><b>${Math.round(s.hit * 100)}%</b><span class="small muted">right (${s.right} of ${s.leaned})</span></div>
-      </div>` : ""}
-      <p class="small muted">${calibrationNote(s)}</p>
-      <details>
-        <summary>Your calibration, row by row</summary>
-        <div class="body">
-          <p class="small muted">If you are well calibrated, answers you were 80% sure of are right about 80% of the time. With few questions per row, read this loosely.</p>
-          <div class="table-wrap"><table>
-            <thead><tr><th class="num">How sure you were</th><th class="num">Questions</th><th class="num">How often you were right</th><th><span class="sr-only">The same, as a bar</span></th></tr></thead>
-            <tbody>${rows}</tbody>
-          </table></div>
-        </div>
-      </details>
-    </section>
-    ${cards.length ? `<section class="stack-sm"><h3>Your standout answers</h3><div class="awards">${cards.join("")}</div></section>` : ""}`;
-  }
-
   const missed = state.answers.filter(r => markOf(r) === "bad");
-  const misses = !conf && missed.length ? `
+  const misses = missed.length ? `
     <section class="stack-sm">
       <h3>${missed.length === 1 ? "The one that got you" : "The ones that got you"}</h3>
       <div>${missed.map(r => reviewItem(r)).join("")}</div>
@@ -4289,7 +3754,7 @@ function renderResults() {
     <section class="card stack">
       <div class="stack-sm">
         <h3><label for="share-text">Share it</label></h3>
-        <p class="small muted">Change the words if you like. The squares show right and wrong answers in order without giving anything away.${url.includes("?c=") ? ` Anyone who opens your link gets the same ${n} questions and sees how they did against you.` : ""}</p>
+        <p class="small muted">Change the words if you like. The squares show how each guess went, in order, without giving anything away.${url.includes("?c=") ? ` Anyone who opens your link gets the same ${n} questions and sees how they did against you.` : ""}</p>
       </div>
       <textarea id="share-text" class="share-preview" rows="${Math.min(16, text.split("\n").reduce((sum, l) => sum + Math.max(1, Math.ceil(l.length / 30)), 1))}" spellcheck="false">${esc(text)}</textarea>
       <div class="share-acts">
@@ -4309,7 +3774,6 @@ function renderResults() {
     ${toll}
     ${share}
     </div><div>
-    ${confCard}
     ${misses}
     ${resourcesBlock()}
     <details>
@@ -4381,18 +3845,8 @@ function renderResults() {
       document.body.appendChild(link); link.click(); link.remove();
     } catch (e) { status.textContent = "Couldn't make the picture here. The text version still works."; }
   });
-  const again = () => { clearChallenge(); state.mode = nextMode; if (nextGuess) Guess.preload(next); startRound(next); };
+  const again = () => { clearChallenge(); Guess.preload(next); startRound(next); };
   document.getElementById("again").addEventListener("click", again);
-  // The other way of playing, where the page offers both. It becomes the one chosen on the start screen too.
-  const swap = document.getElementById("switch-mode");
-  if (swap) swap.addEventListener("click", () => {
-    clearChallenge();
-    state.mode = store.mode = state.mode === "guess" ? "quick" : "guess";
-    const offered = state.mode === "guess" ? Guess.LENGTHS : LENGTHS;
-    if (!offered.includes(state.length)) state.length = offered[offered.length - 1];
-    store.length = state.length; saveStore();
-    startRound();
-  });
   document.getElementById("again-2").addEventListener("click", again);
   document.getElementById("home").addEventListener("click", goHome);
   wireTopBar();
@@ -4426,7 +3880,7 @@ window.addEventListener("resize", () => fitBox(document.getElementById("share-te
    Draws the result as a square picture: score, the row of squares, the one-line finding and one question that caught the player out.
    Always dark, whatever the page theme, so shared cards look the same everywhere. */
 async function resultImage(s, key) {
-  const answers = state.answers, mode = state.mode;   // a new round may have begun by the time the fonts are here
+  const answers = state.answers;   // a new round may have begun by the time the fonts are here
   const W = 1080, H = 1080, pad = 84;
   const c = document.createElement("canvas");
   c.width = W; c.height = H;
@@ -4449,7 +3903,7 @@ async function resultImage(s, key) {
   x.fillStyle = COL.field; x.fillRect(0, 0, W, edge);
   x.textBaseline = "alphabetic"; x.textAlign = "left";
   x.fillStyle = COL.on; x.font = `700 50px ${DISPLAY}`; x.fillText("What's Up With AI?", pad, 116);
-  const many = s.n > 20, two = s.n > 10, size = many ? 40 : two ? 60 : 72, gap = many ? 6 : two ? 11 : 13, per = many ? 20 : 10, top = 158;
+  const two = s.n > 10, size = two ? 60 : 72, gap = two ? 11 : 13, per = 10, top = 158;
   answers.forEach((r, i) => box(pad + (i % per) * (size + gap), top + Math.floor(i / per) * (size + gap), size, size, size * 0.22, COL[markOf(r)]));
   const gridEnd = top + Math.ceil(s.n / per) * (size + gap) - gap;
   // The score, over its place on the ruler and kept inside the picture.
@@ -4462,7 +3916,7 @@ async function resultImage(s, key) {
   x.fillText(of, Math.max(pad - 14 + ow / 2, Math.min(W - pad + 14 - ow / 2, cx)), edge - 68);
   x.fillStyle = COL.on; x.fillRect(px - 4, edge - 54, 8, 54);
   // The lines of the ruler, with every number named that has room.
-  const step = s.n <= 10 ? 1 : s.n <= 20 ? 2 : 5;
+  const step = s.n <= 10 ? 1 : 2;
   x.font = `400 30px ${MONO}`;
   for (const v of [...Array.from({ length: Math.ceil(s.n / step) }, (_, i) => i * step), s.n]) {
     x.fillStyle = COL.ink; x.fillRect(at(v) - 2, edge, 4, 44);
@@ -4503,25 +3957,21 @@ async function resultImage(s, key) {
     for (const l of hook) { x.fillText(l, pad, y); y += lead; }
   }
   x.fillStyle = COL.ink; x.font = `600 32px ${BODY}`;
-  const call = mode === "guess" ? "How close can you get?" : "How many can you get?";
-  x.fillText(call, pad, H - 58);
+  x.fillText("How close can you get?", pad, H - 58);
   if (where) { x.font = `400 28px ${MONO}`; x.fillStyle = COL.muted; x.textAlign = "right"; x.fillText(where, W - pad, H - 58); x.textAlign = "left"; }
   return new Promise(resolve => c.toBlob(resolve, "image/png"));
 }
 
 /* ---------- Keyboard and history ---------- */
-// Y and N answer a yes-or-no question and the number keys pick from a list, while the question or its choices have the focus, so that
-// stray keys elsewhere (from speech input, say) never answer. Enter works on the focused button, and on the verdict it goes on.
+// The number keys pick from a list, while the question or its choices have the focus, so that stray keys elsewhere (from speech input, say)
+// never answer. Enter works on the focused button, and on the verdict it goes on.
 document.addEventListener("keydown", e => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
-  const k = (e.key || "").toLowerCase(), on = document.activeElement, open = asking();
+  const k = (e.key || "").toLowerCase(), on = document.activeElement;
   if (k === "enter" && on && on.id === "verdict") { const next = document.getElementById("next"); if (next) { e.preventDefault(); next.click(); } return; }
-  if (!on || !on.closest(".q-body, #control")) return;
-  if (open && state.mode === "guess" && /^[1-9]$/.test(k)) { const b = $app.querySelector(`.pick[data-i="${Number(k) - 1}"], .photo[data-i="${Number(k) - 1}"]`); if (b) { e.preventDefault(); b.click(); } return; }
-  const yn = open && (state.mode === "quick" || (state.mode === "guess" && state.list[state.index].kind === "yn"));
-  if ((!yn && (state.screen !== "bonus" || state.mode === "guess")) || (k !== "y" && k !== "n")) return;
-  e.preventDefault();
-  if (!yn) answerBonus(k === "y"); else if (state.mode === "guess") answerGuess(k === "y"); else answer(k === "y" ? 1 : 0);
+  if (!/^[1-9]$/.test(k) || !on || !on.closest(".q-body, #control") || !asking()) return;
+  const b = $app.querySelector(`.pick[data-i="${Number(k) - 1}"], .photo[data-i="${Number(k) - 1}"]`);
+  if (b) { e.preventDefault(); b.click(); }
 });
 // Back from a round or a result lands on the start screen. A round in progress is saved, so it can be picked up again.
 window.addEventListener("popstate", () => {
@@ -4543,7 +3993,6 @@ window.addEventListener("popstate", () => {
 // "Back to the start" steps back through the history entry the round added, so the next Back press leaves the page as expected.
 function goHome() {
   clearChallenge();
-  state.mode = store.mode;   // a challenge may have switched the way of answering for one round
   try { if (history.state && history.state.quiz) { history.back(); return; } } catch (e) {}
   renderStart();
 }
