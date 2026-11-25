@@ -2479,6 +2479,13 @@ const Guess = (() => {
   // loud for a statement, true or not, that says the wilder thing.
   const grim = q => isHeavy(q) && (leanOf(q) === "wild" || q.id === "catastrophe-odds"), good = q => GOOD_NEWS.has(q.id) || leanOf(q) === "tame", loud = q => q.worse === "yes";
   const theme = x => x.kind === "quad" || x.quote ? "" : ["AI behavior", "Security", "Reliability"].includes(x.q.cat) ? "lab" : x.q.cat;
+  // A slider or list to take the place of list[at], for a player who cannot see its photos: new to them if possible, on no subject the round already holds, and not a grim one.
+  function swapFor(list, at) {
+    const rest = list.filter((x, i) => i !== at), qs = rest.flatMap(it => it.kind === "quad" ? it.claims.map(c => c.q) : [it.q]), ids = new Set(rest.flatMap(idsOf).concat(qs.map(q => q.id))), groups = new Set(qs.map(q => q.group).filter(Boolean)), seen = new Set(store.seen);
+    const fits = x => !ids.has(x.id) && !ids.has(x.q.id) && !(x.q.group && groups.has(x.q.group)) && !x.q.kind && !grim(x.q) && !APART.some(p => p.includes(x.q.id) && p.some(id => id !== x.q.id && ids.has(id)));
+    const cats = {}; qs.forEach(q => { cats[q.cat] = (cats[q.cat] || 0) + 1; });
+    return NUM.filter(fits).map(x => ({ x, s: (seen.has(x.id) ? 0 : 100) + (x.q.rank || 5) - 4 * (cats[x.q.cat] || 0) + Math.random() * 5 })).sort((a, b) => b.s - a.s).map(o => o.x)[0] || null;
+  }
   // A round dealt ahead of time, which may never be played, does not fetch its photos yet.
   const preload = list => list.forEach(it => (it.photos || []).forEach(p => { new Image().src = p; }));
   function draw(n, ahead) {
@@ -2509,7 +2516,7 @@ const Guess = (() => {
     for (const o of order(QUOTE, 4)) if (rest.length < Math.max(1, per(1)) && fits(o)) rest.push(makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
     let photo = null;
     // A photo question comes up in about six rounds of ten, and each only until the player has seen it.
-    if (PHOTOS.here && Math.random() < 0.6) for (const o of order(FACE, 4)) if (!photo && !seen.has(o.id) && fits(o)) rest.push(photo = makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
+    if (PHOTOS.here && !store.noPhotos && Math.random() < 0.6) for (const o of order(FACE, 4)) if (!photo && !seen.has(o.id) && fits(o)) rest.push(photo = makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
     if (photo && !ahead) preload([photo]);
     const items = order(NUM.concat(YN), 5), ends = order(NUM, 10), plain = () => rest.filter(x => !x.quote);
     const room = x => !(grim(x.q) && plain().filter(y => grim(y.q)).length >= per(2)) && !(isAboutOne(x.q) && plain().filter(y => isAboutOne(y.q)).length >= per(2)) && !(MONEY.has(x.q.id) && plain().some(y => MONEY.has(y.q.id)));
@@ -2662,7 +2669,7 @@ const Guess = (() => {
   // The sources of every statement in a set of four are listed together.
   const sourceOf = it => it.kind !== "quad" ? bankOf(it) : Object.assign({}, bankOf(it), { src: it.claims.flatMap(c => c.q.src) });
 
-  return { LENGTHS, NUM, CLAIM, YN, QUOTE, FACE, extra, say, at, pos, stops, idsOf, titleOf, truthOf, saidOf, optionsOf, bankOf, sourceOf, answerText, grade, lean, valid, result, compare, draw, preload, pack, unpack, encode, decode, gradeKey,
+  return { LENGTHS, NUM, CLAIM, YN, QUOTE, FACE, extra, say, at, pos, stops, idsOf, titleOf, truthOf, saidOf, optionsOf, bankOf, sourceOf, answerText, grade, lean, valid, result, compare, draw, swapFor, preload, pack, unpack, encode, decode, gradeKey,
     summarize, analyze, findingOf, controlHtml, layoutMarks, resultRuler, mark, othersHtml };
 })();
 window.addEventListener("resize", Guess.layoutMarks);
@@ -2676,7 +2683,7 @@ try { document.fonts.ready.then(Guess.layoutMarks); } catch (e) {}
 const STORE_KEY = "can-ai-do-this.v1", ROUND_KEY = "can-ai-do-this.round", LAST_KEY = "can-ai-do-this.last";
 const LENGTHS = [10, 20, 50];
 function loadStore() {
-  const blank = { seen: [], plays: 0, best: {}, mode: okMode(CONFIG.modes[0] === "guess" ? "guess" : "quick"), length: 10, bonus: false };
+  const blank = { seen: [], plays: 0, best: {}, mode: okMode(CONFIG.modes[0] === "guess" ? "guess" : "quick"), length: 10, bonus: false, noPhotos: false };
   try {
     const s = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
     if (!s || typeof s !== "object") return blank;
@@ -2690,7 +2697,8 @@ function loadStore() {
       best,
       mode: okMode(s.mode),
       length: LENGTHS.includes(s.length) ? s.length : 10,
-      bonus: s.bonus === true
+      bonus: s.bonus === true,
+      noPhotos: s.noPhotos === true
     };
   } catch (e) { return blank; }
 }
@@ -3435,6 +3443,7 @@ function showQuestion(k) {
   const qHtml = gloss(guess ? Guess.titleOf(it) : it.q), hint = guess && it.f && it.f.hint;
   const tip = open && store.plays === 0 && k < 4 && qHtml.includes('class="term"') ? `<p class="small muted">Tap an underlined word for a plain-English definition.</p>` : "";
   const again = open && (guess ? Guess.idsOf(it) : [it.id]).every(id => state.seenBefore.has(id));
+  const swap = open && guess && it.photos && !state.challenge;   // a friend's round is the same for both, so nothing is swapped there
   let control = "";
   if (guess) control = Guess.controlHtml(it, open, state.slider);
   else if (open && state.mode === "confidence") {
@@ -3454,11 +3463,14 @@ function showQuestion(k) {
     <div class="q-body">
       ${again ? `<p class="small muted">You have seen this one before.</p>` : ""}
       <h1 id="question" class="q-h" tabindex="-1">${qHtml}</h1>
+      ${swap ? `<p class="sr-only">This one needs sight. A button after the four photos swaps it for another question.</p>` : ""}
       ${hint ? `<p class="muted">${gloss(hint)}</p>` : ""}
       ${tip}
     </div>
     <div id="control" class="stack">${control}</div>
+    ${swap ? `<p class="small center" id="swap-row"><button type="button" class="link" id="swap">Can't see the photos? Swap this question</button></p>` : ""}
     <div id="reveal" class="stack"></div>`;
+  if (swap) document.getElementById("swap").addEventListener("click", swapPhotos);
   wireNav();
   if (!open) paintAnswer(k);
   else if (guess) wireGuess(it, answerGuess, state.slider, v => { state.slider = v; });
@@ -3476,6 +3488,16 @@ function showQuestion(k) {
     document.getElementById("say-no").addEventListener("click", () => answer(0));
   }
   toTop("question");
+}
+// Puts another question in place of the photos, and deals this browser no more of them.
+function swapPhotos() {
+  if (!asking()) return;
+  const other = Guess.swapFor(state.list, state.index);
+  if (!other) return;
+  store.noPhotos = true; saveStore();
+  state.list[state.index] = other; state.slider = null;
+  if (state.answers.length) saveRound();
+  renderQuestion();
 }
 // Wires the controls of a guess question. say(g) gets the answer. A slider starts at the position it was left at, if any.
 function wireGuess(it, say, at, keep) {
@@ -3560,7 +3582,8 @@ function paintAnswer(k, fresh) {
   const current = k === state.index && !state.finished, last = k === state.list.length - 1;
   let streak = 0;
   if (fresh) for (let i = k; i >= 0 && markOf(state.answers[i]) === "good"; i--) streak++;
-  const control = document.getElementById("control");
+  const control = document.getElementById("control"), swap = document.getElementById("swap-row");
+  if (swap) swap.remove();
   if (guess) Guess.mark(r, control); else control.innerHTML = "";
   const label = !current ? (state.finished ? "Back to my result" : `Back to question ${state.index + 1}`) : !last ? "Next question" : store.bonus ? "See my result" : "One last question";
   document.getElementById("reveal").innerHTML = `${revealHtml(r, it, { mode: state.mode, streak, theirs: ch && ch.theirs ? ch.theirs[k] : null })}
