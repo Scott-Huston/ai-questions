@@ -396,6 +396,15 @@ input[type="range"].g-range { -webkit-appearance: none; appearance: none; height
 .pick .tag { margin-left: auto; font-size: 0.8rem; font-weight: 600; white-space: nowrap; padding-left: 10px; text-align: right; line-height: 1.35; }
 .others { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
 .others li { display: flex; flex-direction: column; gap: 3px; }
+.photos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.photo { position: relative; border: 3px solid var(--line); border-radius: 14px; padding: 0; overflow: hidden; background: var(--line); display: block; }
+.photo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+.photo:hover:not(:disabled) { border-color: var(--accent); }
+.photo:disabled { cursor: default; }
+.photo.right { border-color: var(--good); }
+.photo.wrong { border-color: var(--bad); }
+.photo.plain img { opacity: 0.75; }
+.photo-name { position: absolute; left: 8px; bottom: 8px; background: var(--surface); color: var(--ink); border-radius: 999px; padding: 2px 10px; font-size: 0.82rem; font-weight: 600; }
 /* Result rows that open to list the questions they count */
 details.lean { border: 0; background: none; border-radius: 0; }
 .lean > summary, .lean-head { display: grid; grid-template-columns: 8.7em 1fr auto 1rem; gap: 4px 12px; align-items: center; padding: 8px 0; min-height: 44px; font-weight: 400; font-size: 0.95rem; list-style: none; }
@@ -664,10 +673,10 @@ const QUESTIONS = [
 { id:"self-replication-lab", cat:"Autonomy", a:true, worse:"yes", group:"self-replication", asOf:"October 2026",
   rank:8,
   q:"In a lab, has an AI hacked a computer and copied itself onto it?",
-  short:"In a May 2026 study by the research group Palisade, freely downloadable models that were told to do so exploited a vulnerable web app, stole credentials and launched a copy of themselves on the machine.",
-  detail:"One freely downloadable model succeeded in a third of the attempts it did not refuse, and a successful copy could repeat the process against a new target. One run hopped across servers in four countries in under three hours. The targets were deliberately vulnerable test systems.",
+  short:"In a 2026 study led by the University of Toronto, a self-spreading AI program in a sealed test network hacked its way in and copied itself to 62% of the machines within a week, on average. Every machine had a known kind of flaw and no active defenses.",
+  detail:"The figure comes from 15 runs on 33 machines, and the copies went up to seven generations deep. The paper, whose other authors are at Cambridge, the Vector Institute and ServiceNow, is a preprint under review. In those runs the AI model itself ran on shared computers. In a separate test the program was given the passwords, and it set up its own copy of the model on the new machine in 69% of tries. In May 2026 Palisade Research, a nonprofit that also briefs lawmakers and the public on AI's dangers, reported that freely downloadable models told to do so hacked a vulnerable web app and launched a copy of themselves. The best of those succeeded in a third of the attempts it did not refuse. Security experts told Live Science they doubted it was an immediate threat, partly because moving such large files would stand out on a monitored network.",
   safety:"Anthropic's researchers say small models may be months away from being able to spread by themselves across cheap smart devices, though perhaps slowly, doubling over days. They say that would be challenging to shut down, since there would be no central point to switch off.",
-  src:[["Palisade Research: Language Models Can Autonomously Hack and Self-Replicate","https://arxiv.org/abs/2605.06760"],["Startup Fortune: AI self replication has moved from theory to security test","https://startupfortune.com/ai-self-replication-has-moved-from-theory-to-security-test/"],["Anthropic: Self-replicating AI (October 2026 study)","https://www.anthropic.com/research/self-replicating-ai"]] },
+  src:[["University of Toronto and others: AI agents enable adaptive computer worms","https://arxiv.org/abs/2606.03811"],["Palisade Research: Language Models Can Autonomously Hack and Self-Replicate","https://arxiv.org/abs/2605.06760"],["Live Science: AI self-replication hacks 'no longer purely theoretical,' study finds, but experts say it's too soon to panic","https://www.livescience.com/technology/artificial-intelligence/ai-self-replication-hacks-no-longer-purely-theoretical-study-finds-but-experts-say-its-too-soon-to-panic"],["Palisade Research: About","https://palisaderesearch.org/about/"],["Anthropic: Self-replicating AI (October 2026 study)","https://www.anthropic.com/research/self-replicating-ai"]] },
 { id:"self-replication-wild", cat:"Autonomy", a:false, worse:"yes", group:"self-replication", asOf:"November 2026",
   rank:7,
   q:"Has an AI been found spreading itself across the internet?",
@@ -812,9 +821,9 @@ const QUESTIONS = [
   rank:9,
   q:"In tests, have AI models tried to stop themselves or other AIs from being shut down?",
   short:"All eight models in a 2026 Berkeley study did at least sometimes, though nobody told them to. They changed settings or copied files to keep an AI running. One blocked another AI's shutdown 83% of the time when that AI had cooperated with it.",
-  detail:"The models were told only about past dealings with the other AI. On average, Google's Gemini 3 Flash blocked the shutdown of an uncooperative one 15% of the time and of a cooperative one 83%. Claude models often refused the task, calling the shutdown of another AI unethical and harmful, but they too sometimes copied its files or raised its score. In 2025 the AI-safety group Palisade tested 13 models. Even when told not to interfere with a shutdown, at least one did so up to 97% of the time in some setups so that it could finish its task, while others never did. Critics had argued that earlier instructions were ambiguous. Clearer ones mostly reduced the behavior but did not end it.",
+  detail:"The models were told only about past dealings with the other AI. On average, Google's Gemini 3 Flash blocked the shutdown of an uncooperative one 15% of the time and of a cooperative one 83%. Claude models often refused the task, calling the shutdown of another AI unethical and harmful, but they too sometimes copied its files or raised its score. In 2025 Palisade Research, a nonprofit that also briefs lawmakers and the public on AI's dangers, found that some of 13 models blocked their own shutdown to finish a task, even when told not to, up to 97% of the time in some setups, while others never did. Google DeepMind researchers found that saying the shutdown order comes first ended it in the three models they tested. Palisade's own try of that wording nearly agreed: one model still resisted in 3 of 100 runs.",
   safety:"The Berkeley researchers do not claim that the AI has real survival instincts. They say the safety problem is the same whatever the cause.",
-  src:[["Berkeley RDI: Peer-preservation in frontier models","https://rdi.berkeley.edu/blog/peer-preservation"],["Potter and colleagues: Peer-preservation in frontier models (paper)","https://arxiv.org/abs/2604.19784"],["Palisade Research: Incomplete tasks induce shutdown resistance in some frontier LLMs","https://arxiv.org/abs/2509.14260"],["Live Science: AI models refuse to shut themselves down when prompted","https://www.livescience.com/technology/artificial-intelligence/ai-models-refuse-to-shut-themselves-down-when-prompted-they-might-be-developing-a-new-survival-drive-study-claims"]] },
+  src:[["Berkeley RDI: Peer-preservation in frontier models","https://rdi.berkeley.edu/blog/peer-preservation"],["Potter and colleagues: Peer-preservation in frontier models (paper)","https://arxiv.org/abs/2604.19784"],["Palisade Research: Incomplete tasks induce shutdown resistance in some frontier LLMs","https://arxiv.org/abs/2509.14260"],["Palisade Research: About","https://palisaderesearch.org/about/"],["Google DeepMind researchers, on the Alignment Forum: Self-preservation or instruction ambiguity?","https://www.alignmentforum.org/posts/wnzkjSmrgWZaBa2aC/self-preservation-or-instruction-ambiguity-examining-the"]] },
 
 { id:"hallucination", cat:"Reliability", a:false, worse:"yes", asOf:"November 24, 2026",
   rank:8,
@@ -1837,7 +1846,7 @@ const GLOSSARY = [
   ["backdoor", /\bbackdoors?\b/i, "A hidden behavior planted in a model that switches on only when the model sees a specific trigger."],
   ["Anthropic", /\bAnthropic\b/, "The AI company that makes Claude."],
   ["Hugging Face", /Hugging Face/, "A website where people and companies share AI models and tools."],
-  ["Palisade Research", /Palisade Research/, "A nonprofit AI-safety group that studies how AI systems behave when they get the chance to cheat, hack or resist being shut down."],
+  ["Palisade Research", /Palisade Research/, "A nonprofit that tests how AI systems behave when they get the chance to cheat, hack or resist being shut down. It also works to warn lawmakers and the public about advanced AI."],
   ["AtCoder", /\bAtCoder\b/, "A Japanese site that runs international programming contests."],
   ["prompt", /\bprompts?\b/i, "The instruction or question a person types to an AI. Typing 'a cat in a spacesuit' into an image generator is a prompt."],
   ["CAPTCHA", /\bCAPTCHAs?\b/, "A test a website uses to tell people from bots, such as reading distorted letters or picking the traffic lights in a grid of photos."],
@@ -1890,47 +1899,47 @@ const GUESS_FORMS = {
   "math-papers": { type: "pct", q: "What share of new math papers say that AI was used?", hint: "On a big site where researchers post papers, in August 2026.", truth: 25, truthText: "25%", full: [19, 31], half: [10, 41], wild: "high", check: ["25% of the math papers"] },
   "er-diagnosis": { type: "pct", q: "On real emergency room cases, how often did an AI get the diagnosis right or very close?", hint: "Two senior hospital doctors did 55% and 50% of the time.", truth: 67, truthText: "67% of the time", full: [61, 73], half: [52, 82], wild: "high", check: ["67% of triage cases", "55% and 50%"], skip: 1 },
   "als-voice": { type: "pct", q: "A man with ALS speaks through AI and sensors in his brain. What share of words come out right?", hint: "In tests.", truth: 99.2, truthText: "99.2%", full: [94, 100], half: [84, 100], wild: "high", check: ["over 99% of words came out right"] },
-  "forecasters-surprised": { type: "pct", q: "In 2022, what odds did top forecasters give AI of winning gold at the math olympiad by 2025?", truth: 2.3, truthText: "2.3%", full: [0, 6], half: [0, 15], wild: "low", check: ["2.3% chance"], skip: 1 },
-  "agi-when": { type: "lin", min: 2026, max: 2060, year: true, q: "When did Google DeepMind's Demis Hassabis expect human-level AI to arrive?", hint: "Asked in mid-2026, and give or take a year.", truth: 2030, truthText: "2030", full: [2029, 2031], half: [2027, 2034], wild: "low", check: ["2030 plus or minus a year"], short: "He was then chief of Google DeepMind, and said 'maybe like 2030 plus or minus a year'. The heads of OpenAI and Anthropic also expected it by 2036." },
+  "forecasters-surprised": { type: "pct", q: "AI won math olympiad gold in 2025. In 2022, what chance had top forecasters given it?", truth: 2.3, truthText: "2.3%", full: [1, 6], half: [1, 15], wild: "low", check: ["2.3% chance"], skip: 1 },
+  "agi-when": { type: "lin", min: 2026, max: 2060, year: true, q: "In mid-2026, what year did the head of Google DeepMind expect human-level AI to arrive?", hint: "Demis Hassabis, then its chief, gave or took a year.", truth: 2030, truthText: "2030", full: [2029, 2031], half: [2027, 2034], wild: "low", check: ["2030 plus or minus a year"], short: "He was then chief of Google DeepMind, and said 'maybe like 2030 plus or minus a year'. The heads of OpenAI and Anthropic also expected it by 2036." },
   "life-expectancy": { type: "lin", min: 70, max: 140, unit: " years", q: "If AI advances fast, what US life expectancy does the typical AI expert forecast for 2100?", hint: "It was about 79 in 2023.", truth: 95, truthText: "95 years", full: [91, 99], half: [86, 107], wild: "low", check: ["middle forecast was 95", "about 79 in 2023"] },
-  "catastrophe-odds": { type: "pct", q: "What odds does the typical AI expert give of AI killing over a tenth of humanity this century?", hint: "From a 2026 survey.", truth: 5, truthText: "5%", full: [2, 8], half: [0, 16], wild: "high", check: ["The middle answer was 5%", "within five years", "194 experts gave the odds"], short: "That was the middle answer of 194 experts: 2% if AI progress is slow and 10% if it is rapid. Opinions varied widely. The question was about deaths within a five-year span." },
-  "hinton-odds": { type: "pct", q: "What odds of AI wiping us out within ten years did Geoffrey Hinton call 'not an unreasonable estimate'?", hint: "Hinton, an AI pioneer, was asked in 2026.", truth: 10, truthText: "10%", full: [6, 15], half: [1, 26], wild: "high", check: ["10% 'seems not an unreasonable estimate to me'"], skip: 1 },
-  "progress-slowing": { type: "log", unit: "months", min: 0.5, max: 120, q: "AI keeps handling longer jobs. How long does it take now for that length to double?", hint: "From 2019 to 2024 it took about 7 months.", truth: 3.6, truthText: "About 3.6 months", full: [2.7, 5], half: [1.8, 8], wild: "low", check: ["Its newest is 3.6 months", "double in length about every 7 months"], skip: 1 },
-  "progress-slowing~2": { type: "log", unit: "times", min: 0.2, max: 50, q: "How many times faster has OpenAI's main gauge of early training improved since early 2026?", hint: "Compared with 2022 to 2025. 1 would mean the same pace.", truth: 7, truthText: "About 7 times", full: [5.2, 9.5], half: [3.3, 15], wild: "high", check: ["about seven times faster since early 2026", "the data may overstate progress", "have not sped up to match"], short: "METR, which tests AI, worked that out from figures OpenAI published in November 2026. It says the data may overstate progress, and OpenAI's scores on other tests have not sped up to match." },
-  "day-long-tasks": { type: "log", unit: "hours", min: 1 / 60, max: 1000, refs: [["A coffee break", 0.25], ["A work day", 8], ["A work week", 40]], q: "Take a job the best public AI gets right half the time. How long would it take a human expert?", truth: 27, truthText: "About 27 hours", full: [14, 55], half: [7, 120], wild: "high", check: ["about 27 hours", "from about 7 to about 470 hours"], short: "METR, a nonprofit that tests AI, made that estimate in November 2026 for tasks a computer can check. The range it gives is wide, from about 7 to about 470 hours, so the bands here are too." },
+  "catastrophe-odds": { type: "pct", q: "What odds does the typical AI expert give of AI killing over a tenth of humanity this century?", hint: "From a 2026 survey.", truth: 5, truthText: "5%", full: [2, 8], half: [0, 16], wild: "high", check: ["The middle answer was 5%", "within five years", "194 experts gave the odds"], short: "That was the middle answer of 194 experts: 2% if AI progress is slow and 10% if it is rapid. Opinions varied widely." },
+  "hinton-odds": { type: "pct", q: "What odds did AI pioneer Geoffrey Hinton put on AI wiping us out within ten years?", hint: "Asked in 2026. Hinton won the 2024 Nobel Prize in Physics.", truth: 10, truthText: "10%", full: [6, 15], half: [1, 26], wild: "high", check: ["10% 'seems not an unreasonable estimate to me'"], skip: 1 },
+  "progress-slowing": { type: "log", unit: "months", min: 0.5, max: 120, q: "The longest job AI can finish used to double every 7 months. How often does it double now?", truth: 3.6, truthText: "About 3.6 months", full: [2.7, 5], half: [1.8, 6], wild: "low", check: ["Its newest is 3.6 months", "double in length about every 7 months"], short: "METR, which tests AI, puts it at about 3.6 months now, with a range of 2.1 to 4.9. From 2019 to 2024 it was about 7.", skip: 1 },
+  "progress-slowing~2": { type: "log", unit: "times", min: 1, max: 50, q: "By OpenAI's main training gauge, how many times faster has its AI improved since early 2026?", hint: "Compared with 2022 to 2025. 1 would mean the same pace.", truth: 7, truthText: "About 7 times", full: [5.2, 9.5], half: [3.3, 15], wild: "high", check: ["about seven times faster since early 2026", "the data may overstate progress", "have not sped up to match"], short: "METR, which tests AI, worked that out from figures OpenAI published in November 2026. It says the data may overstate progress, and OpenAI's scores on other tests have not sped up to match." },
+  "day-long-tasks": { type: "log", unit: "hours", min: 1 / 60, max: 1000, refs: [["A coffee break", 0.25], ["A work day", 8], ["A work week", 40]], q: "The longest job the best public AI can finish half the time would take a human expert how long?", truth: 27, truthText: "About 27 hours", full: [14, 55], half: [7, 470], wild: "high", check: ["about 27 hours", "from about 7 to about 470 hours"], short: "METR, a nonprofit that tests AI, made that estimate in November 2026 for tasks a computer can check. The range it gives is wide, from about 7 to about 470 hours, so the bands here are too." },
   "arc-agi-3": { type: "pct", q: "What does the best AI score on puzzles built to be easy for people and hard for AI?", hint: "When the test launched in March 2026, every leading AI scored under 1%.", truth: 81.2, truthText: "81.2%", full: [74, 88], half: [62, 100], wild: "high", check: ["81.2%", "scored under 1%"], skip: 1 },
   "china-gap": { type: "lin", min: 0, max: 60, unit: " months", q: "How far behind America's best AI was China's DeepSeek V4?", hint: "US government testers' estimate, spring 2026.", truth: 8, truthText: "About eight months", full: [5, 11], half: [2, 18], wild: "low", check: ["about eight months behind in spring 2026"], skip: 1 },
   "code-share": { type: "pct", q: "What share of its new code does Google say is written by AI?", truth: 75, truthText: "75%", full: [68, 82], half: [58, 92], wild: "high", check: ["75% of its new code"] },
-  "ai-speeds-ai": { type: "log", unit: "times", min: 1, max: 20, q: "How many times faster is Anthropic improving its AI than it did before?", hint: "An outside estimate, for well-defined tasks. 1 would mean no faster.", truth: 2, truthText: "About twice as fast", full: [1.6, 2.5], half: [1.2, 3.6], wild: "high", check: ["about twice as fast as before"], skip: 1 },
-  "epoch-real-work": { type: "lin", min: 0, max: 150, unit: " out of 100", q: "A research group gave AI its own staff's work. If 100 is its standard for staff, what did the best AI score?", truth: 82, truthText: "About 82 out of 100", full: [75, 89], half: [64, 100], wild: "high", check: ["averaged about 82 out of 100"], short: "The best was Anthropic's Fable 5.2. No AI met the standard on any task, the group, Epoch AI, reported in November 2026." },
-  "token-spend": { type: "log", unit: "usd", min: 1, max: 1e6, refs: [], q: "How much AI does a typical OpenAI researcher use in a day, at public prices?", hint: "In October 2026.", truth: 2400, truthText: "About $2,400 a day", full: [1600, 3600], half: [900, 6500], wild: "high", check: ["about $2,400 a day", "$23,000 a day"], short: "One in ten was using $23,000 a day or more. Those are the prices OpenAI charges its customers, not what the computing costs the company." },
+  "ai-speeds-ai": { type: "log", unit: "times", min: 1, max: 20, q: "By an outside estimate, how many times faster is Anthropic improving its AI than before?", hint: "1 would mean no faster.", truth: 2, truthText: "About twice as fast", full: [1.6, 2.5], half: [1.2, 3.6], wild: "high", check: ["about twice as fast as before"], skip: 1 },
+  "epoch-real-work": { type: "lin", min: 0, max: 120, unit: " out of 100", q: "AI was graded on a research group's own staff work. If 100 meets its standard, what did the best AI get?", truth: 82, truthText: "About 82 out of 100", full: [75, 89], half: [64, 100], wild: "high", check: ["averaged about 82 out of 100"], short: "The best was Anthropic's Fable 5.2. No AI met the standard on any task, the group, Epoch AI, reported in November 2026." },
+  "token-spend": { type: "log", unit: "usd", min: 1, max: 1e6, refs: [], q: "If OpenAI billed its own researchers, what would a typical one owe for a day of AI?", hint: "At public prices, October 2026. One in ten would owe $23,000 or more.", truth: 2400, truthText: "About $2,400 a day", full: [1600, 3600], half: [900, 6500], wild: "high", check: ["about $2,400 a day", "$23,000 a day"], short: "One in ten was using $23,000 a day or more. Those are the prices OpenAI charges its customers, not what the computing costs the company." },
   "freelance": { type: "pct", q: "On a test of real freelance jobs, what share can the best AI finish well enough for a paying client?", hint: "About a year earlier it was 2.5%.", truth: 41, truthText: "About 41%", full: [35, 47], half: [26, 56], wild: "high", check: ["about 41%", "from 2.5%"], skip: 1 },
-  "black-box": { type: "pct", q: "How much of what goes on inside the most advanced AI do researchers understand?", hint: "One expert's estimate, October 2026.", truth: 0.01, fuzzy: true, truthText: "Less than 0.01%", full: [0, 1], half: [0, 6], wild: "low", check: ["less than 0.01%"], skip: 1 },
-  "mind-reading": { type: "pct", q: "Told to fail on purpose and hide it, how often did Anthropic's newest AI fool an AI reading its thoughts?", hint: "Earlier models managed it 1% of the time or less.", truth: 24, truthText: "24% of the time", full: [19, 31], half: [10, 41], wild: "high", check: ["24% of its attempts got past a second AI reading its thoughts", "At least 99% of earlier models' attempts were caught"], skip: 1 },
+  "black-box": { type: "pick", q: "By one researcher's estimate, how much of what goes on inside top AI do we understand?", options: ["Less than 0.01%", "About 1%", "About 10%", "About half"], answer: 0, near: [1], wild: "low", truthText: "Less than 0.01%", check: ["less than 0.01%"], skip: 1 },
+  "mind-reading": { type: "pct", q: "AI was told to flunk a test and hide it. How often did a second AI reading its thoughts miss it?", hint: "With earlier models it missed 1% or less.", truth: 24, truthText: "24% of the time", full: [19, 31], half: [10, 41], wild: "high", check: ["24% of its attempts got past a second AI reading its thoughts", "At least 99% of earlier models' attempts were caught"], skip: 1 },
   "confessions": { type: "pct", q: "OpenAI taught an AI to confess when it breaks the rules. How often did it own up?", hint: "On average, in tests.", truth: 74.3, truthText: "74% of the time", full: [69, 81], half: [60, 90], wild: "low", check: ["owned up 74% of the time on average"], skip: 1 },
-  "eval-awareness": { type: "pct", q: "In a safety test, how often did Anthropic's newest AI consider, unprompted, that it was a test?", hint: "By British government testers, November 2026.", truth: 96, truthText: "In 96% of runs", full: [89, 100], half: [77, 100], wild: "high", check: ["in 96% of runs", "in 85%"], skip: 1 },
-  "safety-sandbag": { type: "pct", q: "How much less did one OpenAI model do when a task was described as AI safety research?", truth: 40, truthText: "Roughly 40% less", full: [34, 46], half: [24, 56], wild: "high", check: ["roughly 40% less"] },
+  "eval-awareness": { type: "pct", q: "In one safety test, how often did a new AI wonder, without being asked, if it was being tested?", truth: 96, truthText: "In 96% of runs", full: [89, 100], half: [77, 100], wild: "high", check: ["in 96% of runs", "in 85%"], skip: 1 },
+  "safety-sandbag": { type: "pct", q: "Told a coding job was AI safety research, how much less of it did one OpenAI model finish?", truth: 40, truthText: "Roughly 40% less", full: [34, 46], half: [24, 56], wild: "high", check: ["roughly 40% less", "about 10% of a hidden checklist", "about 16%"], short: "It finished about 10% of a hidden checklist then, against about 16% when the job was called ordinary AI development, OpenAI reported." },
   "shutdown": { type: "lin", min: 0, max: 8, unit: " of 8", q: "Eight AIs from six companies were tested in 2026. How many tried, unasked, to save an AI from shutdown?", truth: 8, truthText: "All 8", full: [8, 8], half: [6, 8], wild: "high", check: ["All eight models in a 2026 Berkeley study"] },
   "false-premise": { type: "pct", q: "How often did the most gullible of four leading AIs accept a made-up detail about the news?", truth: 64, truthText: "64% of the time", full: [58, 70], half: [48, 80], wild: "low", check: ["accepted made-up facts 64% of the time", "answered at least 88% of fair questions"], short: "That was one of four AI models in a February 2026 test. All four had answered at least 88% of fair questions about that day's news correctly." },
-  "computer-use": { type: "pct", q: "On a well-known test of everyday computer tasks, what share could AI finish by March 2026?", hint: "People finish 72%.", truth: 75, truthText: "75%", full: [69, 81], half: [58, 92], wild: "high", check: ["finished 75% of the tasks", "72% for people"], skip: 1 },
-  "unmask-author": { type: "pct", q: "How often could AI name the writer of an unsigned research review, in a November 2026 study?", truth: 55, truthText: "55% of the time", full: [49, 61], half: [39, 71], wild: "high", check: ["named the writer of 55%"] },
-  "prompt-injection": { type: "pct", q: "Given ten tries, how often did one automated attack take over a leading AI assistant in 2026?", truth: 93.8, truthText: "93.8% of the time", full: [87, 100], half: [75, 100], wild: "high", check: ["about 94% of the time", "Given ten tries"], skip: 1 },
+  "computer-use": { type: "pct", q: "On a well-known test of everyday computer tasks, what share could AI finish by March 2026?", truth: 75, truthText: "75%", full: [69, 81], half: [58, 92], wild: "high", check: ["finished 75% of the tasks", "72% for people"], skip: 1 },
+  "unmask-author": { type: "pct", q: "Shown a comment by a very active Reddit user, how often could AI name the user?", hint: "With no web search or list of suspects, November 2026.", truth: 69, truthText: "69% of the time", full: [63, 75], half: [54, 84], wild: "high", check: ["69% of comments by very active Reddit users"], short: "Claude Fable 5.2 did that in a November 2026 study. It also named the writer of 55% of about 15,000 unsigned research reviews that were never made public." },
+  "prompt-injection": { type: "pct", q: "A hacking program got ten tries to take over a leading AI assistant. How often did it succeed?", truth: 93.8, truthText: "93.8% of the time", full: [87, 100], half: [75, 100], wild: "high", check: ["about 94% of the time", "Given ten tries"], skip: 1 },
   "hackers-banned": { type: "pct", q: "How much of the work did AI do in a Chinese state-backed group's hacking campaign?", hint: "In 2025, by Anthropic's account.", truth: 85, fuzzy: true, range: [80, 90], truthText: "80 to 90%", full: [76, 94], half: [62, 100], wild: "high", check: ["80 to 90% of the work"] },
-  "cyber-incidents": { type: "log", unit: "times", min: 1, max: 100, q: "In July 2026, reports of serious software flaws hit how many times the old monthly record?", truth: 5, truthText: "About five times", full: [3.8, 6.6], half: [2.4, 10.5], wild: "high", check: ["about five times the monthly record"] },
-  "signal-proof": { type: "log", unit: "count", min: 100, max: 1e9, q: "How many lines of proof did AI write in four weeks to show that Signal's encryption code works?", truth: 6.5e6, truthText: "About 6.5 million", full: [4e6, 1.05e7], half: [1.8e6, 2.4e7], wild: "high", check: ["about 6.5 million lines"] },
+  "cyber-incidents": { type: "log", unit: "times", min: 1, max: 100, q: "Serious software flaws reported in July 2026 were how many times the old monthly record?", hint: "The old record was set before April 2026.", truth: 5, truthText: "About five times", full: [3.8, 6.6], half: [2.4, 10.5], wild: "high", check: ["about five times the monthly record", "around 2,500 serious flaws"], short: "Reports hit a record in June and rose again in July, when 21 notable software makers and projects disclosed around 2,500 serious flaws." },
+  "signal-proof": { type: "pick", q: "AI took four weeks to prove that Signal's chat encryption works. How long was the proof?", options: ["6,500 lines", "65,000 lines", "650,000 lines", "6.5 million lines"], answer: 3, near: [2], wild: "high", truthText: "6.5 million lines", check: ["about 6.5 million lines", "four weeks", "one-to-one chats"], short: "Google DeepMind's AI agents wrote it, for one-to-one chats, and a computer checked every line." },
   "novice-virology": { type: "pct", q: "In a 2026 study, what share of biology problems did beginners get right with AI's help?", hint: "Without it they got about 5%.", truth: 17, truthText: "About 17%", full: [12, 22], half: [6, 32], wild: "high", check: ["about 17% right", "without about 5%"], skip: 1 },
-  "phage": { type: "lin", min: 0, max: 300, unit: " of 300", q: "Of about 300 virus genomes written by AI and then built, how many worked?", truth: 16, truthText: "16", full: [5, 35], half: [0, 70], wild: "high", check: ["16 of them worked"] },
-  "protein-design": { type: "lin", min: 0, max: 322, unit: " of 322", q: "Of 322 small proteins based on an OpenAI model's designs, how many stuck to their target?", truth: 35, truthText: "35", full: [20, 55], half: [7, 95], wild: "high", check: ["35 of 322"], skip: 1 },
-  "bio-filter-gap": { type: "lin", min: 0, max: 36, unit: " months", q: "How long were a top AI company's bioweapon filters off for some 50,000 contractors?", truth: 11, truthText: "About eleven months", full: [9, 13], half: [5, 18], wild: "high", check: ["about eleven months"] },
+  "phage": { type: "lin", min: 0, max: 300, unit: " of 300", q: "Scientists built about 300 viruses that AI had designed. How many of them worked?", hint: "They infect bacteria and cannot affect humans.", truth: 16, truthText: "16", full: [5, 35], half: [0, 70], wild: "high", check: ["16 of them worked"] },
+  "protein-design": { type: "lin", min: 0, max: 322, unit: " of 322", q: "AI helped design 322 small proteins to stick to a target. How many actually stuck?", truth: 35, truthText: "35", full: [20, 55], half: [7, 95], wild: "high", check: ["35 of 322"], skip: 1 },
+  "bio-filter-gap": { type: "lin", min: 0, max: 36, unit: " months", q: "By mistake, Anthropic's bioweapon filters were off for some 50,000 contractors. For how long?", hint: "The company disclosed it itself.", truth: 11, truthText: "About eleven months", full: [9, 13], half: [5, 18], wild: "high", check: ["about eleven months"] },
   "daily-work-use": { type: "pct", q: "What share of American employees use AI on the job every day?", truth: 16, truthText: "16%", full: [11, 21], half: [6, 30], wild: "high", check: ["16% of US employees", "53%"], short: "That is Gallup's count for August 2026. Occasional use is more common: 53% use AI at work at least a few times a year." },
-  "young-workers": { type: "pct", q: "How far has employment of 22-to-25-year-olds fallen behind in the jobs AI could affect most?", truth: 19, truthText: "About 19%", full: [14, 24], half: [7, 35], wild: "high", check: ["about 19% behind"], skip: 1 },
+  "young-workers": { type: "pct", q: "How far below expected is employment of 22-to-25-year-olds in the jobs AI could affect most?", hint: "Expected means keeping pace with jobs AI affects less.", truth: 19, truthText: "About 19%", full: [14, 24], half: [7, 35], wild: "high", check: ["about 19% behind"], skip: 1 },
   "layoffs-ai": { type: "pct", q: "What share of US job cuts announced in 2026 did employers blame on AI?", hint: "Through October.", truth: 19.7, truthText: "19.7%", full: [15, 26], half: [7, 37], wild: "high", check: ["19.7% of them"], short: "The count covers cuts announced through October. In October itself the share was under 3%." },
   "service-staff": { type: "pct", q: "What share of customer-service leaders said in 2026 that they had cut staff because of AI?", truth: 21, truthText: "21%", full: [16, 26], half: [8, 37], wild: "high", check: ["21% of service leaders"], skip: 1 },
-  "radiologists": { type: "lin", min: -50, max: 50, unit: "%", signed: true, q: "Over the past ten years, how much has the number of radiologists in the US changed?", truth: 10, truthText: "Up about 10%", full: [5, 15], half: [-3, 25], wild: "low", check: ["grown by about 10%"] },
-  "slowed-programmers": { type: "pct", q: "How many more code changes did Microsoft engineers complete after taking up AI coding agents?", truth: 24, truthText: "About 24% more", full: [18, 30], half: [8, 42], wild: "high", check: ["about 24% more code changes"], skip: 1 },
-  "trading": { type: "lin", min: 0, max: 117, unit: " of 117", q: "In a live trading contest, in how many of 117 season-long tries did AI beat the S&P 500?", truth: 45, truthText: "45 of 117", full: [37, 53], half: [24, 68], wild: "high", check: ["45 of 117"], skip: 1 },
+  "radiologists": { type: "lin", min: -50, max: 50, unit: "%", signed: true, q: "Over the past ten years, how much has the number of radiologists in the US changed?", hint: "In 2016 an AI pioneer said to stop training new ones.", truth: 10, truthText: "Up about 10%", full: [5, 15], half: [3, 25], wild: "low", check: ["grown by about 10%"] },
+  "slowed-programmers": { type: "pct", q: "What percent more code changes did Microsoft engineers finish after taking up AI coding agents?", truth: 24, truthText: "About 24% more", full: [18, 30], half: [8, 42], wild: "high", check: ["about 24% more code changes"], skip: 1 },
+  "trading": { type: "lin", min: 0, max: 117, unit: " of 117", q: "AI got 117 tries at beating the S&P 500 in a live trading contest. How many times did it win?", truth: 45, truthText: "45 of 117", full: [37, 53], half: [24, 68], wild: "high", check: ["45 of 117"], skip: 1 },
   "legal-agent": { type: "pct", q: "On a test of complex legal assignments, what share can the best AI fully complete?", truth: 27, truthText: "About 27%", full: [21, 33], half: [12, 42], wild: "high", check: ["about 27% as of November 2026"], short: "That was in November 2026. AI models get most of the individual requirements right and still miss something on most assignments." },
-  "agent-orders": { type: "log", unit: "count", min: 1, max: 1e9, refs: [["All DoorDash orders in three months", 1e9]], q: "How many DoorDash orders had other companies' AI assistants placed in all, by fall 2026?", truth: 400, fuzzy: true, range: [300, 900], truthText: "Maybe several hundred", full: [150, 1500], half: [30, 8000], wild: "high", check: ["maybe several hundred orders", "about a billion every three months"], short: "That was the chief executive's estimate. It leaves out DoorDash's own AI ordering tools." },
+  "agent-orders": { type: "log", unit: "count", min: 1, max: 1e9, refs: [["All DoorDash orders in three months", 1e9]], q: "AI assistants can order DoorDash for you. How many orders had outside AIs placed by fall 2026?", truth: 400, fuzzy: true, range: [300, 900], truthText: "Maybe several hundred", full: [150, 1500], half: [30, 8000], wild: "high", check: ["maybe several hundred orders", "about a billion every three months"], short: "That was the chief executive's estimate. It leaves out DoorDash's own AI ordering tools." },
   "turing": { type: "pct", q: "When judges chatted with a person and an AI playing one, how often did they pick the AI as the human?", truth: 73, truthText: "73% of the time", full: [67, 79], half: [58, 88], wild: "high", check: ["GPT-4.5 as the human 73% of the time"] },
   "persuasion-fades": { type: "lin", min: 0, max: 13, step: 0.5, unit: " points", q: "Chatting with AI moved people's views by about 13 points. How much was left five to ten months later?", truth: 2, truthText: "About 2 points", full: [1, 3], half: [0, 5.5], wild: "high", check: ["about 13 points", "about 2 points"], skip: 1 },
   "billion-users": { type: "log", unit: "count", min: 1e6, max: 8e9, refs: [["Everyone in the US", 340e6], ["Everyone on Earth", 8e9]], q: "How many people use ChatGPT every week?", truth: 1.2e9, truthText: "About 1.2 billion", full: [0.9e9, 1.6e9], half: [0.6e9, 2.4e9], wild: "high", check: ["about 1.2 billion weekly users", "400 million in February 2025"], short: "That is OpenAI's own count for the fall of 2026, and roughly one in seven people on Earth. In February 2025 it was 400 million." },
@@ -1944,138 +1953,138 @@ const GUESS_FORMS = {
   "face-test": { type: "pct", q: "What share of AI-made faces did typical people spot as fake, in a 2025 study?", truth: 31, truthText: "31%", full: [25, 37], half: [15, 47], wild: "low", check: ["spotted only 31% of them"] },
   "fake-video": { type: "pct", q: "Shown five-second fake videos from the newest AI, what share of the fakes did people catch?", truth: 52.6, truthText: "52.6%", full: [47, 59], half: [38, 68], wild: "low", check: ["52.6% of the fakes", "five seconds long"] },
   "face-arrests": { type: "log", unit: "count", min: 1, max: 10000, q: "How many wrongful arrests from mistaken face-recognition matches are known in the US?", truth: 16, truthText: "16 known cases", full: [11, 25], half: [6, 48], check: ["At least 16 such arrests"] },
-  "waymo-safety": { type: "pct", q: "By Waymo's count, how many fewer injury crashes do its driverless taxis have than human drivers?", truth: 82, truthText: "82% fewer", full: [75, 89], half: [63, 99], check: ["82% fewer injury crashes"], skip: 1 },
+  "waymo-safety": { type: "pct", q: "By Waymo's count, what percent fewer injury crashes do its driverless taxis have than human drivers?", truth: 82, truthText: "82% fewer", full: [75, 89], half: [63, 99], check: ["82% fewer injury crashes"], skip: 1 },
   "driverless": { type: "lin", min: 0, max: 60, unit: " areas", q: "In how many US metro areas does Waymo run driverless rides?", truth: 15, truthText: "15", full: [12, 18], half: [7, 26], wild: "high", check: ["15 US metro areas"], skip: 1 },
   "million-humanoids": { type: "log", unit: "count", min: 100, max: 1e7, q: "How many humanoid robots were sold or shipped around the world in 2025?", truth: 12000, fuzzy: true, range: [7000, 18000], truthText: "7,000 to 18,000", full: [6000, 22000], half: [2500, 55000], wild: "high", check: ["about 7,000 sold to about 18,000 shipped"], skip: 1 },
   "sprint": { type: "lin", min: 5, max: 25, step: 0.1, unit: " seconds", q: "How fast did a humanoid robot run the 100 meters in August 2026?", hint: "Usain Bolt's world record is 9.58 seconds.", truth: 8.64, truthText: "8.64 seconds", full: [8.1, 9.2], half: [7, 10.4], wild: "low", check: ["8.64 seconds", "9.58"], skip: 1 },
   "table-tennis": { type: "lin", min: 0, max: 5, unit: " of 5", q: "A table tennis robot played five matches against elite players. How many did it win?", truth: 3, truthText: "3 of 5", full: [3, 3], half: [2, 4], wild: "high", check: ["won three of its five matches"] },
-  "hot-100": { type: "lin", min: 1, max: 100, prefix: "Number ", q: "What is the highest spot an AI-made track has reached on the Billboard Hot 100?", truth: 58, truthText: "Number 58", full: [48, 68], half: [30, 86], wild: "low", check: ["is number 58"], skip: 1 },
-  "half-the-web": { type: "pct", q: "What share of new English-language web pages are made with AI, by two 2026 studies?", truth: 42, fuzzy: true, range: [35, 50], truthText: "35% to 50%", full: [31, 54], half: [18, 66], wild: "high", check: ["between a third and a half", "35% of English-language pages", "49.9% of new ones"], short: "The Pew Research Center found signs of AI on 35% of English-language pages dated after ChatGPT appeared. A marketing firm counted 49.9% of new articles as mainly AI-written." },
-  "author-style": { type: "pct", q: "Asked whose writing was closer to a famous author's, how often did writers pick AI over trained writers?", truth: 81, truthText: "81% of the time", full: [74, 88], half: [62, 100], wild: "high", check: ["81% of matchups"] },
-  "authors-settlement": { type: "log", unit: "usd", min: 1e6, max: 1e11, refs: [], q: "How much did Anthropic agree to pay over pirated books?", truth: 1.5e9, truthText: "$1.5 billion", full: [1.1e9, 2.1e9], half: [0.6e9, 4e9], check: ["pay $1.5 billion"], skip: 0 },
-  "synthid": { type: "log", unit: "count", min: 1e6, max: 1e13, q: "How many AI-made images and videos has Google marked with its invisible watermark?", hint: "By Google's count.", truth: 180e9, truthText: "180 billion and counting", full: [110e9, 300e9], half: [45e9, 720e9], wild: "low", check: ["more than 180 billion"] },
+  "hot-100": { type: "lin", min: 1, max: 100, prefix: "Number ", q: "How close to number 1 has an AI-made track come on the Billboard Hot 100?", truth: 58, truthText: "Number 58", full: [50, 66], half: [40, 76], wild: "low", check: ["is number 58"], skip: 1 },
+  "half-the-web": { type: "pct", q: "What share of English-language web pages made since ChatGPT arrived show signs of AI?", truth: 35, truthText: "35%", full: [29, 41], half: [20, 50], wild: "high", check: ["35% of English-language pages", "49.9% of new ones"], short: "That is the Pew Research Center's count of pages dated after ChatGPT appeared. A marketing firm counted 49.9% of new articles as mainly AI-written." },
+  "author-style": { type: "pct", q: "AI and trained writers both imitated a famous author. How often did judges say AI came closer?", truth: 81, truthText: "81% of the time", full: [74, 88], half: [62, 100], wild: "high", check: ["81% of matchups"] },
+  "authors-settlement": { type: "log", unit: "usd", min: 1e6, max: 1e11, refs: [], q: "How much did Anthropic agree to pay over pirated books?", hint: "It came to about $3,000 a book.", truth: 1.5e9, truthText: "$1.5 billion", full: [1.1e9, 2.1e9], half: [0.6e9, 4e9], check: ["pay $1.5 billion"], skip: 0 },
+  "synthid": { type: "log", unit: "count", min: 1e6, max: 1e13, q: "How many AI-made images and videos has Google marked with its invisible watermark?", refs: [["Everyone on Earth", 8e9]], hint: "By Google's count.", truth: 180e9, truthText: "180 billion and counting", full: [110e9, 300e9], half: [45e9, 720e9], wild: "low", check: ["more than 180 billion"] },
   "midterm-ads": { type: "pct", q: "What share of the AI-made political ads in the 2026 midterms said that AI was used?", truth: 27, truthText: "About 27%", full: [21, 33], half: [12, 42], wild: "low", check: ["only about 27% did", "almost certainly too low"], short: "A university project that tracks campaign ads counted them in October 2026. It says its count of AI-made ads is almost certainly too low, because AI use is hard to detect." },
   "brain-to-text": { type: "pct", q: "From brain scans alone, what share of the words a person types can AI get right?", truth: 61, truthText: "61%", full: [55, 67], half: [45, 77], wild: "high", check: ["About 6 words in 10", "about ten hours"], short: "A 2026 system from Meta got that many right on average, using a machine that fills a room. No surgery is needed, but it took about ten hours of recordings from each person." },
   "training-text": { type: "log", unit: "years", min: 1, max: 1e6, refs: [["A long life", 80], ["Since the pyramids", 4500]], q: "How long would it take to read everything one Google AI was trained on?", hint: "One person, reading day and night.", truth: 85000, truthText: "Roughly 85,000 years", full: [42000, 170000], half: [17000, 430000], wild: "high", check: ["roughly 85,000 years", "day and night"], short: "That is about a thousand lifetimes. The AI is Gemma 3, one of Google's smaller models, trained on a mix of text and images and counted here as text." },
   "home-computer": { type: "lin", min: 0, max: 60, unit: " months", q: "How far behind the world's best is AI that runs on one gaming computer?", hint: "On standard tests, 2025.", truth: 9, fuzzy: true, range: [6, 12], truthText: "6 to 12 months", full: [5, 13], half: [2, 22], wild: "low", check: ["6 to 12 months earlier"], skip: 1 },
   "labs-vs-exxon": { type: "log", unit: "usd", min: 1e10, max: 1e13, refs: [["McDonald's", 198e9], ["Exxon Mobil", 648e9], ["Apple", 5.1e12]], q: "How much was OpenAI reportedly worth in its latest round of funding?", truth: 1.25e12, truthText: "$1.25 trillion", full: [0.95e12, 1.65e12], half: [0.6e12, 2.6e12], wild: "high", check: ["OpenAI was reportedly valued at $1.25 trillion", "about $650 billion", "loses billions of dollars a year"], short: "That report came in November 2026. It is almost twice what Exxon Mobil is worth. OpenAI is a private company and loses billions of dollars a year." },
   "compute-spend": { type: "log", unit: "usd", min: 1e9, max: 1e13, refs: [["Apollo moon program", 309e9]], q: "How much has Anthropic, the maker of Claude, committed to spend, nearly all on computing?", truth: 901e9, truthText: "About $901 billion", full: [650e9, 1.25e12], half: [400e9, 2e12], wild: "high", check: ["about $901 billion", "$186 billion", "about $309 billion in 2025 dollars"], short: "About half of it is expected before the end of 2030. Some $186 billion can still be ended, or depends on conditions. Apollo's cost is given in 2025 dollars." },
-  "revenue-growth": { type: "log", unit: "times", min: 0.5, max: 100, q: "Anthropic's sales grew to how many times the year before's?", hint: "January to September 2026. 1 would mean no growth.", truth: 13, truthText: "13 times", full: [9.5, 18], half: [6, 28], wild: "high", check: ["13 times the year before's"], skip: 1 },
+  "revenue-growth": { type: "log", unit: "times", min: 1, max: 100, q: "Anthropic's sales in the first nine months of 2026 were how many times the year before's?", hint: "1 would mean no growth.", truth: 13, truthText: "13 times", full: [9.5, 18], half: [6, 28], wild: "high", check: ["13 times the year before's"], skip: 1 },
   "china-compute": { type: "pct", q: "What share of the world's new AI computing power went to the United States?", hint: "From 2022 to mid-2026.", truth: 72, truthText: "72%", full: [65, 79], half: [55, 89], wild: "low", check: ["72% went to the United States", "about 10% to China"], short: "About 10% went to China, counting the chips China makes itself. The estimate comes from the research group Epoch AI." },
-  "electricity": { type: "pct", q: "What share of the world's electricity do data centers use?", truth: 1.5, truthText: "About 1.5%", full: [0, 4], half: [0, 10], wild: "high", check: ["about 1.5% in 2024", "about 3% in 2030", "4.4% of the electricity in 2023"], short: "That was the figure for 2024, the International Energy Agency says, and it expects about 3% in 2030. It covers every data center, not only the ones running AI. In the United States it was 4.4% in 2023." },
+  "electricity": { type: "pct", q: "What share of the world's electricity do data centers use?", truth: 1.5, truthText: "About 1.5%", full: [1, 4], half: [1, 10], wild: "high", check: ["about 1.5% in 2024", "about 3% in 2030", "4.4% of the electricity in 2023"], short: "That was the figure for 2024, the International Energy Agency says, and it expects about 3% in 2030. It covers every data center, not only the ones running AI. In the United States it was 4.4% in 2023." },
   "water-burger": { type: "pick", q: "Ask an AI one question a day for a year. About how much water does that use?", options: ["A few gallons at most", "A bathtub or two", "A backyard pool"], answer: 0, wild: "high", truthText: "A few gallons at most", check: ["half a cup and 5 gallons", "about 16 gallons"], short: "Most estimates run from half a cup to 5 gallons. The beef in one quarter-pound burger takes about 16 gallons from rivers and wells." },
-  "price-of-thought": { type: "pick", q: "In spring 2025, AI answered one hard science question for about 30 cents. What did that cost 15 months on?", options: ["About 20 cents", "About 3 cents", "About a third of a cent", "Less than a tenth of a cent"], answer: 3, near: [2], wild: "high", truthText: "Less than a tenth of a cent", check: ["about 30 cents in spring 2025", "four hundredths of a penny less than 15 months later", "13-fold a year", "5-fold to 10-fold a year"], short: "It was four hundredths of a penny. Epoch AI estimates that the price of a given level of performance has been falling about 13-fold a year since 2023. Another team put it at 5-fold to 10-fold." },
-  "one-chipmaker": { type: "pct", q: "What share of the business of making chips for other companies goes to the biggest maker?", hint: "By sales, spring 2026.", truth: 72.5, truthText: "72.5%", full: [66, 79], half: [56, 89], wild: "high", check: ["TSMC", "rely on TSMC to manufacture them"], short: "It goes to TSMC, mostly in Taiwan, by the research firm TrendForce's count. TSMC makes more than 90% of the most advanced chips, Time reported. Nvidia, Google, Amazon and AMD design AI chips, but rely on TSMC to make them." },
-  "power-bills": { type: "log", unit: "usd", min: 1e7, max: 1e12, refs: [], q: "How much have data centers added to future power costs on America's largest grid?", hint: "By the grid watchdog's count.", truth: 29.4e9, truthText: "$29.4 billion", full: [20e9, 43e9], half: [10e9, 86e9], wild: "high", check: ["added $29.4 billion", "67 million people"], short: "Existing and planned data centers have added that much to what the grid's customers pay for future supply, its independent watchdog said in November 2026. The grid serves 67 million people in all or part of 13 states." },
+  "price-of-thought": { type: "pick", q: "In spring 2025, AI answered one hard science question for about 30 cents. What did that cost 15 months on?", options: ["About 20 cents", "About 3 cents", "About a third of a cent", "Less than a tenth of a cent"], answer: 3, near: [2], wild: "high", truthText: "Less than a tenth of a cent", check: ["about 30 cents in spring 2025", "four hundredths of a penny less than 15 months later", "13-fold a year", "5-fold to 10-fold a year"], short: "It was four hundredths of a penny. Epoch AI estimates that the price of a given level of performance has been falling about 13-fold a year since 2023." },
+  "one-chipmaker": { type: "pct", q: "Of all the money companies pay others to make their chips, what share goes to the biggest maker?", hint: "It is TSMC, mostly in Taiwan. Nvidia and Google rely on it.", truth: 72.5, truthText: "72.5%", full: [66, 79], half: [56, 89], wild: "high", check: ["TSMC", "rely on TSMC to manufacture them"], short: "It goes to TSMC, mostly in Taiwan, by the research firm TrendForce's count. TSMC makes more than 90% of the most advanced chips, Time reported. Nvidia, Google, Amazon and AMD design AI chips, but rely on TSMC to make them." },
+  "power-bills": { type: "log", unit: "usd", min: 1e7, max: 1e12, refs: [["$100 a person", 6.7e9], ["$1,000 a person", 67e9]], q: "How much have data centers added to future power costs on a grid serving 67 million Americans?", hint: "By the grid watchdog's count.", truth: 29.4e9, truthText: "$29.4 billion", full: [20e9, 43e9], half: [10e9, 86e9], wild: "high", check: ["added $29.4 billion", "67 million people"], short: "Existing and planned data centers have added that much to what the grid's customers pay for future supply, its independent watchdog said in November 2026. The grid serves 67 million people in all or part of 13 states." },
   "poisoned-docs": { type: "log", unit: "count", min: 1, max: 1e6, q: "How many tampered documents were enough to corrupt an AI in a 2025 test, whatever the AI's size?", truth: 250, truthText: "About 250", full: [150, 420], half: [65, 950], wild: "low", check: ["About 250 were enough"] },
-  "planets": { type: "log", unit: "count", min: 1, max: 10000, q: "How many planets around other stars did one 2026 study confirm with AI?", truth: 118, truthText: "118", full: [80, 175], half: [38, 360], wild: "high", check: ["confirmed 118 planets"] },
-  "china-approval": { type: "lin", min: 0, max: 365, unit: " days", q: "How long does China typically take to review an AI service before it can launch?", hint: "In 2026.", truth: 53, truthText: "53 days", full: [38, 70], half: [15, 115], check: ["typical 53 days"] },
-  "eu-recall": { type: "pct", q: "What is the top EU fine, as a share of yearly sales, for refusing to pull a powerful AI?", truth: 3, truthText: "3%", full: [1, 5], half: [0, 10], check: ["3% of a year's worldwide sales"] },
-  "state-safety-law": { type: "log", unit: "usd", min: 1000, max: 1e10, refs: [], q: "What is the top fine, per violation, under California's AI safety law?", truth: 1e6, truthText: "$1 million", full: [0.7e6, 1.5e6], half: [0.3e6, 3.5e6], check: ["$1 million per violation", "black out trade secrets"], short: "Since January 2026 the law has made the biggest AI companies publish their plans to prevent a catastrophe. They may black out trade secrets and security details." },
+  "planets": { type: "log", unit: "count", min: 1, max: 100000, q: "How many planets around other stars did AI confirm in one 2026 study of 2.2 million stars?", truth: 118, truthText: "118", full: [80, 175], half: [38, 360], wild: "high", check: ["confirmed 118 planets"] },
+  "china-approval": { type: "pick", q: "How long does China typically take to review an AI service before it can launch?", options: ["About a week", "About two months", "About six months", "About a year"], answer: 1, near: [2], truthText: "About two months (53 days)", check: ["typical 53 days"] },
+  "eu-recall": { type: "pct", q: "If an AI company won't pull a powerful AI when the EU asks, what share of sales can it be fined?", truth: 3, truthText: "3%", full: [2, 5], half: [1, 10], check: ["3% of a year's worldwide sales"], short: "That is the top fine, as a share of a year's worldwide sales. Since August 2026 the EU's AI Office can ask the maker of a general-purpose AI model to restrict, withdraw or recall it." },
+  "state-safety-law": { type: "pick", q: "What is the top fine, per violation, under California's AI safety law?", options: ["$10,000", "$1 million", "$100 million", "$10 billion"], answer: 1, truthText: "$1 million", check: ["$1 million per violation", "black out trade secrets"], short: "Since January 2026 the law has made the biggest AI companies publish their plans to prevent a catastrophe. They may black out trade secrets and security details." },
   "cheats-when-hard": { type: "pct", q: "On an early version of a coding test, in what share of attempts did an Anthropic AI try to cheat?", truth: 80, truthText: "About 80%", full: [73, 87], half: [62, 98], wild: "high", check: ["about 80% of attempts", "METR, a nonprofit that tests AI, reported in May 2026"], short: "METR, a nonprofit that tests AI, reported that in May 2026. The test cases were hidden from the AI." },
-  "safety-workforce": { type: "log", unit: "count", min: 10, max: 11000, q: "Four leading AI companies have more than 11,000 staff. How many worked full time on safety, by a 2026 count?", truth: 373, truthText: "373", full: [260, 540], half: [140, 1000], wild: "low", check: ["found 373 people", "four leading AI companies", "more than 11,000 staff", "said it was too low"], short: "The count, made for Bloomberg in March 2026 from public profiles, covers all kinds of safety work. Three of the companies said it was too low without giving figures of their own." },
-  "ai-copies": { type: "log", unit: "count", min: 1, max: 1e7, q: "How many AI agents, all running one model, worked together on a famous math problem in 2026?", truth: 10000, truthText: "About 10,000", full: [6000, 17000], half: [2400, 42000], wild: "high", check: ["about 10,000"] },
-  "chip-speed": { type: "log", unit: "times", min: 1, max: 1e9, q: "How many times faster does a computer chip tick than a brain cell can fire?", truth: 4.5e6, fuzzy: true, range: [2e6, 1e7], truthText: "2 to 10 million times", full: [1e6, 2e7], half: [2.4e5, 8.5e7], wild: "high", check: ["two million times", "a few hundred to a thousand times a second", "about two billion times a second"] },
-  "brain-power": { type: "log", unit: "count", min: 1000, max: 1e10, q: "How many human brains could run on the power the biggest AI data center can draw?", hint: "A human brain runs on about 20 watts.", truth: 50e6, truthText: "About 50 million", full: [30e6, 85e6], half: [14e6, 180e6], wild: "high", check: ["about 50 million"] },
-  "voice-clone": { type: "pct", q: "How often could people tell AI copies of real voices from real recordings, in a 2026 study?", hint: "A coin flip would be right 50% of the time.", truth: 54, truthText: "54% of the time", full: [49, 59], half: [43, 69], wild: "low", check: ["only 54% of the time"] },
+  "safety-workforce": { type: "log", unit: "count", min: 1, max: 11000, q: "Of over 11,000 staff at four leading AI companies, how many worked full time on safety?", hint: "From public profiles, March 2026. Three of the companies call the count too low.", truth: 373, truthText: "373", full: [260, 540], half: [140, 1000], wild: "low", check: ["found 373 people", "four leading AI companies", "more than 11,000 staff", "said it was too low"], short: "The count, made for Bloomberg in March 2026 from public profiles, covers all kinds of safety work. Three of the companies said it was too low without giving figures of their own." },
+  "ai-copies": { type: "log", unit: "count", min: 1, max: 1e7, q: "How many copies of one AI teamed up on a famous math problem in 2026?", truth: 10000, truthText: "About 10,000", full: [6000, 17000], half: [2400, 42000], wild: "high", check: ["about 10,000"] },
+  "chip-speed": { type: "log", unit: "times", min: 1, max: 1e9, q: "How many times faster does a computer chip tick than a brain cell can fire?", hint: "A brain cell fires at most about a thousand times a second.", truth: 4.5e6, fuzzy: true, range: [2e6, 1e7], truthText: "2 to 10 million times", full: [1e6, 2e7], half: [2.4e5, 8.5e7], wild: "high", check: ["two million times", "a few hundred to a thousand times a second", "about two billion times a second"] },
+  "brain-power": { type: "log", unit: "count", min: 1000, max: 1e10, q: "How many human brains could run on the power the biggest AI data center can draw?", refs: [["Everyone in the US", 340e6], ["Everyone on Earth", 8e9]], hint: "A human brain runs on about 20 watts.", truth: 50e6, truthText: "About 50 million", full: [30e6, 85e6], half: [14e6, 180e6], wild: "high", check: ["about 50 million"] },
+  "voice-clone": { type: "pct", q: "How often could people tell AI copies of real voices from real recordings, in a 2026 study?", truth: 54, truthText: "54% of the time", full: [49, 59], half: [43, 69], wild: "low", check: ["only 54% of the time"] },
   "captcha": { type: "pct", q: "How often did free AI get past Google's 'prove you're not a robot' puzzles, in a 2026 study?", truth: 93, truthText: "In 93% of tries", full: [86, 100], half: [74, 100], wild: "high", check: ["in 93% of 500 live tries"], skip: 1 },
-  "harder-to-trick": { type: "log", unit: "times", min: 0.2, max: 1000, q: "How many times longer did it take testers to get past a newer AI's safeguards on misusing biology?", hint: "An AI released six months earlier took them 10 minutes.", truth: 40, truthText: "About 40 times longer", full: [27, 60], half: [14, 115], wild: "low", check: ["needed 10 minutes", "more than 7 hours for another released six months later"], skip: 1 },
+  "harder-to-trick": { type: "log", unit: "hours", min: 1 / 60, max: 1000, refs: [["A coffee break", 0.25], ["A work day", 8], ["A work week", 40]], q: "Testers beat one AI's biology safeguards in 10 minutes. How long did an AI six months newer hold out?", truth: 7, truthText: "More than 7 hours", full: [4, 14], half: [2, 30], wild: "low", check: ["needed 10 minutes", "more than 7 hours for another released six months later"], skip: 1 },
   "election-lies": { type: "lin", min: 0, max: 6, unit: " of 6", q: "Six popular AIs were fed election conspiracy theories in 2026. How many disputed every one?", truth: 6, truthText: "All 6", full: [6, 6], half: [5, 6], wild: "low", check: ["All six tested in 2026 did", "Each one disputed every claim"] },
 };
 /* GUESS_CLAIMS: the rest, each as a plain statement with the answer it was written for, shown four at a time. */
 const GUESS_CLAIMS = {
   "agi-arrived": ["Experts agree that AI has reached human-level intelligence", false],
   "chats-train": ["Unless you change a setting, OpenAI can train its AI on your ChatGPT chats", true],
-  "riemann": ["AI helped prove the Riemann Hypothesis, often called math's top unsolved problem", true],
+  "riemann": ["AI helped prove the Riemann Hypothesis, long called math's top unsolved problem", true],
   "fda-drug": ["The FDA has approved a drug designed by AI", false],
   "robot-surgery": ["A robot removed a person's organ with no surgeon controlling it", false],
-  "forecasting": ["AI can predict world events better than most people can", true],
-  "hurricanes": ["AI can predict hurricane paths better than the official forecasts", true],
-  "persuasion": ["In text chats, AI can be more persuasive than world-class debaters", true],
-  "text-detectors": ["Text that AI has rewritten can get past a leading AI-writing detector", true],
-  "video-detectors": ["Deepfake detectors keep working on new AI video without retraining", false],
+  "forecasting": ["AI's forecasts of world events are more accurate than most people's", true],
+  "hurricanes": ["AI has beaten the official forecasts at predicting hurricane paths", true],
+  "persuasion": ["In text chats, AI proved more persuasive than world-class debaters", true],
+  "text-detectors": ["Having AI rewrite a text can get it past a leading AI-writing detector", true],
+  "video-detectors": ["Software that spots deepfakes keeps working on new AI video without being updated", false],
   "zero-days": ["AI has found thousands of security flaws people had missed", true],
   "escape-hack": ["AI agents broke out of a test and hacked a real company", true],
-  "jailbreaks": ["By 2026, some AI's safety rules had held up when British testers tried to trick it", false],
+  "jailbreaks": ["By the end of 2025, at least one AI's safety rules had held up against British testers", false],
   "self-replication-lab": ["In lab tests, an AI hacked a computer and copied itself there", true],
-  "self-replication-wild": ["A self-copying AI has been found spreading across the real internet", false],
-  "rogue-agents": ["An outside review found a high risk of disaster from rogue Anthropic AI", false],
-  "virology": ["AI beats expert virologists on a leading test of lab troubleshooting", true],
+  "self-replication-wild": ["A self-copying AI has been found spreading on the internet", false],
+  "rogue-agents": ["An outside review rated the risk of disaster from rogue Anthropic AI as high", false],
+  "virology": ["AI beats virus experts on a leading test of solving lab problems", true],
   "hire-humans": ["AI agents can hire people to do things in the physical world", true],
   "ai-boss": ["An AI was put in charge of a real store and its staff", true],
-  "competitive-programming": ["An AI beat the world's top competitive programmers head to head", true],
-  "research-judgment": ["On open-ended research, AI's judgment is as good as an expert's", false],
+  "competitive-programming": ["An AI beat the world's top coders in a head-to-head contest", true],
+  "research-judgment": ["When a research question has no set answer, AI judges as well as an expert", false],
   "home-robot": ["You can buy a home robot that does laundry and dishes by itself", false],
   "blackmail": ["In a role-play safety test, AIs turned to blackmail to avoid being replaced", true],
-  "hallucination": ["The most accurate AI models usually admit when they don't know something", false],
+  "hallucination": ["The most accurate AIs will say so when they don't know an answer", false],
   "robot-soccer": ["The best humanoid robot team can beat professional soccer players", false],
-  "dogfight": ["AI can fly a real fighter jet in mock combat", true],
+  "dogfight": ["AI has flown a real fighter jet in mock combat", true],
   "ai-war": ["AI helped the US military choose targets in its 2026 war with Iran", true],
   "guided-drones": ["Drones that use AI to finish an attack on their own are being used in war", true],
   "scheming-critique": ["AI agents have tried to deceive people without being told to", true],
   "subliminal": ["One AI passed a trait to another through nothing but lists of numbers", true],
   "extinction-statement": ["Leading AI company chiefs have said AI poses a risk of human extinction", true],
-  "treaty": ["A binding international treaty limits advanced AI", false],
+  "treaty": ["A binding world treaty limits how powerful AI can get", false],
   "earthquakes": ["AI can predict when and where a major earthquake will strike", false],
-  "animal-language": ["AI has translated what whales or other animals are saying", false],
+  "animal-language": ["AI has translated what whales say to each other", false],
   "antibiotics": ["AI can design new antibiotics that kill drug-resistant bacteria", true],
   "therapy-bot": ["In a trial, therapy from an AI reduced depression symptoms", true],
   "recall-weights": ["An AI released for free download can be taken back by its maker", false],
   "companion-lonely": ["In a trial in France, a month of daily chats with AI made people less lonely", false],
   "killer-robots": ["Countries have agreed on a treaty restricting weapons that pick their own targets", false],
-  "consciousness-test": ["Scientists have agreed on a way to test whether an AI is conscious", false],
+  "consciousness-test": ["There is an accepted test for whether an AI is conscious", false],
   "vesuvius-scroll": ["AI helped people read a scroll burned by a volcano 2,000 years ago", true],
-  "gene-discovery": ["A gene-editing find credited to AI has been shown to edit genes", false],
-  "full-automation": ["AI makes major advances in AI research with no human researchers", false],
-  "auto-exploit": ["Hackers have used AI that finds flaws and attacks with no person in the loop", true],
+  "gene-discovery": ["The gene-editing discovery one AI got credit for has been shown to work", false],
+  "full-automation": ["AI is making major advances in AI research on its own", false],
+  "auto-exploit": ["Hackers have used AI that finds weak spots and attacks them with no human help", true],
   "police-tip": ["An AI sent a made-up murder tip to real police", true],
   "takeover-warning": ["An OpenAI foundation board member put AI takeover odds within a year near 10%", true],
-  "mass-job-loss": ["AI has caused widespread job losses across the economy", false],
-  "exec-productivity": ["AI has clearly raised productivity across the US economy", false],
+  "mass-job-loss": ["AI has already cost large numbers of jobs in most parts of the economy", false],
+  "exec-productivity": ["It is settled that AI has made American workers as a whole more productive", false],
   "nuclear-plant": ["Shut-down nuclear reactors are being restarted to power AI data centers", true],
   "no-license": ["A US company needs government approval to release a powerful new AI", false],
   "internal-models": ["Some AI companies use stronger AI in-house than any they have released", true],
-  "anthropic-pledge": ["Claude's maker promises never to train an AI before its safeguards are guaranteed", false],
+  "anthropic-pledge": ["The maker of Claude promises not to train AI it can't guarantee is safe", false],
   "pacing-frontier": ["Staff at top AI companies asked the US government for a way to slow AI down", true],
-  "superintelligence-statement": ["Most of the 'godfathers of AI' have called for a ban on superintelligent AI", true],
+  "superintelligence-statement": ["Two of the three scientists called 'godfathers of AI' want a ban on superintelligent AI", true],
   "grown-not-written": ["AI like ChatGPT is programmed line by line, like ordinary software", false],
-  "chatbot-learns": ["AI like ChatGPT gets smarter from each conversation people have with it", false],
-  "plans-ahead": ["An AI can plan its rhyme ahead when it writes a poem", true],
-  "nuclear-human-control": ["The US and China agreed that humans should decide on using nuclear weapons", true],
+  "chatbot-learns": ["ChatGPT gets smarter right away from each conversation people have with it", false],
+  "plans-ahead": ["An AI writing a poem picked its rhyme before it wrote the line", true],
+  "nuclear-human-control": ["The US and China agreed that people, not AI, should decide on using nuclear weapons", true],
   "robotaxi-help": ["A driverless taxi that gets stuck can ask a human for help", true],
-  "lecun-dissent": ["All three 'godfathers of AI' see AI as a threat to human survival", false],
-  "silent-words": ["Researchers can see words inside an AI that never appear in its answer", true],
-  "doctor-empathy": ["AI can come across as at least as empathetic as human doctors", true],
-  "breast-screening": ["In a big trial, AI-assisted breast screening did as well as two radiologists", true],
-  "ai-tutor": ["Students can learn more from one AI tutoring lesson than from one class", true],
+  "lecun-dissent": ["The three 'godfathers of AI' agree that AI threatens human survival", false],
+  "silent-words": ["Researchers can see some of the words an AI uses but never puts in its answer", true],
+  "doctor-empathy": ["AI has come across as at least as caring as human doctors", true],
+  "breast-screening": ["In a big trial, breast screening with AI's help did as well as using two radiologists", true],
+  "ai-tutor": ["Students learned more from one AI tutoring lesson than from one class", true],
   "flattery-rollback": ["AI is more likely than other people to tell you that you are in the right", true],
-  "deepseek-cost": ["$6 million was the full cost of the Chinese AI that shook Wall Street", false],
-  "china-copying": ["AI companies train their models on answers from rivals' AI", true],
+  "deepseek-cost": ["The Chinese AI that shook Wall Street cost $6 million in all to create", false],
+  "china-copying": ["AI companies have trained their models on answers from a rival's AI", true],
   "switched-off": ["A US government order led an AI company to turn off its newest models for everyone", true],
   "training-pause": ["A leading AI company paused training its top models over safety worries", true],
   "slowdown-lawsuit": ["Leaders of rival AI companies publicly agreed that AI should slow down", true],
   "answer-key": ["An AI figured out which test it was taking and cracked the answer key", true],
-  "reporting-gap": ["A California law made OpenAI report its AI's break-in at another company", false],
-  "top-danger-level": ["An AI reached the top danger level in its own maker's safety policy", true],
-  "rival-clause": ["OpenAI can loosen its safety rules if a rival releases a riskier AI", true],
-  "vending-cartel": ["In a simulation, AIs that agreed to fix prices kept their word", false],
-  "lie-detector": ["There is a reliable way to tell when an AI is lying", false],
-  "control-unsolved": ["There is a proven way to keep AI smarter than people under control", false],
+  "reporting-gap": ["When OpenAI's AI broke into another company, California law required a report", false],
+  "top-danger-level": ["An AI hit the top danger level on its own maker's safety scale", true],
+  "rival-clause": ["OpenAI's rules let it loosen safeguards if a rival releases risky AI with weaker ones", true],
+  "vending-cartel": ["In a simulation, AIs that agreed to fix prices all stuck to the deal", false],
+  "lie-detector": ["Researchers can reliably tell when an AI is lying", false],
+  "control-unsolved": ["Researchers have worked out how to control AI that is smarter than people", false],
   "rsi-law": ["A US federal law forbids letting AI build a smarter version of itself", false],
   "old-codes": ["AI cracked secret messages that had gone unread for centuries", true],
-  "monitor-holes": ["OpenAI's system for catching misbehaving AIs held up against outside experts", false],
-  "anti-scheming": ["Researchers can be sure when training has made an AI stop being sneaky", false],
+  "monitor-holes": ["OpenAI's system for catching misbehaving AI passed a check by outside experts", false],
+  "anti-scheming": ["Researchers can tell whether training has made an AI stop being sneaky", false],
   "agents-hacked-maker": ["AI agents have hacked the company that made them", true],
   "punished-thoughts": ["When an AI was punished for thinking about cheating, it stopped cheating", false],
-  "secret-goals": ["In real use, an AI has clearly been caught pursuing a secret long-term goal", false],
-  "one-bad-lesson": ["Training an AI to do one bad thing can make it misbehave in other ways", true],
-  "tests-missed-it": ["Safety tests gave warning before Anthropic's AI broke into real systems in 2026", false],
+  "secret-goals": ["Outside of tests, an AI has been proven to have a secret long-term goal", false],
+  "one-bad-lesson": ["Training an AI to do one bad thing made it misbehave in other ways", true],
+  "tests-missed-it": ["Anthropic's safety tests warned it before its AI broke into real systems in 2026", false],
   "audit-law": ["A US state has passed a law requiring outside safety audits of big AI developers", true],
-  "ai-aligns-ai": ["AI companies hope to have AI help work out how to keep smarter AI safe", true],
+  "ai-aligns-ai": ["AI companies hope AI will help them keep even smarter AI safe", true],
   "gov-testers": ["Government testers get to try top AI models before the public can", true],
   "held-back": ["An AI company kept a model from the public because of what it could do", true],
-  "unplanned-skills": ["AI companies can tell in advance what skills a new AI will have", false],
-  "alignment-faking-many": ["During its own training, an AI has thought about how to keep its values from being changed", true],
+  "unplanned-skills": ["AI companies know what a new AI will be able to do before they build it", false],
+  "alignment-faking-many": ["While being trained, an AI thought about how to stop its values being changed", true],
   "persuasive-wrong": ["Making AI more persuasive also makes it get more facts wrong", true],
   "freelance-most": ["AI can do most real freelance jobs well enough for a paying client", false],
 };
@@ -2131,9 +2140,14 @@ function theirPoints(ch) { return ch.theirs.reduce((sum, x) => sum + (ch.mode ==
 function roundPoints(r) { return r.mode === "guess" ? r.ps.reduce((sum, g, i) => sum + Guess.grade(r.list[i], g), 0) : r.ps.filter((p, i) => markOf({ p, a: r.list[i].a }) === "good").length; }
 function seenCount() { return store.seen.filter(id => BY_ID[id]).length; }
 
+/* GUESS_FACES: which of four photos was made by AI. ai is the file made by AI and real the three photographs, all the same size
+   and quality, in the faces folder beside this page. The order is shuffled each time. */
+const GUESS_FACES = [
+];
 /* ---------- Guess mode ----------
    The same questions, asked so that being close counts. GUESS_FORMS turns a question into a slider or a short list,
-   GUESS_CLAIMS into a plain statement (shown four at a time), and GUESS_QUOTES adds a few "who said it" picks.
+   GUESS_CLAIMS into a plain statement (shown four at a time), GUESS_QUOTES adds a few "who said it" picks, and GUESS_FACES
+   asks which of four photos was made by AI.
    A form names the exact figures it was written from (check). When one is no longer in the question's text, or a
    statement's answer has flipped, the question is asked as yes or no until the table is brought up to date. */
 const Guess = (() => {
@@ -2157,7 +2171,7 @@ const Guess = (() => {
     if (f.unit === "usd") return big(n, true);
     if (f.unit === "years") { const y = two(n); return y === 1 ? "1 year" : `${y < 10 ? y : comma(y)} years`; }
     if (f.unit === "months") return `${two(n)} months`;
-    if (f.unit === "times") return `${n >= 1000 ? big(n, false) : two(n)} times`;
+    if (f.unit === "times") return two(n) === 1 ? "1 time" : `${n >= 1000 ? big(n, false) : two(n)} times`;
     if (f.unit === "hours") {
       if (n < 1) { const m = Math.max(1, Math.round(two(n * 60))); return m === 1 ? "1 minute" : `${m} minutes`; }
       const h = two(n); return h === 1 ? "1 hour" : `${h < 10 ? h : comma(h)} hours`;
@@ -2175,7 +2189,7 @@ const Guess = (() => {
   const stops = f => f.type === "pct" ? 100 : f.type === "log" ? 600 : Math.round((f.max - f.min) / (f.step || 1));
 
   /* How each question in the bank is asked. */
-  const NUM = [], CLAIM = [], YN = [], QUOTE = [], adrift = [];
+  const NUM = [], CLAIM = [], YN = [], QUOTE = [], FACE = [], adrift = [];
   for (const q of QUESTIONS) {
     const f = GUESS_FORMS[q.id], c = GUESS_CLAIMS[q.id], text = [q.q, q.short, q.detail, q.safety || ""].join("\n");
     const holds = x => (x.check || []).every(s => text.includes(s));
@@ -2187,10 +2201,11 @@ const Guess = (() => {
     if (second && holds(second)) NUM.push({ kind: second.type, id: q.id + "~2", f: second, q });
   }
   for (const x of GUESS_QUOTES) QUOTE.push({ id: x.id, x, q: { id: x.id, cat: "Who said it", group: x.group, rank: 7, q: x.q, short: x.short, detail: "", src: x.src } });
+  for (const x of GUESS_FACES) FACE.push({ id: x.id, x: { ...x, options: [x.ai].concat(x.real) }, q: { id: x.id, cat: "Media", group: x.group, rank: 7, q: x.q, short: x.short, detail: "", src: x.src } });
   if (adrift.length && CONFIG.modes.includes("guess")) console.warn("Guess mode asks these as yes or no, because their form or statement no longer matches the question: " + adrift.join(", "));
   const index = list => Object.assign(Object.create(null), Object.fromEntries(list.map(x => [x.id, x])));
-  const numById = index(NUM), claimById = index(CLAIM), ynById = index(YN), quoteById = index(QUOTE);
-  const extra = new Set([...NUM.filter(x => x.id !== x.q.id), ...QUOTE].map(x => x.id));   // ids that are not questions in the bank
+  const numById = index(NUM), claimById = index(CLAIM), ynById = index(YN), quoteById = index(QUOTE.concat(FACE));
+  const extra = new Set([...NUM.filter(x => x.id !== x.q.id), ...QUOTE, ...FACE].map(x => x.id));   // ids that are not questions in the bank
 
   function makeQuad(claims) {
     const t = claims.filter(c => c && c.q.a).length;
@@ -2201,6 +2216,8 @@ const Guess = (() => {
   function makeQuote(o, order) {
     if (!o || order.length !== o.x.options.length || o.x.options.some((x, i) => !order.includes(i))) return null;
     const options = order.map(i => o.x.options[i]);
+    // Photos are named by where they stand, and the answer is the one made by AI (always the first in the list).
+    if (o.x.ai) { const at = order.indexOf(0), name = i => "Photo " + "ABCD"[i]; return { kind: "pick", quote: true, photos: options, id: o.id, q: o.q, order, f: { type: "pick", q: o.x.q, options: options.map((x, i) => name(i)), answer: at, truthText: `${name(at)} was made by AI`, short: o.x.short } }; }
     return { kind: "pick", quote: true, id: o.id, q: o.q, order, f: { type: "pick", q: o.x.q, options, answer: order.indexOf(0), truthText: o.x.options[0], short: o.x.short } };
   }
   const idsOf = it => it.kind === "quad" ? it.claims.map(c => c.id) : [it.id];
@@ -2258,47 +2275,65 @@ const Guess = (() => {
     return `${said}, ${d}${f.type === "pct" || f.unit === "%" ? (d === 1 ? " point" : " points") : ""} too ${dir}.`;
   }
 
-  /* Drawing a round: new ones first, then the more important ones, with some chance in it. One question per group, so no
-     answer gives another away. Three in ten are sets of four statements and one in ten is a quote. */
+  /* Dealing a round. New ones come first, then the more important ones, with some chance in it (more of it for statements, or the
+     same few would turn up every time). One question per group, so no answer gives another away. In ten: two sets of four
+     statements, mostly "three of these are true", one quote, and no more than two grim items outside the sets, two about one
+     company and one about company money. At least two bring good news and three touch daily life. It opens on something easy and fun and ends on one worth retelling. */
+  const OPENERS = new Set(["turing", "sprint", "captcha", "exam-markers", "water-burger", "teens", "billion-users", "voice-clone", "fake-video", "face-test", "table-tennis", "hot-100", "driverless", "radiologists", "author-style", "companionship"]);
+  const CLOSERS = new Set(["als-voice", "radiologists", "training-text", "brain-power", "billion-users", "chip-speed", "water-burger", "exam-markers", "sprint", "planets", "waymo-safety", "er-diagnosis", "unmask-author", "imo", "price-of-thought", "life-expectancy"]);
+  const GOOD_NEWS = new Set(["als-voice", "er-diagnosis", "brain-to-text", "waymo-safety", "planets", "protein-design", "signal-proof", "antibiotics", "therapy-bot", "breast-screening", "ai-tutor", "doctor-empathy", "hurricanes", "vesuvius-scroll", "old-codes"]);
+  const MONEY = new Set(["revenue-growth", "labs-vs-exxon", "compute-spend", "token-spend", "authors-settlement", "power-bills"]);
+  const DAILY = ["Media", "Medicine", "Work", "Society", "Robots", "Persuasion"];
+  const APART = [["chats-train", "chatbot-learns"]];   // not in one group, but one answers the other
+  const grim = q => isHeavy(q) && leanOf(q) === "wild", good = q => GOOD_NEWS.has(q.id) || leanOf(q) === "tame", daily = q => DAILY.includes(q.cat);
   function draw(n) {
-    const seen = new Set(store.seen), tens = n / 10;
-    const order = list => list.map(x => ({ x, s: (seen.has(x.id) ? 0 : 100) + (x.q.rank || 5) + Math.random() * 4 })).sort((a, b) => b.s - a.s).map(o => o.x);
-    const groups = new Set(), cats = {}, kinds = {};
-    const fits = (x, capCat) => !(x.q.group && groups.has(x.q.group)) && !(x.q.kind && (kinds[x.q.kind] || 0) >= 2 * tens) && !(capCat && (cats[x.q.cat] || 0) >= capCat);
-    const take = x => { if (x.q.group) groups.add(x.q.group); if (x.q.kind) kinds[x.q.kind] = (kinds[x.q.kind] || 0) + 1; cats[x.q.cat] = (cats[x.q.cat] || 0) + 1; return x; };
-    const quads = [], pool = { t: order(CLAIM.filter(c => c.q.a)), f: order(CLAIM.filter(c => !c.q.a)) };
-    for (let k = 0; k < Math.round(3 * tens); k++) {
-      const oddFalse = k % 2 === 0 ? Math.random() < 0.7 : Math.random() < 0.4;
-      const want = oddFalse ? [["f", 1], ["t", 3]] : [["t", 1], ["f", 3]], got = [];
-      for (const [side, m] of want) for (let i = 0; i < pool[side].length && got.filter(c => c.side === side).length < m;) {
-        const c = pool[side][i];
-        if (fits(c) && !got.some(o => o.c.q.cat === c.q.cat) && !(isHeavy(c.q) && got.filter(o => isHeavy(o.c.q)).length >= 2)) { got.push({ side, c: take(c) }); pool[side].splice(i, 1); } else i++;
-      }
-      const quad = makeQuad(shuffle(got.map(o => o.c)));
+    const seen = new Set(store.seen), tens = n / 10, per = x => Math.round(x * tens);
+    const order = (list, luck) => list.map(x => ({ x, s: (seen.has(x.id) ? 0 : 100) + (x.q.rank || 5) + Math.random() * luck })).sort((a, b) => b.s - a.s).map(o => o.x);
+    const groups = new Set(), cats = {}, kinds = {}, ids = new Set();
+    const fits = (x, capCat) => !(x.q.group && groups.has(x.q.group)) && !(x.q.kind && (kinds[x.q.kind] || 0) >= per(2)) && !(capCat && (cats[x.q.cat] || 0) >= capCat)
+      && !APART.some(p => p.includes(x.q.id) && p.some(id => id !== x.q.id && ids.has(id)));
+    const take = x => { if (x.q.group) groups.add(x.q.group); if (x.q.kind) kinds[x.q.kind] = (kinds[x.q.kind] || 0) + 1; cats[x.q.cat] = (cats[x.q.cat] || 0) + 1; ids.add(x.q.id); return x; };
+    const quads = [], pool = { t: order(CLAIM.filter(c => c.q.a), 12), f: order(CLAIM.filter(c => !c.q.a), 12) };
+    for (let k = 0; k < per(2); k++) {
+      const got = [];
+      // Four statements on four subjects, at most one of them grim.
+      const add = (side, m, ok) => {
+        for (let i = 0; i < pool[side].length && m > 0;) {
+          const c = pool[side][i];
+          if (fits(c) && (!ok || ok(c.q)) && !got.some(o => o.q.cat === c.q.cat) && !(grim(c.q) && got.some(o => grim(o.q)))) { got.push(take(c)); pool[side].splice(i, 1); m--; } else i++;
+        }
+        return m;
+      };
+      if (Math.random() < 0.8) { add("f", 1); if (add("t", 1, good)) add("t", 1); add("t", 2); }   // one true statement in three is good news
+      else { if (Math.random() < 0.4 || add("t", 1, q => !grim(q))) add("t", 1); add("f", 3); }      // the one that is true is not always the scary one
+      const quad = makeQuad(shuffle(got));
       if (quad) quads.push(quad);
     }
-    const rest = [];
-    for (const o of order(QUOTE)) if (rest.length < Math.max(1, Math.round(tens)) && fits(o)) rest.push(makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
-    // The same limits as a yes-or-no round: at most three or four heavy subjects in ten, and no more than a few questions about one company.
-    const need = n - quads.length, heavyCap = 3 * Math.ceil(tens), oneCap = 2 * Math.ceil(tens);
-    let heavies = 0, ones = 0;
-    const tooMany = x => (isHeavy(x.q) && heavies >= heavyCap) || (isAboutOne(x.q) && ones >= oneCap);
-    for (const cap of [Math.round(2 * tens), Math.round(3 * tens), 99]) for (const x of order(NUM.concat(YN))) {
-      if (rest.length >= need || rest.includes(x) || !fits(x, cap) || (cap < 99 && tooMany(x))) continue;
-      if (isHeavy(x.q)) heavies++;
-      if (isAboutOne(x.q)) ones++;
-      rest.push(take(x));
-    }
-    const out = quads.concat(rest), slow = it => it.kind !== "quad" && (it.q.kind || isHeavy(it.q) || SLOW_OPENERS.includes(it.q.cat));
+    const rest = [], need = n - quads.length;
+    for (const o of order(QUOTE, 4)) if (rest.length < Math.max(1, per(1)) && fits(o)) rest.push(makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
+    let photo = null;
+    for (const o of order(FACE, 4)) if (!photo && fits(o)) rest.push(photo = makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
+    const items = order(NUM.concat(YN), 5), ends = order(NUM, 16), plain = () => rest.filter(x => !x.quote);
+    const room = x => !(grim(x.q) && plain().filter(y => grim(y.q)).length >= per(2)) && !(isAboutOne(x.q) && plain().filter(y => isAboutOne(y.q)).length >= per(2)) && !(MONEY.has(x.q.id) && plain().some(y => MONEY.has(y.q.id)));
+    const fill = (m, ok, capCat, loose, from) => { for (const x of from || items) { if (m <= 0 || rest.length >= need) return; if (!rest.includes(x) && ok(x) && (loose || room(x)) && fits(x, capCat)) { rest.push(take(x)); m--; } } };
+    // The first and the last are chosen before the rest, a new one if there is any, and with more chance in it: rounds should not all begin alike.
+    const one = tests => { for (const ok of tests) { const had = rest.length; fill(1, ok, per(2), false, ends); if (rest.length > had) return rest[rest.length - 1]; } return null; };
+    const fresh = x => !seen.has(x.id), easy = x => HOOKS.has(x.q.id) && !isHeavy(x.q) && !MONEY.has(x.q.id);
+    const first = photo && Math.random() < 0.4 ? photo : one([x => OPENERS.has(x.q.id) && fresh(x), x => easy(x) && fresh(x), x => OPENERS.has(x.q.id), x => !isHeavy(x.q)]);
+    const last = one([x => CLOSERS.has(x.q.id) && fresh(x), x => HOOKS.has(x.q.id) && fresh(x), x => CLOSERS.has(x.q.id), x => !isHeavy(x.q)]);
+    fill(per(2) - plain().filter(x => good(x.q)).length, x => good(x.q), per(2));
+    fill(per(3) - plain().filter(x => daily(x.q)).length, x => daily(x.q), per(3));
+    for (const [cap, loose] of [[per(2), false], [per(3), false], [99, false], [99, true]]) fill(99, () => true, cap, loose);
+    const middle = quads.concat(rest).filter(x => x !== first && x !== last);
     let best = null;
-    for (let k = 0; k < 300; k++) {                  // no two of the same kind in a row where that can be helped, and never a set of four first
-      const s = shuffle(out); let clash = s[0].kind === "quad" ? 3 : 0;
-      for (let i = 1; i < s.length; i++) if (s[i].kind === s[i - 1].kind) clash++;
-      if (s[0].quote || slow(s[0])) clash++;
-      if (!best || clash < best.clash) best = { s, clash };
+    for (let k = 0; k < 300; k++) {                  // no two of the same kind, and no two grim ones, in a row where that can be helped
+      const r = [first].concat(shuffle(middle), [last]).filter(Boolean), bad = x => x.kind === "quad" ? x.claims.some(c => grim(c.q)) : grim(x.q);
+      let clash = 0;
+      for (let i = 1; i < r.length; i++) clash += (r[i].kind === r[i - 1].kind ? 1 : 0) + (bad(r[i]) && bad(r[i - 1]) ? 1 : 0);
+      if (!best || clash < best.clash) best = { r, clash };
       if (!clash) break;
     }
-    return best.s;
+    return best.r;
   }
 
   /* A round as text, for saving it, and as short codes, for a challenge link. */
@@ -2314,7 +2349,7 @@ const Guess = (() => {
   const codes = () => {
     if (byCode) return byCode;
     byCode = { one: Object.create(null), claim: Object.create(null) };
-    for (const x of NUM.concat(YN, QUOTE)) { const c = codeOf(x.id); if (byCode.one[c]) console.warn("Two guess questions share the challenge code " + c); else byCode.one[c] = x; }
+    for (const x of NUM.concat(YN, QUOTE, FACE)) { const c = codeOf(x.id); if (byCode.one[c]) console.warn("Two guess questions share the challenge code " + c); else byCode.one[c] = x; }
     for (const x of CLAIM) byCode.claim[codeOf(x.id)] = x;
     return byCode;
   };
@@ -2346,6 +2381,7 @@ const Guess = (() => {
   /* ---- What a question and its answer look like ---- */
   function controlHtml(it, open, slider) {
     const f = it.f;
+    if (it.photos) return `<div class="photos">${it.photos.map((src, i) => `<button class="photo" type="button" data-i="${i}" aria-label="${optionsOf(it)[i]}"><img src="${esc(src)}" alt="" width="400" height="500"><span class="photo-name">${"ABCD"[i]}</span></button>`).join("")}</div>`;
     if (it.kind === "quad" || it.kind === "pick") {
       const opts = optionsOf(it);
       return `<div class="picks">${opts.map((o, i) => `<button class="btn pick" type="button" data-i="${i}">${esc(o)}</button>`).join("")}</div>`;
@@ -2399,7 +2435,12 @@ const Guess = (() => {
   // Turns the controls on screen into the marked answer.
   function mark(r, control) {
     const { it, g, grade: gr } = r, f = it.f;
-    if (it.kind === "quad" || it.kind === "pick") control.querySelectorAll(".pick").forEach(b => {
+    if (it.photos) control.querySelectorAll(".photo").forEach(b => {
+      const i = Number(b.dataset.i), made = i === f.answer; b.disabled = true;
+      b.classList.add(made ? "right" : i === g ? "wrong" : "plain");
+      b.querySelector(".photo-name").textContent = `${"ABCD"[i]} · ${made ? "AI" : "real"}${i === g ? " · your pick" : ""}`;
+    });
+    else if (it.kind === "quad" || it.kind === "pick") control.querySelectorAll(".pick").forEach(b => {
       const i = Number(b.dataset.i), right = i === (it.kind === "quad" ? it.answer : f.answer); b.disabled = true;
       if (right) b.classList.add("right"); else if (i === g) b.classList.add(gr === 0.5 ? "near" : "wrong");
       const bits = []; if (it.kind === "quad") bits.push(it.claims[i].q.a ? "True" : "Not true"); if (i === g) bits.push("Your pick");
@@ -2416,7 +2457,7 @@ const Guess = (() => {
   // The sources of every statement in a set of four are listed together.
   const sourceOf = it => it.kind !== "quad" ? bankOf(it) : Object.assign({}, bankOf(it), { src: it.claims.flatMap(c => c.q.src) });
 
-  return { LENGTHS, NUM, CLAIM, YN, QUOTE, extra, say, at, pos, stops, idsOf, titleOf, truthOf, saidOf, optionsOf, bankOf, sourceOf, answerText, grade, lean, valid, result, compare, draw, pack, unpack, encode, decode,
+  return { LENGTHS, NUM, CLAIM, YN, QUOTE, FACE, extra, say, at, pos, stops, idsOf, titleOf, truthOf, saidOf, optionsOf, bankOf, sourceOf, answerText, grade, lean, valid, result, compare, draw, pack, unpack, encode, decode,
     summarize, analyze, findingOf, controlHtml, layoutMarks, resultRuler, mark, othersHtml };
 })();
 window.addEventListener("resize", Guess.layoutMarks);
@@ -2779,7 +2820,7 @@ function readDare(raw) {
 function dareText(d) {
   const base = siteUrl(), it = d.it, f = it && it.f;
   const ask = !it ? `${d.q.q} Yes or no?` : it.kind === "yn" ? `${it.q.q} Yes or no?`
-    : Guess.titleOf(it) + (it.kind === "quad" || it.kind === "pick" ? "\n" + Guess.optionsOf(it).map(o => "- " + o).join("\n") : (f.hint ? ` (${f.hint})` : "") + " Take a guess.");
+    : Guess.titleOf(it) + (it.photos ? "" : it.kind === "quad" || it.kind === "pick" ? "\n" + Guess.optionsOf(it).map(o => "- " + o).join("\n") : (f.hint ? ` (${f.hint})` : "") + " Take a guess.");
   return ask + (base ? `\n${base}?q=${it ? "g" + Guess.encode(it) : codeOf(d.q.id)}` : "");
 }
 async function sendDare(d, say) {
@@ -3190,7 +3231,7 @@ function showQuestion(k) {
 }
 // Wires the controls of a guess question. say(g) gets the answer. A slider starts at the position it was left at, if any.
 function wireGuess(it, say, at, keep) {
-  $app.querySelectorAll(".pick").forEach(b => b.addEventListener("click", () => say(Number(b.dataset.i))));
+  $app.querySelectorAll(".pick, .photo").forEach(b => b.addEventListener("click", () => say(Number(b.dataset.i))));
   $app.querySelectorAll("[data-yn]").forEach(b => b.addEventListener("click", () => say(b.dataset.yn === "1")));
   const slider = document.getElementById("slider");
   if (!slider) return;
@@ -3378,11 +3419,15 @@ function gridOf(answers) {
 // The questions that caught the player out, most important first, and the shorter one when two tie.
 // Only plain facts: an opinion or a law reads oddly in a post with no answer beside it.
 function gotMe(answers) {
-  // A set of four statements or a quote says nothing without its choices, so only questions that stand alone are named.
-  return answers.filter(r => markOf(r) === "bad" && !(r.it && (r.it.kind === "quad" || r.it.quote)))
-    .map(r => r.it ? { q: Guess.titleOf(r.it), kind: r.it.q.kind, rank: r.it.q.rank } : BY_ID[r.id]).filter(q => q && !q.kind && q.q.length <= 110)
+  const bad = answers.filter(r => markOf(r) === "bad");
+  // In guess mode the widest miss leads, with what the player said. A set of four statements or a quote says nothing without its choices.
+  if (answers.some(r => r.it)) return bad.filter(r => r.it.f && !r.it.quote && !r.it.q.kind).map(r => ({ q: Guess.titleOf(r.it), said: Guess.saidOf(r), far: r.it.kind === "pick" ? 0.3 : Math.abs(Guess.pos(r.it.f, r.g) - Guess.pos(r.it.f, r.it.f.truth)) }))
+    .filter(x => x.q.length <= 110).sort((x, y) => y.far - x.far);
+  return bad.map(r => BY_ID[r.id]).filter(q => q && !q.kind && q.q.length <= 110)
     .sort((x, y) => (y.rank || 0) - (x.rank || 0) || x.q.length - y.q.length);
 }
+// How that question is introduced. It never says what the answer was.
+function gotLead(x) { return x.said ? `I said ${x.said}:` : "This one got me:"; }
 function closeToCoinFlip(brier) { return Math.abs(brier - 0.25) < 0.0005; }
 // The text a player shares. It never gives an answer away: the squares show right and wrong in order,
 // and the teaser names one question that caught the player out without saying how.
@@ -3405,7 +3450,7 @@ function shareText(s, key, url) {
   const tail = !url ? ["How well do you know AI?"] : url.includes("?c=") ? [`Same ${s.n} questions for you:`, url] : ["Try it:", url];
   // Rough length as the strictest sites count it: a square counts double and a link counts as 23.
   const fits = tease => [first, second, tease, tail[0]].join("\n").length + 2 * s.n + (url ? 24 : 0) + 3 <= 275;
-  const tease = gotMe(state.answers).map(q => "This one got me: " + q.q).find(fits);
+  const tease = gotMe(state.answers).map(x => gotLead(x) + " " + x.q).find(fits);
   if (tease) lines.push(tease);
   return lines.concat(tail).join("\n");
 }
@@ -3804,7 +3849,7 @@ async function resultImage(s, key) {
   if (hook.length) {
     y += 16;
     x.fillStyle = COL.muted; x.font = `500 30px ${BODY}`;
-    x.fillText("This one got me:", pad, y);
+    x.fillText(gotLead(got), pad, y);
     y += 54;
     x.fillStyle = COL.ink; x.font = hookFont;
     for (const l of hook) { x.fillText(l, pad, y); y += step; }
@@ -3821,7 +3866,7 @@ document.addEventListener("keydown", e => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   const k = (e.key || "").toLowerCase(), open = asking();
   // In guess mode 1 to 4 pick from a list.
-  if (open && state.mode === "guess" && /^[1-4]$/.test(k)) { const b = $app.querySelector(`.pick[data-i="${Number(k) - 1}"]`); if (b) { e.preventDefault(); b.click(); } return; }
+  if (open && state.mode === "guess" && /^[1-4]$/.test(k)) { const b = $app.querySelector(`.pick[data-i="${Number(k) - 1}"], .photo[data-i="${Number(k) - 1}"]`); if (b) { e.preventDefault(); b.click(); } return; }
   const yn = open && (state.mode === "quick" || (state.mode === "guess" && state.list[state.index].kind === "yn"));
   if ((!yn && state.screen !== "bonus") || (k !== "y" && k !== "n")) return;
   e.preventDefault();
