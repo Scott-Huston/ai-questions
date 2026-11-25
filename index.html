@@ -2305,9 +2305,28 @@ function roundPoints(r) { return r.mode === "guess" ? r.ps.reduce((sum, g, i) =>
 function seenCount() { return store.seen.filter(id => BY_ID[id]).length; }
 
 /* GUESS_FACES: which of four photos was made by AI. ai is the file made by AI and real the three photographs, all the same size
-   and quality, in the faces folder beside this page. The order is shuffled each time. */
+   and quality, in the faces folder beside this page, with names that say nothing. The order is shuffled each time. */
 const GUESS_FACES = [
+  { id:"face-1", group:"fakes", q:"Three of these are photos of real people. Which one was made by AI?",
+    ai:"faces/f07.jpg", real:["faces/f05.jpg", "faces/f12.jpg", "faces/f13.jpg"],
+    short:"ChatGPT made this one in November 2026 from a one-paragraph description. The other three are official portraits of US Justice Department officials. One clue, researchers say: AI faces tend to be more symmetrical than real ones.",
+    src:[["Wikimedia Commons: official portrait of Henry C. Leventis, US Department of Justice, public domain","https://commons.wikimedia.org/wiki/File:Henry_C._Leventis,_U.S._Attorney.jpg"],["Wikimedia Commons: official portrait of Mac Schneider, US Department of Justice, public domain","https://commons.wikimedia.org/wiki/File:Mac_Schneider,_U.S._Attorney.jpg"],["Wikimedia Commons: official portrait of Sean P. Costello, US Department of Justice, public domain","https://commons.wikimedia.org/wiki/File:Sean_P._Costello,_official_portrait_(2023).jpg"],["PNAS, 2026: training people to spot AI faces","https://pmc.ncbi.nlm.nih.gov/articles/PMC13342996/"]] },
+  { id:"face-2", group:"fakes", q:"Three of these are photos of real people. Which one was made by AI?",
+    ai:"faces/f09.jpg", real:["faces/f16.jpg", "faces/f04.jpg", "faces/f02.jpg"],
+    short:"ChatGPT made this one in November 2026 from a one-paragraph description. The other three are official portraits of US Justice Department officials. One clue, researchers say: AI faces tend to be more symmetrical than real ones.",
+    src:[["Wikimedia Commons: official portrait of Damien Diggs, US Department of Justice, public domain","https://commons.wikimedia.org/wiki/File:Damien_Diggs,_U.S._Attorney_2.jpg"],["Wikimedia Commons: official portrait of Ismail J. Ramsey, US Department of Justice, public domain","https://commons.wikimedia.org/wiki/File:Ismail_J._Ramsey,_U.S._Attorney_3.jpg"],["Wikimedia Commons: official portrait of Markenzy Lapointe, US Department of Justice, public domain","https://commons.wikimedia.org/wiki/File:Markenzy_Lapointe,_U.S._Attorney.jpg"],["PNAS, 2026: training people to spot AI faces","https://pmc.ncbi.nlm.nih.gov/articles/PMC13342996/"]] },
+  { id:"face-3", group:"fakes", q:"Three of these are photos of real people. Which one was made by AI?",
+    ai:"faces/f15.jpg", real:["faces/f08.jpg", "faces/f10.jpg", "faces/f03.jpg"],
+    short:"ChatGPT made this one in November 2026 from a one-paragraph description. The other three are official portraits of US Justice Department officials. One clue, researchers say: AI faces tend to be more symmetrical than real ones.",
+    src:[["Wikimedia Commons: official portrait of Leigha Simonton, US Department of Justice, public domain","https://commons.wikimedia.org/wiki/File:Leigha_Simonton,_U.S._Attorney_2.jpg"],["Wikimedia Commons: official portrait of Jill Steinberg, US Department of Justice, public domain","https://commons.wikimedia.org/wiki/File:Jill_Steinberg,_U.S._Attorney_2.jpg"],["Wikimedia Commons: official portrait of Rachelle Aud Crowe, US Department of Justice, public domain","https://commons.wikimedia.org/wiki/File:Rachelle_Aud_Crowe,_U.S._Attorney.jpg"],["PNAS, 2026: training people to spot AI faces","https://pmc.ncbi.nlm.nih.gov/articles/PMC13342996/"]] },
+  { id:"face-4", group:"fakes", q:"Three of these are photos of real people. Which one was made by AI?",
+    ai:"faces/f06.jpg", real:["faces/f14.jpg", "faces/f01.jpg", "faces/f11.jpg"],
+    short:"ChatGPT made this one in November 2026 from a one-paragraph description. The other three are official portraits of US Justice Department officials. One clue, researchers say: AI faces tend to be more symmetrical than real ones.",
+    src:[["Wikimedia Commons: official portrait of Delia L. Smith, US Department of Justice, public domain","https://commons.wikimedia.org/wiki/File:Delia_L._Smith,_U.S._Attorney.jpg"],["Wikimedia Commons: official portrait of Vanessa Roberts Avery, US Department of Justice, public domain","https://commons.wikimedia.org/wiki/File:Vanessa_Roberts_Avery,_U.S._Attorney.jpg"],["Wikimedia Commons: official portrait of Dena J. King, US Attorney's Office, Western District of North Carolina, public domain","https://commons.wikimedia.org/wiki/File:Usa-dena-j-king.jpg"],["PNAS, 2026: training people to spot AI faces","https://pmc.ncbi.nlm.nih.gov/articles/PMC13342996/"]] }
 ];
+// The photos are separate files. Where they are not beside the page (a copy of this file alone), no photo question is dealt.
+const PHOTOS = { here: false };
+if (GUESS_FACES.length && CONFIG.modes.includes("guess")) { const im = new Image(); im.onload = () => { PHOTOS.here = true; }; im.src = GUESS_FACES[0].ai; }
 /* ---------- Guess mode ----------
    The same questions, asked so that being close counts. GUESS_FORMS turns a question into a slider or a short list,
    GUESS_CLAIMS into a plain statement (shown four at a time), GUESS_QUOTES adds a few "who said it" picks, and GUESS_FACES
@@ -2450,7 +2469,7 @@ const Guess = (() => {
   const GOOD_NEWS = new Set(["als-voice", "er-diagnosis", "brain-to-text", "waymo-safety", "planets", "protein-design", "signal-proof", "antibiotics", "therapy-bot", "breast-screening", "ai-tutor", "doctor-empathy", "hurricanes", "vesuvius-scroll", "old-codes"]);
   const MONEY = new Set(["revenue-growth", "labs-vs-exxon", "compute-spend", "token-spend", "authors-settlement", "power-bills"]);
   // Not in one group, but one answers the other, or both are the same trick (can people tell AI from the real thing?).
-  const APART = [["chats-train", "chatbot-learns"], ["turing", "fake-video"], ["turing", "voice-clone"], ["turing", "face-test"]];
+  const APART = [["chats-train", "chatbot-learns"], ["turing", "fake-video"], ["turing", "voice-clone"], ["turing", "face-test"], ...GUESS_FACES.map(f => ["turing", f.id])];
   // Odds of a catastrophe read as grim even where they are the tamer answer. Good is for a true statement that is not alarming, and
   // loud for a statement, true or not, that says the wilder thing.
   const grim = q => isHeavy(q) && (leanOf(q) === "wild" || q.id === "catastrophe-odds"), good = q => GOOD_NEWS.has(q.id) || leanOf(q) === "tame", loud = q => q.worse === "yes";
@@ -2482,7 +2501,9 @@ const Guess = (() => {
     const rest = [], need = n - quads.length;
     for (const o of order(QUOTE, 4)) if (rest.length < Math.max(1, per(1)) && fits(o)) rest.push(makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
     let photo = null;
-    for (const o of order(FACE, 4)) if (!photo && fits(o)) rest.push(photo = makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
+    // A photo question comes up in about six rounds of ten, and each only until the player has seen it.
+    if (PHOTOS.here && Math.random() < 0.6) for (const o of order(FACE, 4)) if (!photo && !seen.has(o.id) && fits(o)) rest.push(photo = makeQuote(take(o), shuffle(o.x.options.map((x, i) => i))));
+    if (photo) photo.photos.forEach(p => { new Image().src = p; });
     const items = order(NUM.concat(YN), 5), ends = order(NUM, 10), plain = () => rest.filter(x => !x.quote);
     const room = x => !(grim(x.q) && plain().filter(y => grim(y.q)).length >= per(2)) && !(isAboutOne(x.q) && plain().filter(y => isAboutOne(y.q)).length >= per(2)) && !(MONEY.has(x.q.id) && plain().some(y => MONEY.has(y.q.id)));
     const fill = (m, ok, capCat, loose, from) => { for (const x of from || items) { if (m <= 0 || rest.length >= need) return; if (!rest.includes(x) && ok(x) && (loose || room(x)) && fits(x, capCat)) { rest.push(take(x)); m--; } } };
