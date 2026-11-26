@@ -3138,10 +3138,16 @@ function readDare(raw) {
   // Links from before November 25, 2026 carry the code of an entry. It is asked as it is now, if it has a question of its own.
   return (/^[0-9a-z]{4}$/.test(raw) && Guess.NUM.find(x => codeOf(answerKey(x.q)) === raw)) || null;
 }
+// A question's link. One with a four-letter code has its own page in q/, whose link preview shows the question and its
+// drawing, and which sends the visitor straight on to the question here. A set of four statements has no page of its own.
+function dareUrl(it) {
+  const base = siteUrl(), code = Guess.encode(it);
+  return !base ? "" : code.length === 4 ? base.replace(/[^/]*$/, "") + "q/" + code + "/" : `${base}?q=g${code}`;
+}
 function dareText(it) {
-  const base = siteUrl(), listed = it.kind === "quad" || it.kind === "pick";
+  const url = dareUrl(it), listed = it.kind === "quad" || it.kind === "pick";
   const ask = Guess.titleOf(it) + (it.photos ? "" : listed ? "\n" + Guess.optionsOf(it).map(o => "- " + o).join("\n") : (it.f.hint ? ` (${it.f.hint})` : "") + " Take a guess.");
-  return ask + (base ? `\n${base}?q=g${Guess.encode(it)}` : "");
+  return ask + (url ? `\n${url}` : "");
 }
 async function sendDare(it, say) {
   const text = dareText(it);

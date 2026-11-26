@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not found · What's up with AI?</title>
+<script>
+// A question's link whose page in q/ hasn't been built yet still reaches the question.
+(function () {
+  var m = location.pathname.match(/^(.*\/)q\/([0-9a-z]{4})\/?$/);
+  if (m) location.replace(m[1] + "?q=g" + m[2] + location.hash);
+})();
+</script>
+<style>
+:root { color-scheme: light dark; }
+body { margin: 0; padding: 64px 16px; background: #2742d6; color: #fff; font: 18px/1.5 system-ui, sans-serif; }
+main { max-width: 36rem; margin: 0 auto; }
+a { color: #fff; }
+</style>
+</head>
+<body>
+<main>
+<h1>That page isn't here</h1>
+<p><a href="/ai-questions/" id="home">Go to the quiz</a></p>
+</main>
+<script>document.getElementById("home").href = location.pathname.split("/").slice(0, 2).join("/") + "/";</script>
+</body>
+</html>
