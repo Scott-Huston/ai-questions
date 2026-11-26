@@ -3634,16 +3634,20 @@ function renderStart(notice, fresh) {
     const control = document.getElementById("dare-control");
     Guess.idsOf(dare).forEach(remember);
     Guess.mark(r, control); placeArt(dare, markOf(r), true);
-    document.getElementById("dare-reveal").innerHTML = revealHtml(r, {});
-    gather(document.getElementById("dare-reveal"));
+    // The answer, and the same way to pass the question on as in a round (gather puts both in the answer's column on wide screens).
+    const box = document.getElementById("dare-reveal");
+    box.innerHTML = revealHtml(r, {}) + `<p class="small center pass-on"><button type="button" class="link" id="pass">Send this question to a friend</button> <span class="muted" id="pass-status" role="status"></span></p>`;
+    gather(box);
+    document.getElementById("pass").addEventListener("click", () => sendDare(dare, msg => { const el = document.getElementById("pass-status"); if (el) el.textContent = msg; }));
     if (Guess.isSlide(dare) && !reducedMotion()) Guess.travel(control, dare.f, r.g);
     document.getElementById("fresh-round").classList.add("btn-ink");
     state.shownAt = performance.now();
     const v = document.getElementById("verdict");
     try { v.focus({ preventScroll: true }); } catch (e) {}
     showVerdict(v, Guess.isSlide(dare));
-    // The answer is known now, so a refresh or a Back should not ask again.
-    clearDare();
+    // Answered, but the question's address stays, so copying it from the address bar still passes the question on.
+    // A refresh asks it again; the address goes when a round starts.
+    state.dare = null;
   };
   if (dare) placeArt(dare);
   if (dare) wireGuess(dare, g => { if (state.dare) answerDare(Guess.result(dare, g)); });
@@ -4112,7 +4116,7 @@ function renderResults() {
   // The round to come stays with this result while a question or Learn more is looked at.
   const kept = state.kept && state.kept.list === state.list ? state.kept : (state.kept = { list: state.list, next: null });
   const text = shareText(s, key, url);
-  const shareLabel = !url ? "Share my result" : ch && ch.theirs ? "Send your score back" : "Challenge a friend";
+  const shareLabel = !url ? "Share my result" : ch && ch.theirs ? "Reply to your friend" : "Challenge a friend";
   // Things learned this round that can be passed on: a miss first, the widest first, then close calls, then the rest.
   const missBy = r => r.it.f && r.it.f.type !== "pick" ? Math.abs(Guess.pos(r.it.f, r.g) - Guess.pos(r.it.f, r.it.f.truth)) : 0.3;
   const passable = state.answers.map(r => ({ r, fact: factFor(r.it) })).filter(x => x.fact)
