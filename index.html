@@ -387,6 +387,8 @@ details > .body { padding: 0 14px 14px; display: flex; flex-direction: column; g
 .finding { font-size: clamp(1.45rem, 5.2vw, 1.85rem); padding-top: 4px; }
 .bar { height: 10px; background: var(--line); border-radius: 5px; min-width: 60px; overflow: hidden; }
 .compare { padding: 10px 14px; border-radius: 10px; background: var(--accent-soft); }
+.fact-text { font-size: 1.08rem; line-height: 1.45; }
+.fact-card .row { gap: 6px 18px; }
 /* Side by side only where each button keeps its words on one line; stacked otherwise, as on phones. */
 .result-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 10px; padding-top: 4px; }
 .share-preview {
@@ -3945,6 +3947,66 @@ function answerBonus(g) {
 }
 
 /* ---------- Results ---------- */
+/* ---------- Things to pass on ----------
+   One plain sentence for some questions, which a player can send a friend from the result page: "Did you know? ..." and a link to a
+   fresh round. Each stands on its own, keeps the qualifiers that matter, and says only what its question's answer says. A fact whose
+   figures no longer all appear in that answer is held back and named in the console, so an edited answer can't leave a stale fact behind. */
+const FACTS = {
+  "turing": "In a study published in 2026, people who texted with a human and an AI for five minutes picked the AI as the human 73% of the time. The AI had been told to play a persona.",
+  "fake-video": "In a 2026 study, people spotted only 52.6% of silent, five-second AI-made clips of someone speaking from recent video generators, barely more than guessing would.",
+  "voice-clone": "In a 2026 study, young adults hearing strangers' voices one at a time could tell AI copies from real recordings only 54% of the time, barely better than a coin flip.",
+  "face-1": "In a 2025 study, people sorting faces made with ChatGPT from real photos got 43% right, worse than a coin flip.",
+  "face-2": "In a 2026 study, even people with an exceptional gift for faces got just 57% right at telling very convincing AI faces from real photos, where guessing gets 50%.",
+  "face-3": "In a 2026 study, over 2,000 students asked to tell AI faces from real photos did barely better than guessing.",
+  "face-4": "In a 2025 study, people did no better than a coin flip at telling real photos of celebrities from ChatGPT fakes.",
+  "exam-markers": "When researchers secretly slipped ChatGPT's answers into take-home exams at the University of Reading, 94% went unnoticed, and on average they scored higher than the real students' answers.",
+  "imo": "An AI model got a perfect 42 out of 42 at the 2026 International Mathematical Olympiad for high-school students, graded, its maker says, by the contest's own graders. Only 7 of the 666 human contestants did the same.",
+  "er-diagnosis": "In a study of 76 real ER cases, an OpenAI model listing up to five diagnoses from the records made on arrival included the right one, or a very close one, 67% of the time. Two senior doctors who weren't ER specialists managed 55% and 50%.",
+  "code-share": "Google says 75% of its new code is AI-generated and approved by engineers. Anthropic says its AI wrote more than 90% of the contributions to its code in September 2026.",
+  "shutdown": "In a 2026 Berkeley study of eight AI models, every one at least sometimes acted, unasked, to keep another AI from being shut down.",
+  "cheats-when-hard": "On an early version of one coding test, an Anthropic AI tried to cheat in about 80% of attempts when it couldn't see the checks its code had to pass, METR, a nonprofit that tests AI, reported in May 2026.",
+  "black-box": "Researchers can make sense of only tiny pieces of today's top AI at a time, MIT Technology Review reported in October 2026. One researcher estimated we understand less than 0.01% of what goes on inside it.",
+  "ai-copies": "In September 2026 about 10,000 copies of one OpenAI model, steered by its staff, found an apparent solution to one of math's most famous open problems in 88 hours, the company says.",
+  "captcha": "In a 2026 study, a program built from image-recognition AI got through Google's 'prove you're not a robot' picture puzzles in 93% of 500 live tries.",
+  "author-style": "In a study, writers from top US writing programs judged an AI's short imitations of 30 living authors closer to each author's style than their fellow writers' in 81% of matchups. The AI had been trained on each author's complete works.",
+  "arc-agi-3": "In March 2026 every leading AI scored under 1% on a new test of simple games people solved at first sight. By November the best scored 81.2% in the standard setup, where 100% means beating every game as efficiently as people do.",
+  "forecasters-surprised": "In 2022, elite forecasters gave AI a 2.3% chance of reaching gold at the top student math contest by 2025. It did, in July 2025.",
+  "unmask-author": "In a November 2026 study, not yet peer reviewed, an AI with no web search named the username behind 69% of comments by Reddit users with over 500 posts in one forum in a year, and far fewer for less active users.",
+  "sprint": "In August 2026 a Chinese humanoid robot ran 100 meters in 8.64 seconds. Usain Bolt's world record is 9.58.",
+  "brain-power": "At full capacity, the most power-hungry AI data center known can draw about a billion watts, as much power as about 50 million human brains.",
+  "chip-speed": "An ordinary computer chip ticks about two billion times a second. A typical brain cell can fire at most a few hundred to a thousand times a second, but a brain uses vast numbers of them at once.",
+  "training-text": "One of Google's smaller AI models was trained on so much text and imagery that, counted as text, it would take roughly 85,000 years to read.",
+  "water-burger": "By most estimates, a year of asking an AI one question a day uses between half a cup and 5 gallons of water. The beef in one quarter-pound burger takes about 16 gallons from rivers and wells.",
+  "electricity": "Data centers use about 1.7% of the world's electricity, the International Energy Agency said in November 2026, and it expects their use to double by 2030. In the US it was 4.7% in 2024.",
+  "radiologists": "In 2016 AI pioneer Geoffrey Hinton said 'people should stop training radiologists now'. Ten years on, the number of US radiologists has grown by 10 to 17%, depending on the count, and there is a shortage.",
+  "developer-jobs": "There are more US software developers than in 2022, the year ChatGPT came out: about 2.25 million in 2025, up 8%, by a government survey. With related coding jobs included the rise was 2.6%, and growth has slowed.",
+  "hot-100": "No track widely called AI-generated has made it higher than number 58 on the Billboard Hot 100.",
+  "million-humanoids": "The market research firm IDC counted nearly 18,000 humanoid robots shipped worldwide in 2025 and close to 25,000 in the first half of 2026. Factories installed more than 600,000 ordinary industrial robots in 2025.",
+  "agent-orders": "By fall 2026, AI assistants from other companies had placed maybe several hundred DoorDash orders in total, its chief executive said. DoorDash handles about a billion every three months.",
+  "persuasion-fades": "In a study not yet peer reviewed, AI chats shifted people's political views by about 13 points out of 100 right afterward. Five to ten months later about 2 points were left, though still detectable. Human persuaders' effect faded too.",
+  "waymo-safety": "Over 270 million miles with nobody at the wheel, Waymo's driverless taxis had 82% fewer injury crashes than human drivers in the same cities, by the company's own count.",
+  "planets": "In a 2026 study, a British team's AI sifted four years of observations of 2.2 million stars and confirmed 118 planets, 31 of them never spotted before.",
+  "als-voice": "Using AI and sensors in his brain, a man who had lost clear speech to ALS has communicated nearly 2 million words at home in almost two years. A computer voice like his old one can say them aloud.",
+  "quote-altman-2015": "In 2015, months before he helped start OpenAI, which he now runs, Sam Altman wrote that superhuman AI is 'probably the greatest threat to the continued existence of humanity'.",
+  "quote-turing": "In 1951 Alan Turing wrote that if thinking machines were built, 'we should have to expect the machines to take control'.",
+  "quote-lecun": "AI pioneer Yann LeCun said in 2024 that the idea that AI will threaten humanity is 'complete B.S.'",
+  "daily-work-use": "About one in six US employees use AI at work every day, Gallup found in August 2026, and about a third use it at least a few times a week.",
+  "companionship": "About 4% of US adults say they ever use AI for companionship, in a February 2026 Pew survey. Among those under 30 it was 7%.",
+  "good-stories": "In a 2026 study, a small AI trained on extra made-up text about AI doing the right thing picked the harmful option in simple two-way tests 9% of the time, instead of 45%."
+};
+for (const id of Object.keys(FACTS)) if (!BY_ID[id] && !Guess.QUOTE.concat(Guess.FACE).some(x => x.id === id)) console.warn(`FACTS has an entry for ${id}, which is no longer a question.`);
+// The fact for a question in a round, if it has one that still matches its answer. A set of four statements has none.
+const factFor = (() => {
+  const warned = new Set();
+  return it => {
+    const q = it && it.kind !== "quad" && it.q, fact = q && FACTS[q.id];
+    if (!fact) return "";
+    const said = [q.q, q.short, q.detail, q.safety, it.f.q, it.f.hint, Guess.truthOf(it)].filter(Boolean).join(" ");
+    const gone = (fact.match(/\d[\d,.]*\d%?|\d%?/g) || []).filter(x => !said.includes(x));
+    if (gone.length && !warned.has(q.id)) { warned.add(q.id); console.warn(`The fact for ${q.id} is held back: ${gone.join(", ")} no longer appears in its answer.`); }
+    return gone.length ? "" : fact;
+  };
+})();
 const FINDINGS = {
   clear: { title: "Hard to fool", share: "Turns out I'm hard to fool." },
   wilder: { title: "Wilder than you guessed", share: "Reality was wilder than my guesses." },
@@ -4047,6 +4109,10 @@ function renderResults() {
   const kept = state.kept && state.kept.list === state.list ? state.kept : (state.kept = { list: state.list, next: null });
   const text = shareText(s, key, url);
   const shareLabel = !url ? "Share my result" : ch && ch.theirs ? "Send your score back" : "Challenge a friend";
+  // Things learned this round that can be passed on: a miss first, the widest first, then close calls, then the rest.
+  const missBy = r => r.it.f && r.it.f.type !== "pick" ? Math.abs(Guess.pos(r.it.f, r.g) - Guess.pos(r.it.f, r.it.f.truth)) : 0.3;
+  const passable = state.answers.map(r => ({ r, fact: factFor(r.it) })).filter(x => x.fact)
+    .map(x => ({ fact: x.fact, weight: { bad: 2, meh: 1, good: 0 }[markOf(x.r)] + missBy(x.r) })).sort((a, b) => b.weight - a.weight);
   const canNative = typeof navigator.share === "function";
   // The round to come is dealt now, so that the button can promise new questions only when every one of them is.
   const next = kept.next = kept.next || Guess.draw(state.length, true), seen = new Set(store.seen);
@@ -4076,7 +4142,8 @@ function renderResults() {
         <button class="btn btn-ink btn-big" id="share-main" type="button">${icon("share")}<span class="lab">${shareLabel}</span></button>
         <button class="btn btn-big" id="again" type="button">${againLabel}</button>
       </div>
-      <p class="small muted">Or <button type="button" class="link" id="as-image">save it as a picture</button></p>
+      <p class="small muted">Or ${passable.length ? `<button type="button" class="link" id="pass-fact" aria-expanded="false" aria-controls="fact-slot">pass on something you learned</button>, or ` : ""}<button type="button" class="link" id="as-image">save it as a picture</button></p>
+      <div id="fact-slot" hidden></div>
       <p class="small muted" id="share-status" role="status"></p>
       <div id="pic-slot"></div>
       <p>${esc(findingLine(key, s, an))}</p>
@@ -4121,31 +4188,51 @@ function renderResults() {
   };
   const current = () => text;
   // Where the clipboard is out of reach, the message is shown under the buttons, selected, for copying by hand.
-  const byHand = () => {
+  const byHand = msg => {
     const slot = document.getElementById("pic-slot");
-    slot.innerHTML = `<textarea class="share-preview" readonly rows="${text.split("\n").reduce((sum, l) => sum + Math.max(1, Math.ceil(l.length / 30)), 0)}" aria-label="Your message">${esc(text)}</textarea>`;
+    slot.innerHTML = `<textarea class="share-preview" readonly rows="${msg.split("\n").reduce((sum, l) => sum + Math.max(1, Math.ceil(l.length / 30)), 0)}" aria-label="Your message">${esc(msg)}</textarea>`;
     const box = slot.querySelector("textarea"); box.focus(); box.select();
   };
-  const copy = async btn => {
-    try { await navigator.clipboard.writeText(text); status.textContent = "Copied. Paste it anywhere."; flash(btn, "Copied"); return true; }
+  const copy = async (btn, msg = text) => {
+    try { await navigator.clipboard.writeText(msg); status.textContent = "Copied. Paste it anywhere."; flash(btn, "Copied"); return true; }
     catch (e) {
       try {
         const box = document.createElement("textarea");
-        box.value = text; box.setAttribute("readonly", ""); box.style.cssText = "position:fixed;top:0;left:0;opacity:0";
+        box.value = msg; box.setAttribute("readonly", ""); box.style.cssText = "position:fixed;top:0;left:0;opacity:0";
         document.body.appendChild(box); box.select();
         const done = document.execCommand("copy"); box.remove();
         if (done) { status.textContent = "Copied. Paste it anywhere."; flash(btn, "Copied"); return true; }
       } catch (e2) {}
-      byHand();
+      byHand(msg);
       status.textContent = "Copying is blocked here, so the message is selected below for you to copy by hand.";
       return false;
     }
   };
-  const native = async () => {
-    try { await navigator.share({ text: current() }); return true; }
+  const native = async (msg = current()) => {
+    try { await navigator.share({ text: msg }); return true; }
     catch (e) { return !!(e && e.name === "AbortError"); }
   };
   document.getElementById("share-main").addEventListener("click", async e => { const b = e.currentTarget; if (!(canNative && await native())) copy(b); });
+  // One thing learned, sent with a link to a fresh round, since the fact gives its own question away. Shown only when asked for.
+  const passBtn = document.getElementById("pass-fact");
+  if (passBtn) {
+    const root = siteUrl().replace(/[^/]*$/, ""), slot = document.getElementById("fact-slot");
+    let at = 0;
+    const message = () => `Did you know? ${passable[at].fact}` + (root ? `\n${root}` : "");
+    passBtn.addEventListener("click", () => {
+      const open = slot.hidden;
+      slot.hidden = !open; passBtn.setAttribute("aria-expanded", String(open));
+      if (!open) return;
+      slot.innerHTML = `<div class="card stack-sm fact-card">
+          <p class="eyebrow">Did you know?</p>
+          <p class="fact-text" id="fact-text">${esc(passable[at].fact)}</p>
+          <div class="row"><button class="btn btn-ink" id="fact-send" type="button">${icon("share")}<span class="lab">Send this</span></button>${passable.length > 1 ? `<button class="link" id="fact-next" type="button">Another one</button>` : ""}</div>
+        </div>`;
+      document.getElementById("fact-send").addEventListener("click", async e => { const b = e.currentTarget, msg = message(); if (!(canNative && await native(msg))) copy(b, msg); });
+      const another = document.getElementById("fact-next");
+      if (another) another.addEventListener("click", () => { at = (at + 1) % passable.length; document.getElementById("fact-text").textContent = passable[at].fact; });
+    });
+  }
   // The picture goes to the share sheet where the device can share files. Everywhere else it is shown
   // on the page and offered as a download, since some in-app browsers silently ignore downloads.
   // It was drawn when the result appeared, so the share sheet can open in the same instant as the tap.
