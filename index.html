@@ -281,12 +281,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); height: 44px; ma
 .reveal .side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .fielded .btn-ink, .fielded .next-row .btn-primary { background: var(--btn); border-color: var(--btn); color: var(--on-btn); font-family: var(--font-display); font-weight: 700; font-size: 1.22rem; border-radius: 8px; }
 .fielded .btn-ink[aria-disabled] { background: none; border-color: transparent; color: var(--ink); font-weight: 600; font-size: 1.1rem; }
+/* The answer, its Next button and the link to pass it on are one column, .main. On a phone they read in turn with the notes between,
+   and Next waits at the foot of the screen. On a wide screen the notes stand beside them, and the column stays in view while they are read, with Next held at the foot of the screen until the column is in view. */
+.reveal > .main { display: contents; }
+.reveal > .main > .verdict { order: 1; } .reveal > .side { order: 2; } .reveal > .main > .pass-on { order: 3; } .reveal > .main > .next-row { order: 4; }
 @media (min-width: 900px) {
-  .reveal { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); column-gap: 36px; align-items: start; grid-auto-rows: max-content; }
-  .reveal > * { grid-column: 1; }
-  .reveal > .side { grid-column: 2; grid-row: 1 / span 4; }
-  .reveal > .next-row { grid-column: 1 / -1; grid-row: 5; }
-  .reveal > .next-row .btn { max-width: 33rem; }
+  .reveal { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); column-gap: 40px; align-items: start; }
+  .reveal > .main { display: flex; flex-direction: column; gap: 14px; grid-column: 1; position: sticky; top: 20px; }
+  .reveal > .main.tall { position: static; }
+  .reveal > .side { grid-column: 2; }
+  .reveal > .main > .pass-on { margin: 0; text-align: left; }
 }
 .verdict { border-radius: 10px; scroll-margin: 16px 0 100px; padding: 18px 20px 20px; border: 1px solid transparent; display: flex; flex-direction: column; gap: 6px; animation: rise .22s ease; }
 .verdict.good { background: var(--good-bg); border-color: var(--good); }
@@ -3625,6 +3629,7 @@ function renderStart(notice, fresh) {
     Guess.idsOf(dare).forEach(remember);
     Guess.mark(r, control); placeArt(dare, markOf(r), true);
     document.getElementById("dare-reveal").innerHTML = revealHtml(r, {});
+    gather(document.getElementById("dare-reveal"));
     if (Guess.isSlide(dare) && !reducedMotion()) Guess.travel(control, dare.f, r.g);
     document.getElementById("fresh-round").classList.add("btn-ink");
     state.shownAt = performance.now();
@@ -3859,6 +3864,17 @@ function revealHtml(r, o) {
     ${Guess.othersHtml(it)}
     ${detailsBlock(Guess.sourceOf(it), q.detail ? "More detail and sources" : "Sources", false, Guess.askedOf(it))}</div>`;
 }
+// Gathers the answer, its Next button and the link to pass it on into one column (see .main in the styles).
+function gather(box) {
+  const parts = [".verdict", ".next-row", ".pass-on"].map(c => box.querySelector(":scope > " + c)).filter(Boolean);
+  if (!parts.length) return;
+  const main = document.createElement("div"); main.className = "main";
+  box.prepend(main); main.append(...parts);
+  fitMain(main);
+}
+// A column taller than the window would hide its foot while it stayed in view, so then it scrolls with the page.
+const fitMain = main => main.classList.toggle("tall", main.offsetHeight > window.innerHeight - 40);
+window.addEventListener("resize", () => document.querySelectorAll(".reveal > .main").forEach(fitMain));
 // The answer to question k, under the question.
 function paintAnswer(k, fresh) {
   const r = state.answers[k], it = state.list[k], ch = state.challenge;
@@ -3878,6 +3894,7 @@ function paintAnswer(k, fresh) {
   document.getElementById("reveal").innerHTML = `${revealHtml(r, { streak, so, theirs: ch && ch.theirs ? ch.theirs[k] : null })}
     <p class="small center pass-on"><button type="button" class="link" id="pass">Send this question to a friend</button> <span class="muted" id="pass-status" role="status"></span></p>
     <div class="next-row"><button class="btn btn-primary btn-big btn-block" id="next" type="button">${label}</button></div>`;
+  gather(document.getElementById("reveal"));
   document.getElementById("pass").addEventListener("click", () => sendDare(it, msg => { const el = document.getElementById("pass-status"); if (el) el.textContent = msg; }));
   document.getElementById("next").addEventListener("click", () => {
     if (state.finished) renderResults();
