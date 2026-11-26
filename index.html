@@ -3683,7 +3683,20 @@ const brief = t => t.length <= 46 ? " brief" : "", listed = it => it && (it.phot
 
 /* ---------- Question screen ---------- */
 // One history entry per visit, so the Back button returns to the start screen instead of leaving the site.
-function enterQuiz() { try { if (!(history.state && history.state.quiz)) history.pushState({ quiz: 1 }, ""); } catch (e) {} }
+// Each question reached in a round is a step in the browser's history, and so is the result, so that Back and Forward (a swipe on a trackpad
+// or a phone) go from question to question. A step holds which round it belongs to (r), its place (at: a question's number, or "end" for the
+// last question for fun and the result) and how many steps the round has made so far (n), so that "Back to the start" can undo them all at once.
+const roundKey = list => codeOf(list.map(it => Guess.pack(it)).join());
+const placeOf = at => at === "end" ? state.list.length : at;
+function step(at) {
+  try {
+    const h = history.state, ours = h && h.quiz && h.r === state.rk;
+    history.pushState({ quiz: 1, r: state.rk, at, n: (ours && h.n || 0) + 1 }, "");
+    state.steps = placeOf(at);   // a new step ends the history there
+  } catch (e) {}
+}
+// A round's first step. A round already in the history (taken up again, or reloaded) adds none.
+function enterQuiz(at) { try { if (!(history.state && history.state.quiz && history.state.r === state.rk)) step(at === undefined ? state.index : at); } catch (e) {} }
 // A newcomer's first question is one of these sliders, which read in one go, because it is the first thing anyone sees of the quiz.
 const FIRST = new Set(["exam-markers", "face-test", "code-share", "brain-to-text", "daily-work-use", "electricity", "companionship", "captcha", "sprint", "teens", "driverless", "table-tennis"]);
 // Sets up a round without showing it.
@@ -3691,7 +3704,7 @@ function deal(list) {
   clearDare();
   state.list = list || Guess.draw(state.length, true, store.plays || store.seen.length ? null : FIRST);
   state.index = 0; state.view = 0; state.answers = []; state.slider = null; state.finished = false; state.recorded = false; state.dealt = 0;
-  state.seenBefore = new Set(store.seen);
+  state.seenBefore = new Set(store.seen); state.rk = roundKey(state.list); state.steps = -1;
 }
 function startRound(list) {
   deal(list);
@@ -3708,8 +3721,9 @@ function resumeRound(saved, alreadyCounted) {
   state.answers = saved.ps.map((g, i) => Guess.result(saved.list[i], g));
   state.index = Math.min(saved.ps.length, saved.list.length - 1); state.slider = null; state.finished = false; state.recorded = !!alreadyCounted;
   const mine = new Set(saved.list.slice(0, saved.ps.length).flatMap(it => Guess.idsOf(it)));   // answered in this round, so not "seen before"
-  state.seenBefore = new Set(store.seen.filter(id => !mine.has(id)));
-  enterQuiz();
+  state.seenBefore = new Set(store.seen.filter(id => !mine.has(id))); { const rk = roundKey(saved.list); if (rk !== state.rk) state.steps = -1; state.rk = rk; }   // the same round, taken up again on this page, keeps its steps
+  enterQuiz(saved.ps.length === saved.list.length ? "end" : state.index);
+  { const h = history.state; if (h && h.quiz && h.r === state.rk) state.steps = Math.max(state.steps, placeOf(h.at)); }
   if (saved.ps.length === saved.list.length) renderResults(); else renderQuestion();
 }
 // Two challenges are the same when they ask the same questions, counting a photo question skipped in one of them.
@@ -3813,7 +3827,7 @@ function skipPhotos() {
   state.challenge = { ...ch, list: ch.list.filter((x, i) => i !== at), theirs: ch.theirs && ch.theirs.filter((x, i) => i !== at), skipped: (ch.skipped || []).concat([it]) };
   state.slider = null;
   if (state.answers.length) saveRound();
-  if (k === state.list.length) { state.index = k - 1; if (store.bonus) renderResults(); else renderBonus(); return; }   // it was the last question
+  if (k === state.list.length) { state.index = k - 1; step("end"); if (store.bonus) renderResults(); else renderBonus(); return; }   // it was the last question
   renderQuestion();
   $app.querySelector(".q-body").insertAdjacentHTML("afterbegin", `<p class="small muted" role="status">Photo question skipped. It doesn't count for either of you.</p>`);
 }
@@ -3944,11 +3958,16 @@ function paintAnswer(k, fresh) {
   gather(document.getElementById("reveal"));
   document.getElementById("pass").addEventListener("click", () => sendDare(it, msg => { const el = document.getElementById("pass-status"); if (el) el.textContent = msg; }));
   document.getElementById("next").addEventListener("click", () => {
+    // From a question looked at again: forward through the steps that are there, or a new step where there are none.
+    const h = history.state, target = state.finished ? state.list.length : state.index;
+    if (!current && h && h.quiz && h.r === state.rk && typeof h.at === "number" && h.at < target) {
+      if (state.steps >= target) { try { history.go(target - h.at); return; } catch (e) {} }
+      else step(state.finished ? "end" : target);
+    }
     if (state.finished) renderResults();
     else if (!current) showQuestion(state.index);
-    else if (!last) { state.index++; state.slider = null; renderQuestion(); }
-    else if (store.bonus) renderResults();
-    else renderBonus();
+    else if (!last) { state.index++; state.slider = null; step(state.index); renderQuestion(); }
+    else { step("end"); if (store.bonus) renderResults(); else renderBonus(); }
   });
 }
 
@@ -4432,9 +4451,20 @@ document.addEventListener("keydown", e => {
 window.addEventListener("popstate", () => {
   if (pageNamed()) { renderPage(pageNamed()); return; }
   if (state.screen === "learn") { closeLearn(); return; }
+  const h = history.state;
+  if (h && h.quiz && h.r === state.rk) state.steps = Math.max(state.steps, placeOf(h.at));
+  if (h && h.quiz && h.r === state.rk && state.list.length && ["question", "results", "bonus"].includes(state.screen)) {
+    if (h.at === "end" && state.answers.length === state.list.length) { if (store.bonus) renderResults(); else renderBonus(); return; }
+    // A step can name a place a skipped photo question has since left; the question now last stands in for it.
+    if (typeof h.at === "number") { const k = Math.min(h.at, state.list.length - 1); if (k <= state.index) { showQuestion(k); return; } }
+  }
   // Forward, after Back: on with the round that was left.
   const left = history.state && history.state.quiz && state.screen === "start" ? loadRound() : null;
-  if (left && (!state.challenge || sameRound(left.ch, state.challenge))) { resumeRound(left); return; }
+  if (left && (!state.challenge || sameRound(left.ch, state.challenge))) {
+    resumeRound(left);
+    if (h && h.r === state.rk && typeof h.at === "number" && h.at < state.index) showQuestion(h.at);   // Forward lands on the step it names
+    return;
+  }
   const before = state.challenge, coded = /[?&]c=/.test(location.search);
   // A challenge played through to its result is over, and so is one whose code has left the address.
   // Going back must not offer it again as if it were new.
@@ -4445,10 +4475,10 @@ window.addEventListener("popstate", () => {
   if (state.screen !== "start" || before !== state.challenge) renderStart();
   try { if (!state.challenge && /[?&]c=/.test(location.search)) history.replaceState(history.state, "", location.pathname); } catch (e) {}
 });
-// "Back to the start" steps back through the history entry the round added, so the next Back press leaves the page as expected.
+// "Back to the start" undoes all the steps the round added, so the next Back press leaves the page as expected.
 function goHome() {
   clearChallenge();
-  try { if (history.state && history.state.quiz) { history.back(); return; } } catch (e) {}
+  try { const h = history.state; if (h && h.quiz) { history.go(-(h.r === state.rk && h.n > 0 ? h.n : 1)); return; } } catch (e) {}
   renderStart();
 }
 
