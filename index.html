@@ -2501,6 +2501,12 @@ function minutes(n) { const m = Math.max(1, Math.round(n / 2)); return m + (m ==
 // Scores hold halves.
 function pts(n) { return Number.isInteger(n) ? String(n) : (n > 1 ? Math.floor(n) : "") + "½"; }
 function theirPoints(ch) { return ch.theirs.reduce((sum, x) => sum + x / 2, 0); }
+// A photo question skipped in a friend's round by someone who can't see the photos counts for neither player (see skipPhotos).
+const skippedOf = ch => ch && ch.skipped ? ch.skipped.length : 0;
+function skipNote(ch) {
+  const n = skippedOf(ch);
+  return !n ? "" : `You skipped ${n === 1 ? "the photo question, so it doesn't" : n + " photo questions, so they don't"} count${ch.theirs ? " for either of you" : ""}.`;
+}
 function roundPoints(r) { return r.ps.reduce((sum, g, i) => sum + Guess.grade(r.list[i], g), 0); }
 function seenCount() { return store.seen.filter(id => BY_ID[id]).length; }
 
@@ -2779,8 +2785,10 @@ const Guess = (() => {
     return numById[m[2]] || null;
   }
   // What a link's code stands for: the question and its answer. What a saved round must still match: everything it is graded by.
+  // bandsOf is what a slider or list marks a guess by besides its answer: its bands, or its choices and which of them earn half a point.
   const keyOf = x => x.x ? x.id + "|" + x.x.options[0] : x.text ? answerKey(x.q) : x.id + "|" + (x.f.type === "pick" ? x.f.options[x.f.answer] : x.f.truth);
-  const gradeKey = it => codeOf(it.kind === "quad" ? it.claims.map(keyOf).join() : it.quote ? keyOf(quoteById[it.id]) : JSON.stringify([it.id, it.f.truth, it.f.full, it.f.half, it.f.options, it.f.answer, it.f.near, it.f.wild]));
+  const bandsOf = it => [it.f.full, it.f.half, it.f.options, it.f.answer, it.f.near];
+  const gradeKey = it => codeOf(it.kind === "quad" ? it.claims.map(keyOf).join() : it.quote ? keyOf(quoteById[it.id]) : JSON.stringify([it.id, it.f.truth, ...bandsOf(it), it.f.wild]));
   let byCode = null;
   const codes = () => {
     if (byCode) return byCode;
@@ -2790,13 +2798,19 @@ const Guess = (() => {
     return byCode;
   };
   const encode = it => (it.kind === "quad" ? it.claims : [it.quote ? quoteById[it.id] : it]).map(x => codeOf(keyOf(x))).join("");
+  // In a challenge link a slider or list also carries two characters of its bands, so that a friend is never marked by bands it did not
+  // have when the sender played. A set of statements, a quote or a photo is marked by its answer alone, which its code stands for already.
+  const checkOf = it => it.kind === "quad" || it.quote ? "" : codeOf(JSON.stringify(bandsOf(it))).slice(0, 2);
+  const linkCode = it => encode(it) + checkOf(it);
   // The choices of a linked question stand in the same order for everyone who opens the link.
   const steady = (s, n) => [...Array(n).keys()].sort((a, b) => codeOf(s + ":" + a) < codeOf(s + ":" + b) ? -1 : 1);
+  // Six characters are a slider or list from a challenge link: it is left out, like a changed answer, if its bands have changed since.
   function decode(s) {
     const t = codes();
     if (s.length === 16) return makeQuad(s.match(/.{4}/g).map(c => t.claim[c]));
-    const x = t.one[s];
-    return !x ? null : x.x ? makeQuote(x, steady(s, x.x.options.length)) : x;
+    const x = t.one[s.slice(0, 4)], check = s.slice(4);
+    if (!x || check && (x.x || check !== checkOf(x))) return null;
+    return x.x ? makeQuote(x, steady(s, x.x.options.length)) : x;
   }
 
   function summarize(answers) {
@@ -2980,7 +2994,7 @@ const Guess = (() => {
   // The sources of every statement in a set of four are listed together.
   const sourceOf = it => it.kind !== "quad" ? bankOf(it) : Object.assign({}, bankOf(it), { src: it.claims.flatMap(c => c.q.src) });
 
-  return { NUM, CLAIM, QUOTE, FACE, adrift, extra, say, at, pos, stops, idsOf, titleOf, truthOf, saidOf, optionsOf, bankOf, askedOf, sourceOf, answerText, grade, lean, valid, result, compare, draw, swapFor, preload, pack, unpack, encode, decode, gradeKey,
+  return { NUM, CLAIM, QUOTE, FACE, adrift, extra, say, at, pos, stops, idsOf, titleOf, truthOf, saidOf, optionsOf, bankOf, askedOf, sourceOf, answerText, grade, lean, valid, result, compare, draw, swapFor, preload, pack, unpack, encode, linkCode, decode, gradeKey,
     summarize, analyze, findingOf, controlHtml, layoutMarks, resultRuler, mark, othersHtml, isSlide, parts, showReading, travel, slideHtml, unknown };
 })();
 window.addEventListener("resize", Guess.layoutMarks);
@@ -3027,7 +3041,7 @@ function keepRound(key) {
     const ch = state.challenge;
     const text = JSON.stringify({
       t: Date.now(), ids: state.list.map(it => Guess.pack(it)), ps: state.answers.map(r => r.g), fp: state.list.map(it => Guess.gradeKey(it)),
-      ch: ch ? { theirs: ch.theirs } : null
+      ch: ch ? { theirs: ch.theirs, skipped: (ch.skipped || []).map(it => Guess.pack(it)) } : null
     });
     unstored[key] = text; localStorage.setItem(key, text); delete unstored[key];
   } catch (e) {}
@@ -3063,7 +3077,9 @@ function readRound(key, days, finished) {
     let ch = null;
     if (r.ch && typeof r.ch === "object") {
       const marks = r.ch.theirs;
-      ch = { list, theirs: Array.isArray(marks) && marks.length === list.length && marks.every(x => x === 0 || x === 1 || x === 2) ? marks : null, missing: 0 };
+      // A photo question skipped in it is kept apart: it counts for neither player, and the challenge is still the same one (sameRound).
+      const skipped = (Array.isArray(r.ch.skipped) ? r.ch.skipped : []).map(id => typeof id === "string" ? Guess.unpack(id) : null).filter(it => it && it.photos && !names.includes(it.id));
+      ch = { list, theirs: Array.isArray(marks) && marks.length === list.length && marks.every(x => x === 0 || x === 1 || x === 2) ? marks : null, missing: 0, skipped };
     }
     return { list, ps, ch };
   } catch (e) { return null; }
@@ -3087,10 +3103,12 @@ const HOOKS = new Set(["gym-waitlist", "crypto-mining", "good-stories", "free-ch
 /* ---------- Challenge links ----------
    A shared link carries the exact questions of the round and how the sharer did on each, so whoever
    opens it plays the same round and can compare. Format of the c parameter: the letter g, then the code of each question
-   with hyphens between them (four characters, or sixteen for a set of four statements), then a dot and one digit per
-   question (2 a point, 1 half a point, 0 none). The q parameter is the letter g and the code of one question.
+   with hyphens between them (four characters, six for a slider or list, or sixteen for a set of four statements), then a dot
+   and one digit per question (2 a point, 1 half a point, 0 none). The q parameter is the letter g and the code of one question.
    A code is a hash of the question's id and its answer, so it survives questions being added, removed, reordered or reworded,
-   but not an answer that has changed: that question then drops out of the link instead of being compared. */
+   but not an answer that has changed: that question then drops out of the link instead of being compared. The two extra
+   characters of a slider or list check its bands the same way (Guess.linkCode). Links made before that check give every question
+   four characters, and are taken as they are. */
 const answerKey = q => q.id + (q.a ? "" : "!");
 function codeOf(id) {
   let h = 0x811c9dc5;
@@ -3109,7 +3127,7 @@ QUESTIONS.forEach((q, i) => {
 });
 if (Object.keys(BY_ID).length !== QUESTIONS.length) console.warn("Two questions share an id.");
 function readChallenge(raw) {
-  const m = /^g((?:[0-9a-z]{4}|[0-9a-z]{16})(?:-(?:[0-9a-z]{4}|[0-9a-z]{16})){3,19})(?:\.([012]+))?$/.exec(raw || "");
+  const m = /^g((?:[0-9a-z]{4}|[0-9a-z]{6}|[0-9a-z]{16})(?:-(?:[0-9a-z]{4}|[0-9a-z]{6}|[0-9a-z]{16})){3,19})(?:\.([012]+))?$/.exec(raw || "");
   if (!m) return null;
   const parts = m[1].split("-"), marks = m[2] || "", hasMarks = marks.length === parts.length, list = [], theirs = [], used = new Set();
   parts.forEach((c, i) => {
@@ -3138,7 +3156,7 @@ function siteUrl() {
 // The link to share: the site address plus this round's questions and results.
 function shareUrl() {
   const base = siteUrl();
-  return base && base + "?c=g" + state.list.map(it => Guess.encode(it)).join("-") + "." + state.answers.map(r => ({ good: 2, meh: 1, bad: 0 })[markOf(r)]).join("");
+  return base && base + "?c=g" + state.list.map(it => Guess.linkCode(it)).join("-") + "." + state.answers.map(r => ({ good: 2, meh: 1, bad: 0 })[markOf(r)]).join("");
 }
 
 // One question to pass on. The link carries that question alone, and the friend answers it on the start screen.
@@ -3582,6 +3600,7 @@ function renderStart(notice, fresh) {
         <button class="btn btn-primary btn-big" id="take" type="button">Take the challenge</button>
         <p class="small muted">About ${minutes(n)}, sliding to a number or picking an answer. Every answer comes with its sources.</p>
         ${ch.missing ? `<p class="small muted">${ch.missing === 1 ? "One question from their round has" : ch.missing + " questions from their round have"} since changed or been retired, so this round is a little shorter.</p>` : ""}
+        ${skippedOf(ch) ? `<p class="small muted">${skipNote(ch)}</p>` : ""}
         <p class="small"><button type="button" class="link" id="fresh">Play a fresh round instead</button></p>
         ${saved ? `<p class="small muted">You have an unfinished round. <button type="button" class="link" id="resume">Pick up where you left off</button></p>` : ""}
       </div></div></section>`;
@@ -3693,9 +3712,9 @@ function resumeRound(saved, alreadyCounted) {
   enterQuiz();
   if (saved.ps.length === saved.list.length) renderResults(); else renderQuestion();
 }
-// Two challenges are the same when they ask the same questions.
+// Two challenges are the same when they ask the same questions, counting a photo question skipped in one of them.
 function sameRound(a, b) {
-  const key = c => c.list.map(it => Guess.encode(it)).join();
+  const key = c => c.list.concat(c.skipped || []).map(it => Guess.encode(it)).sort().join();
   return !!a && !!b && key(a) === key(b);
 }
 // The row at the top of a question. Answered questions can be opened again, with the arrows or by tapping their square.
@@ -3727,19 +3746,20 @@ function questionHtml(k, top) {
   const tip = open && store.plays === 0 && k < 4 && qHtml.includes('class="term"') ? `<p class="small muted">Tap an underlined word for a plain-English definition.</p>` : "";
   const tap = open && store.plays === 0 && listed(it) && !state.answers.some(r => listed(r.it)) ? `<p class="small muted tap">One tap locks it in.</p>` : "";
   const again = open && Guess.idsOf(it).every(id => state.seenBefore.has(id));
-  const swap = open && it.photos && !state.challenge;   // a friend's round is the same for both, so nothing is swapped there
+  // Someone who can't see the photos can have another question. A friend's round is the same for both, so there it is skipped instead.
+  const away = open && it.photos && (!state.challenge || state.list.length > 1), swap = away && !state.challenge, skip = away && !!state.challenge;
   return `
     <section class="field${slide ? " tight" : it.photos ? "" : " has-art"}">${slide || it.photos ? "" : artSvg(artOf(it), "beside " + (open ? "" : markOf(state.answers[k])))}<div class="wrap">
       ${top || ""}${navHtml()}
       <div class="q-body">
         ${again ? `<p class="small muted">You have seen this one before.</p>` : ""}
         <h1 id="question" class="q-h${brief(title)}" tabindex="-1">${qHtml}</h1>
-        ${swap ? `<p class="sr-only">This one needs sight. A button after the four photos swaps it for another question.</p>` : ""}
+        ${away ? `<p class="sr-only">This one needs sight. A button after the four photos ${swap ? "swaps it for another question" : "skips it, and then it counts for neither of you"}.</p>` : ""}
         ${hint ? `<p class="muted">${gloss(hint)}</p>` : ""}
         ${tip}${tap}
       </div>
     </div></section>
-    <div id="control" class="control${slide ? "" : " on-field"}${open && !slide ? " fill" : ""}${listed(it)}">${Guess.controlHtml(it, open, state.slider)}${swap ? `<p class="small center wrap" id="swap-row"><button type="button" class="link" id="swap">Can't see the photos? Swap this question</button></p>` : ""}</div>
+    <div id="control" class="control${slide ? "" : " on-field"}${open && !slide ? " fill" : ""}${listed(it)}">${Guess.controlHtml(it, open, state.slider)}${away ? `<p class="small center wrap" id="swap-row"><button type="button" class="link" id="${swap ? "swap" : "skip"}">Can't see the photos? ${swap ? "Swap" : "Skip"} this question</button></p>` : ""}</div>
     <div id="reveal" class="reveal wrap"></div>`;
 }
 // Moves a pin, its stem and the large number to where its slider is.
@@ -3781,10 +3801,27 @@ function swapPhotos() {
   renderStart("", true);
   document.getElementById("question").focus({ preventScroll: true });
 }
+// In a friend's round the photo question is skipped instead, and then it counts for neither player: the friend's mark for it goes too.
+// The challenge keeps it among the skipped ones, so the result can say so and the round is still known as the same challenge.
+function skipPhotos() {
+  const ch = state.challenge, k = state.index, it = state.list[k];
+  if (!asking() || !ch || !it || !it.photos || state.list.length < 2) return;
+  const at = ch.list.indexOf(it);
+  if (at < 0) return;
+  store.noPhotos = true; saveStore();
+  state.list = state.list.filter((x, i) => i !== k);
+  state.challenge = { ...ch, list: ch.list.filter((x, i) => i !== at), theirs: ch.theirs && ch.theirs.filter((x, i) => i !== at), skipped: (ch.skipped || []).concat([it]) };
+  state.slider = null;
+  if (state.answers.length) saveRound();
+  if (k === state.list.length) { state.index = k - 1; if (store.bonus) renderResults(); else renderBonus(); return; }   // it was the last question
+  renderQuestion();
+  $app.querySelector(".q-body").insertAdjacentHTML("afterbegin", `<p class="small muted" role="status">Photo question skipped. It doesn't count for either of you.</p>`);
+}
 function wireQuestion(k) {
   wireNav();
-  const swap = document.getElementById("swap");
+  const swap = document.getElementById("swap"), skip = document.getElementById("skip");
   if (swap) swap.addEventListener("click", swapPhotos);
+  if (skip) skip.addEventListener("click", skipPhotos);
   if (k < state.answers.length) paintAnswer(k);
   else { placeArt(state.list[k]); const it = state.list[k], c = document.getElementById("control"); if (!Guess.isSlide(it) && !it.photos) c.insertAdjacentHTML("beforeend", artSvg(artOf(it), "below")); wireGuess(state.list[k], answerGuess, state.slider, v => { state.slider = v; }); }
 }
@@ -4056,6 +4093,8 @@ function shareText(s, key, url) {
     if (s.right > theirs) first = `I beat your ${pts(theirs)} on What's up with AI? I got ${mine}.`;
     else if (s.right === theirs) first = `We tied on What's up with AI? We both got ${mine}.`;
     else first = `Your ${pts(theirs)} still stands. I got ${mine} on What's up with AI?`;
+    const n = skippedOf(ch);
+    if (n) first += n === 1 ? " The photo question I skipped doesn't count for either of us." : ` The ${n} photo questions I skipped don't count for either of us.`;
   }
   if (!url) return first;
   return ch && ch.theirs ? `${first}\n${url}` : `${first} Same ${s.n} questions for you:\n${url}`;
@@ -4100,12 +4139,12 @@ function renderResults() {
     store.plays++; saveStore(); state.recorded = true;
     state.bestNote = newBest ? `<p class="compare"><b>A new personal best.</b> Your previous best over ${n} questions was ${pts(prev)}.</p>` : "";
   } else if (!returning) state.bestNote = "";
-  const ch = state.challenge;
+  const ch = state.challenge, skipped = skipNote(ch);
   let compare = "";
   if (ch && ch.theirs) {
     const theirs = theirPoints(ch);
-    compare = `<p class="compare"><b>You ${pts(s.right)}, your challenger ${pts(theirs)}.</b> ${s.right > theirs ? "You win." : s.right < theirs ? "They win this one." : "A tie."}</p>`;
-  } else compare = state.bestNote;
+    compare = `<p class="compare"><b>You ${pts(s.right)}, your challenger ${pts(theirs)}.</b> ${s.right > theirs ? "You win." : s.right < theirs ? "They win this one." : "A tie."}${skipped ? " " + skipped : ""}</p>`;
+  } else compare = state.bestNote + (skipped ? `<p class="compare">${skipped}</p>` : "");
   const other = an.other ? `
       <p class="small muted">Not counted here: ${an.other === 1 ? "1 miss that points" : an.other + " misses that point"} neither way.</p>` : "";
   const split = !(an.under + an.over) ? "" : `
